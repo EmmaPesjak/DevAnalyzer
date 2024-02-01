@@ -24,14 +24,10 @@ class MainView:
     USERS = ["Anna", "Clara", "Stina"]
 
     def __init__(self):
-
         self.setup_appearance()
         self.create_main_window()
         self.setup_ui_components()
         self.root.mainloop()
-
-        #self.root = ctk.CTk()
-        #self.setup_ui()
 
     def setup_appearance(self):
         ctk.set_appearance_mode(self.MODE_DARK)
@@ -77,49 +73,10 @@ class MainView:
         self.frame2 = ctk.CTkFrame(self.root, corner_radius=1)
         self.frame2.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
 
-        # You can add initial contents to frame2 here, if needed
-        # For example:
-        initial_label = ctk.CTkLabel(self.frame2, text="Welcome to DevAnalyzer!")
-        initial_label.pack()
+        # TODO fixa sen så att man kan uppdatera i programmet
+        self.setup_diagrams()
 
 
-    def setup_ui(self):
-        pass
-        #self.root.title(self.WINDOW_TITLE)
-        #self.root.geometry(self.WINDOW_GEOMETRY)
-        #self.root.resizable(width=True, height=True)
-
-        #self.root.grid_rowconfigure(0, weight=1)  # This makes the row 0 expandable (fills the height).
-
-        #self.root.grid_columnconfigure(0, minsize=200)  # This sets the minimum width for column 0 to 200.
-        #self.root.grid_columnconfigure(1, weight=1)  # This makes column 1 expandable (fills the rest of the width).
-
-        #frame1 = ctk.CTkFrame(self.root, corner_radius=1)
-        #frame1.grid(row=0, column=0, sticky="ns")  # 'ns' makes it expand only vertically.
-
-        #frame2 = ctk.CTkFrame(self.root, corner_radius=1)
-        #frame2.grid(row=0, column=1, sticky="nsew")  # 'nsew' makes it expand in all directions.
-
-        #self.git_button = ctk.CTkButton(frame1, text="Select repository", command=self.open_git_input)
-        #self.git_button.pack(pady=5, padx=5)
-
-        #self.menubar = ctk.CTkOptionMenu(frame1, values=self.USERS, command=self.usermenu_callback)
-        #self.menubar.set("Select user")
-        #self.menubar.pack(pady=5, padx=5)
-
-        # Mode button
-        #self.mode_button = ctk.CTkButton(frame1, text="Appearance mode", command=self.set_appearance_mode)
-        #self.mode_button.pack(pady=5, padx=5)
-
-        # Exit button.
-        #self.exit_button = ctk.CTkButton(frame1, text="Exit", command=self.on_closing)
-        #self.exit_button.pack(pady=5, padx=5)
-
-        # Exit handling.
-        #self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-        # Mainloop.
-        #self.root.mainloop()
 
     def open_git_input(self):
         """
@@ -138,10 +95,43 @@ class MainView:
     def display_data(self, data):
         print(data)
 
-    def set_up_diagrams(self):
-        fig1, ax1 = plt.subplots()
-        ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())
-        pass
+    def setup_diagrams(self):
+
+        # ANTAL COMMITS FÖR VARJE CONTRIBUTOR
+        fig1, ax1 = plt.subplots(dpi=75) # dpi sätter size
+        ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
+        ax1.set_title("Total commits by contributor")
+        ax1.set_xlabel("Contributor")
+        ax1.set_ylabel("Commits")
+
+        canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
+        canvas.draw()
+        canvas.get_tk_widget().pack(padx=10, pady=10)
+        #canvas_widget.pack(padx=10, pady=10)  # Adjust padding as needed
+
+        # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
+        fig2, ax2 = plt.subplots(dpi=75) # dpi sätter size
+        ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
+        ax2.set_title("Total commits by contributor")
+
+        canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
+        canvas2.draw()
+        canvas2.get_tk_widget().pack(padx=10, pady=10)
+
+        # TIMELINE
+        fig3, ax3 = plt.subplots(dpi=75)
+        ax3.plot(total_monthly_commits.keys(), total_monthly_commits.values())
+        ax3.set_title("Total monthly commits")
+        ax3.set_xlabel("Month")
+        ax3.set_ylabel("Commits")
+
+        canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
+        canvas3.draw()
+        canvas3.get_tk_widget().pack(padx=10, pady=10)
+
+
+
+        #plt.show()
 
     def set_appearance_mode(self):
 
