@@ -97,26 +97,25 @@ class MainView:
 
     def setup_diagrams(self):
 
-        # ANTAL COMMITS FÖR VARJE CONTRIBUTOR
+        # ANTAL COMMITS FÖR VARJE FIX
         fig1, ax1 = plt.subplots(dpi=75) # dpi sätter size
         ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
-        ax1.set_title("Total commits by contributor")
-        ax1.set_xlabel("Contributor")
+        ax1.set_title("What")
+        ax1.set_xlabel("Type")
         ax1.set_ylabel("Commits")
 
-        canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
-        canvas.draw()
-        canvas.get_tk_widget().pack(padx=10, pady=10)
-        #canvas_widget.pack(padx=10, pady=10)  # Adjust padding as needed
+        # canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
+        # canvas.draw()
+        # canvas.get_tk_widget().pack(padx=10, pady=10)
 
         # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
         fig2, ax2 = plt.subplots(dpi=75) # dpi sätter size
         ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
         ax2.set_title("Total commits by contributor")
 
-        canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
-        canvas2.draw()
-        canvas2.get_tk_widget().pack(padx=10, pady=10)
+        # canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
+        # canvas2.draw()
+        # canvas2.get_tk_widget().pack(padx=10, pady=10)
 
         # TIMELINE
         fig3, ax3 = plt.subplots(dpi=75)
@@ -125,9 +124,46 @@ class MainView:
         ax3.set_xlabel("Month")
         ax3.set_ylabel("Commits")
 
+        # canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
+        # canvas3.draw()
+        # canvas3.get_tk_widget().pack(padx=10, pady=10)
+
+        # TO BE CHANGED
+        fig4, ax4 = plt.subplots(dpi=75)  # dpi sätter size
+        ax4.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
+        ax4.set_title("Where")
+        ax4.set_xlabel("Where")
+        ax4.set_ylabel("Commits")
+
+        # canvas4 = FigureCanvasTkAgg(fig4, master=self.frame2)
+        # canvas4.draw()
+        # canvas4.get_tk_widget().pack(padx=10, pady=10)
+
+        self.frame2.grid_columnconfigure(0, weight=1)
+        self.frame2.grid_columnconfigure(1, weight=1)
+        self.frame2.grid_rowconfigure(0, weight=1)
+        self.frame2.grid_rowconfigure(1, weight=1)
+
+        # Canvas 1
+        canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
+        canvas.draw()
+        canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 2
+        canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
+        canvas2.draw()
+        canvas2.get_tk_widget().grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 3
         canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
         canvas3.draw()
-        canvas3.get_tk_widget().pack(padx=10, pady=10)
+        canvas3.get_tk_widget().grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 4
+        canvas4 = FigureCanvasTkAgg(fig4, master=self.frame2)  # Make sure to use fig4 here instead of fig1
+        canvas4.draw()
+        canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+
 
 
 
