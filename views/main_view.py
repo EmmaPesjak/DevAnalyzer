@@ -6,7 +6,7 @@ import tkinter as tk
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-from support.test_data import total_commits_by_contributor, commit_types_by_contributor, monthly_commits_by_contributor, total_monthly_commits
+from support.test_data import total_commits_by_contributor, commit_types_by_contributor, monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
 
@@ -20,7 +20,7 @@ class MainView:
     # blue green or dark-blue
     DEFAULT_THEME = "green"
     WINDOW_TITLE = "DevAnalyzer"
-    WINDOW_GEOMETRY = "900x600"
+    WINDOW_GEOMETRY = "1200x600"
     USERS = ["Anna", "Clara", "Stina"]
 
     def __init__(self):
@@ -43,11 +43,13 @@ class MainView:
         self.setup_layout()
         self.create_sidebar()
         self.create_main_area()
+        self.create_info_bar()
 
     def setup_layout(self):
         self.root.grid_rowconfigure(0, weight=1)  # Make row 0 expandable
         self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0
         self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable
+        self.root.grid_columnconfigure(2, minsize=200)  # Make column 1 expandable
 
     def create_sidebar(self):
         frame1 = ctk.CTkFrame(self.root, corner_radius=1)
@@ -74,9 +76,43 @@ class MainView:
         self.frame2.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
 
         # TODO fixa sen så att man kan uppdatera i programmet
-        self.setup_diagrams()
+        self.setup_overwiew_diagrams()
 
+    def create_info_bar(self):
+        frame3 = ctk.CTkFrame(self.root, corner_radius=1)
+        frame3.grid(row=0, column=2, sticky="ns")  # Expand only vertically
 
+        # Determine the text color based on the mode
+        text_color = "#3FA27B"
+
+        total_commits = "Total Commits: " + str(self.get_total_commits())
+        most_active_month = "Most Active Month: " + self.get_most_active_month()
+        most_type_of_commits = "Most Type of Commits: " + self.get_most_type_of_commits()
+        most_where_of_commits = "Most Where of Commits: " + self.get_most_where_of_commits()
+
+        # Create labels for each statistic
+        total_commits_label = ctk.CTkLabel(frame3, text=total_commits, text_color=text_color)
+        most_active_month_label = ctk.CTkLabel(frame3, text=most_active_month, text_color=text_color)
+        most_type_of_commits_label = ctk.CTkLabel(frame3, text=most_type_of_commits, text_color=text_color)
+        most_where_of_commits_label = ctk.CTkLabel(frame3, text=most_where_of_commits, text_color=text_color)
+
+        # Pack the labels with left alignment
+        total_commits_label.pack(pady=(10, 2), padx=5)
+        most_active_month_label.pack(pady=2, padx=5)
+        most_type_of_commits_label.pack(pady=2, padx=5)
+        most_where_of_commits_label.pack(pady=2, padx=5)
+
+    def get_total_commits(self):
+        return info_bar_statistics['Most commits']
+
+    def get_most_active_month(self):
+        return info_bar_statistics['Most active month']
+
+    def get_most_type_of_commits(self):
+        return info_bar_statistics['Most type']
+
+    def get_most_where_of_commits(self):
+        return info_bar_statistics['Most changes in']
 
     def open_git_input(self):
         """
@@ -91,11 +127,29 @@ class MainView:
 
     def usermenu_callback(self, choice):
         print("optionmenu dropdown clicked:", choice)
+        # Create a new Toplevel window
+        new_window = ctk.CTkToplevel(self.root)
+        new_window.title(f"Information for {choice}")
+        new_window.geometry("400x300")  # You can adjust the size as needed
+
+        # Example content based on the user selection
+        if choice == "Anna":
+            info_text = "Info about Anna"
+        elif choice == "Clara":
+            info_text = "Info about Clara"
+        elif choice == "Stina":
+            info_text = "Info about Stina"
+        else:
+            info_text = "Select a user"
+
+        # Create a label in the new window with the selected information
+        info_label = ctk.CTkLabel(new_window, text=info_text, anchor="w", width=100, height=25)
+        info_label.pack(pady=20)
 
     def display_data(self, data):
         print(data)
 
-    def setup_diagrams(self):
+    def setup_overwiew_diagrams(self):
 
         # ANTAL COMMITS FÖR VARJE FIX
         fig1, ax1 = plt.subplots(dpi=75) # dpi sätter size
@@ -104,18 +158,10 @@ class MainView:
         ax1.set_xlabel("Type")
         ax1.set_ylabel("Commits")
 
-        # canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
-        # canvas.draw()
-        # canvas.get_tk_widget().pack(padx=10, pady=10)
-
         # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
         fig2, ax2 = plt.subplots(dpi=75) # dpi sätter size
         ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
         ax2.set_title("Total commits by contributor")
-
-        # canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
-        # canvas2.draw()
-        # canvas2.get_tk_widget().pack(padx=10, pady=10)
 
         # TIMELINE
         fig3, ax3 = plt.subplots(dpi=75)
@@ -124,20 +170,12 @@ class MainView:
         ax3.set_xlabel("Month")
         ax3.set_ylabel("Commits")
 
-        # canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
-        # canvas3.draw()
-        # canvas3.get_tk_widget().pack(padx=10, pady=10)
-
         # TO BE CHANGED
         fig4, ax4 = plt.subplots(dpi=75)  # dpi sätter size
         ax4.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
         ax4.set_title("Where")
         ax4.set_xlabel("Where")
         ax4.set_ylabel("Commits")
-
-        # canvas4 = FigureCanvasTkAgg(fig4, master=self.frame2)
-        # canvas4.draw()
-        # canvas4.get_tk_widget().pack(padx=10, pady=10)
 
         self.frame2.grid_columnconfigure(0, weight=1)
         self.frame2.grid_columnconfigure(1, weight=1)
@@ -165,8 +203,6 @@ class MainView:
         canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
 
 
-
-
         #plt.show()
 
     def set_appearance_mode(self):
@@ -177,7 +213,6 @@ class MainView:
         else:
             ctk.set_appearance_mode("dark")
             self.mode = "dark"
-
 
     def on_closing(self):
         """
