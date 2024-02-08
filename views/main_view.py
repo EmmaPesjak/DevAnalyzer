@@ -59,7 +59,7 @@ class MainView:
         self.git_button = ctk.CTkButton(frame1, text="Select repository", command=self.open_git_input)
         self.git_button.pack(pady=5, padx=5)
 
-        self.menubar = ctk.CTkOptionMenu(frame1, values=self.USERS, command=self.usermenu_callback)
+        self.menubar = ctk.CTkOptionMenu(frame1, values=self.USERS, command=self.setup_user_window)
         self.menubar.set("Select user")
         self.menubar.pack(pady=5, padx=5)
 
@@ -101,8 +101,6 @@ class MainView:
         most_type_of_commits_label.pack(pady=2, padx=5)
         most_where_of_commits_label.pack(pady=2, padx=5)
 
-
-
     def get_total_commits(self):
         return info_bar_statistics['Most commits']
 
@@ -126,11 +124,11 @@ class MainView:
         else:
             print("No input.")
 
-    def usermenu_callback(self, choice):
+    def setup_user_window(self, choice):
         # Create a new Toplevel window
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information for {choice}")
-        new_window.geometry("800x600")  # Adjust the size as needed
+        new_window.geometry(self.WINDOW_GEOMETRY)  # Adjust the size as needed
 
         # Create a sidebar in the new window
         sidebar_frame = ctk.CTkFrame(new_window, corner_radius=10)
@@ -139,6 +137,59 @@ class MainView:
         # Create a main area in the new window
         main_area_frame = ctk.CTkFrame(new_window, corner_radius=10)
         main_area_frame.pack(side="left", expand=True, fill="both", padx=10, pady=10)
+
+        # ANTAL COMMITS FÖR VARJE FIX
+        fig1, ax1 = plt.subplots(dpi=75)  # dpi sätter size
+        ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
+        ax1.set_title("What")
+        ax1.set_xlabel("Type")
+        ax1.set_ylabel("Commits")
+
+        # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
+        fig2, ax2 = plt.subplots(dpi=75)  # dpi sätter size
+        ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
+        ax2.set_title("Total commits by contributor")
+
+        # TIMELINE
+        fig3, ax3 = plt.subplots(dpi=75)
+        ax3.plot(total_monthly_commits.keys(), total_monthly_commits.values())
+        ax3.set_title("Total monthly commits")
+        ax3.set_xlabel("Month")
+        ax3.set_ylabel("Commits")
+
+        # TO BE CHANGED
+        fig4, ax4 = plt.subplots(dpi=75)  # dpi sätter size
+        ax4.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
+        ax4.set_title("Where")
+        ax4.set_xlabel("Where")
+        ax4.set_ylabel("Commits")
+
+        main_area_frame.grid_columnconfigure(0, weight=1)
+        main_area_frame.grid_columnconfigure(1, weight=1)
+        main_area_frame.grid_rowconfigure(0, weight=1)
+        main_area_frame.grid_rowconfigure(1, weight=1)
+
+        # Canvas 1
+        canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
+        canvas.draw()
+        canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 2
+        canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
+        canvas2.draw()
+        canvas2.get_tk_widget().grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 3
+        canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
+        canvas3.draw()
+        canvas3.get_tk_widget().grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
+
+        # Canvas 4
+        canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)  # Make sure to use fig4 here instead of fig1
+        canvas4.draw()
+        canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+
+
 
         text_color = "#3FA27B"
 
@@ -149,7 +200,6 @@ class MainView:
         # Example main area content
         detail_label = ctk.CTkLabel(main_area_frame, text=f"Details about {choice}'s contributions", anchor="w", text_color=text_color)
         detail_label.pack(padx=10, pady=10)
-
 
 
     def display_data(self, data):
