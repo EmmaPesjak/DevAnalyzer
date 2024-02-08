@@ -50,6 +50,13 @@ info_bar_statistics = {
     'Most type': 'Bugfix'
 }
 
+info_bar_statistics_user = {
+    'What': 'Bugfix',
+    'Where': 'Backend',
+    'Total commits': 130,
+    'Most active month': 'April'
+}
+
 
 
 
