@@ -49,7 +49,7 @@ class MainView:
         self.root.grid_rowconfigure(0, weight=1)  # Make row 0 expandable
         self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0
         self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable
-        self.root.grid_columnconfigure(2, minsize=200)  # Make column 1 expandable
+        self.root.grid_columnconfigure(2, minsize=200)
 
     def create_sidebar(self):
         frame1 = ctk.CTkFrame(self.root, corner_radius=1)
@@ -82,7 +82,6 @@ class MainView:
         frame3 = ctk.CTkFrame(self.root, corner_radius=1)
         frame3.grid(row=0, column=2, sticky="ns")  # Expand only vertically
 
-        # Determine the text color based on the mode
         text_color = "#3FA27B"
 
         total_commits = "Total Commits: " + str(self.get_total_commits())
@@ -101,6 +100,8 @@ class MainView:
         most_active_month_label.pack(pady=2, padx=5)
         most_type_of_commits_label.pack(pady=2, padx=5)
         most_where_of_commits_label.pack(pady=2, padx=5)
+
+
 
     def get_total_commits(self):
         return info_bar_statistics['Most commits']
@@ -126,25 +127,30 @@ class MainView:
             print("No input.")
 
     def usermenu_callback(self, choice):
-        print("optionmenu dropdown clicked:", choice)
         # Create a new Toplevel window
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information for {choice}")
-        new_window.geometry("400x300")  # You can adjust the size as needed
+        new_window.geometry("800x600")  # Adjust the size as needed
 
-        # Example content based on the user selection
-        if choice == "Anna":
-            info_text = "Info about Anna"
-        elif choice == "Clara":
-            info_text = "Info about Clara"
-        elif choice == "Stina":
-            info_text = "Info about Stina"
-        else:
-            info_text = "Select a user"
+        # Create a sidebar in the new window
+        sidebar_frame = ctk.CTkFrame(new_window, corner_radius=10)
+        sidebar_frame.pack(side="right", fill="y", padx=10, pady=10)
 
-        # Create a label in the new window with the selected information
-        info_label = ctk.CTkLabel(new_window, text=info_text, anchor="w", width=100, height=25)
-        info_label.pack(pady=20)
+        # Create a main area in the new window
+        main_area_frame = ctk.CTkFrame(new_window, corner_radius=10)
+        main_area_frame.pack(side="left", expand=True, fill="both", padx=10, pady=10)
+
+        text_color = "#3FA27B"
+
+        # Example sidebar content
+        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice}", anchor="w", width=130, text_color=text_color)  # Adjust width here
+        info_label.pack(padx=10, pady=10, fill='x')  # Ensure label fills the sidebar frame
+
+        # Example main area content
+        detail_label = ctk.CTkLabel(main_area_frame, text=f"Details about {choice}'s contributions", anchor="w", text_color=text_color)
+        detail_label.pack(padx=10, pady=10)
+
+
 
     def display_data(self, data):
         print(data)
