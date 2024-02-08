@@ -6,7 +6,7 @@ import tkinter as tk
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-from support.test_data import total_commits_by_contributor, commit_types_by_contributor, monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics
+from support.test_data import total_commits_by_contributor, commit_types_by_contributor, monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
 
@@ -190,16 +190,49 @@ class MainView:
         canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
 
 
-
         text_color = "#3FA27B"
 
+        user_text = self.create_info_label_text_user()
+
         # Example sidebar content
-        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice}", anchor="w", width=130, text_color=text_color)  # Adjust width here
+        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {user_text}", anchor="w", width=130, text_color=text_color)  # Adjust width here
         info_label.pack(padx=10, pady=10, fill='x')  # Ensure label fills the sidebar frame
 
         # Example main area content
         detail_label = ctk.CTkLabel(main_area_frame, text=f"Details about {choice}'s contributions", anchor="w", text_color=text_color)
         detail_label.pack(padx=10, pady=10)
+
+    def create_info_label_text_user(self):
+        total_commits = "Total Commits: " + str(self.get_total_commit_user())
+        most_active_month = "Most Active Month: " + self.get_most_active_month_user()
+        most_type_of_commits = "Most Type of Commits: " + self.get_most_type_of_commits_user()
+        most_where_of_commits = "Most Where of Commits: " + self.get_most_where_of_commits_user()
+
+        total_string = total_commits + "\n" + most_active_month + "\n" + most_type_of_commits + "\n" + most_where_of_commits
+        return total_string
+        # # Create labels for each statistic
+        # total_commits_label = ctk.CTkLabel(frame3, text=total_commits, text_color=text_color)
+        # most_active_month_label = ctk.CTkLabel(frame3, text=most_active_month, text_color=text_color)
+        # most_type_of_commits_label = ctk.CTkLabel(frame3, text=most_type_of_commits, text_color=text_color)
+        # most_where_of_commits_label = ctk.CTkLabel(frame3, text=most_where_of_commits, text_color=text_color)
+        #
+        # # Pack the labels with left alignment
+        # total_commits_label.pack(pady=(10, 2), padx=5)
+        # most_active_month_label.pack(pady=2, padx=5)
+        # most_type_of_commits_label.pack(pady=2, padx=5)
+        # most_where_of_commits_label.pack(pady=2, padx=5)
+
+    def get_total_commit_user(self):
+        return info_bar_statistics_user['Total commits']
+
+    def get_most_active_month_user(self):
+        return info_bar_statistics_user['Most active month']
+
+    def get_most_type_of_commits_user(self):
+        return info_bar_statistics_user['What']
+
+    def get_most_where_of_commits_user(self):
+        return info_bar_statistics_user['Where']
 
 
     def display_data(self, data):
