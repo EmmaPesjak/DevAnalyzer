@@ -24,10 +24,11 @@ class MainView:
     USERS = ["Anna", "Clara", "Stina"]
 
     def __init__(self):
+        self.on_input_change = None
         self.setup_appearance()
         self.create_main_window()
         self.setup_ui_components()
-        self.root.mainloop()
+        #self.root.mainloop()
 
     def setup_appearance(self):
         ctk.set_appearance_mode(self.MODE_DARK)
@@ -113,16 +114,22 @@ class MainView:
     def get_most_where_of_commits(self):
         return info_bar_statistics['Most changes in']
 
+    # Open the dialog and call the method for input_change
     def open_git_input(self):
-        """
-        Method for getting a repository. TODO: handle in the model.
-        """
         dialog = ctk.CTkInputDialog(text="Enter you repository link:", title="Repository")
         repo_input = dialog.get_input()
-        if repo_input:
-            print(repo_input)  # TODO The model has to verify that the repo was successfully collected.
+        if repo_input and self.on_input_change:
+            self.on_input_change(repo_input)
         else:
             print("No input.")
+
+    # Set the callback for changing the repo-input (used from controller)
+    def set_on_input_change(self, callback):
+        self.on_input_change = callback
+
+    # Acts like a placeholder, is defined in controller.
+    def on_input_change(self):
+        pass
 
     def setup_user_window(self, choice):
         # Create a new Toplevel window
