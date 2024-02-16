@@ -16,9 +16,15 @@ class MainView:
     WINDOW_TITLE = "DevAnalyzer"
     WINDOW_GEOMETRY = "1200x600"
     USERS = ["Anna", "Clara", "Stina"]  # TODO: get this from model when analyzing the repo
+    TEXT_COLOR = "#3FA27B"
+    PADDING = 10
     mode = MODE_DARK  # Light or dark
 
     def __init__(self):
+        """
+        Initializes an instance of the MainView class. This constructor method sets up the main
+        application window and its UI components.
+        """
         self.root = ctk.CTk()
         self.on_input_change = None
         self.frame2 = None
@@ -31,65 +37,83 @@ class MainView:
         self.setup_ui_components()
 
     def setup_appearance(self):
+        """
+        Sets the appearance mode and color theme for the application.
+        """
         ctk.set_appearance_mode(self.MODE_DARK)
         ctk.set_default_color_theme(self.DEFAULT_THEME)
 
     def create_main_window(self):
+        """
+        Configures the main application window.
+        """
         self.root.title(self.WINDOW_TITLE)
         self.root.geometry(self.WINDOW_GEOMETRY)
         self.root.resizable(width=True, height=True)
 
     def setup_ui_components(self):
+        """
+        Sets up the user interface components of the application.
+        """
         self.setup_layout()
         self.create_sidebar()
         self.create_main_area()
         self.create_info_bar()
 
     def setup_layout(self):
+        """
+        Configures the layout of the main application window.
+        """
         self.root.grid_rowconfigure(0, weight=1)  # Make row 0 expandable
-        self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0
-        self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable
-        self.root.grid_columnconfigure(2, minsize=200)
+        self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0 (sidebar)
+        self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable (main content area)
+        self.root.grid_columnconfigure(2, minsize=200)  # Set min width for column 2 (info bar)
 
     def create_sidebar(self):
+        """
+        Creates and configures the sidebar with various control buttons.
+        """
         frame1 = ctk.CTkFrame(self.root, corner_radius=1)
         frame1.grid(row=0, column=0, sticky="ns")  # Expand only vertically
 
-        # Add buttons and other components to the sidebar
         self.git_button = ctk.CTkButton(frame1, text="Select repository", command=self.open_git_input)
-        self.git_button.pack(pady=5, padx=5)
+        self.git_button.pack(pady=self.PADDING, padx=self.PADDING)
 
         self.menubar = ctk.CTkOptionMenu(frame1, values=self.USERS, command=self.setup_user_window)
         self.menubar.set("Select user")
-        self.menubar.pack(pady=5, padx=5)
+        self.menubar.pack(padx=self.PADDING)
 
         self.mode_button = ctk.CTkButton(frame1, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.pack(pady=5, padx=5)
+        self.mode_button.pack(pady=self.PADDING, padx=self.PADDING)
 
         self.exit_button = ctk.CTkButton(frame1, text="Exit", command=self.on_closing)
-        self.exit_button.pack(pady=5, padx=5)
+        self.exit_button.pack(padx=self.PADDING)
 
+        # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def create_main_area(self):
+        """
+        Creates the main content area of the application where the diagrams are placed.
+        """
         self.frame2 = ctk.CTkFrame(self.root, corner_radius=1)
         self.frame2.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
-
-        # TODO fixa sen så att man kan uppdatera i programmet
         self.setup_overwiew_diagrams()
 
     def create_info_bar(self):
+        """
+        Creates the information bar on to display statistics.
+        """
         frame3 = ctk.CTkFrame(self.root, corner_radius=1)
         frame3.grid(row=0, column=2, sticky="ns")  # Expand only vertically
 
-        text_color = "#3FA27B"
         info_text = (
             f"Total Commits: {self.get_total_commits()}\n"
             f"Most Active Month: {self.get_most_active_month()}\n"
             f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
             f"Most Where of Commits: {self.get_most_where_of_commits()}"
         )
-        info_label = ctk.CTkLabel(frame3, text=info_text, text_color=text_color)
+        info_label = ctk.CTkLabel(frame3, text=info_text, text_color=self.TEXT_COLOR)
         info_label.pack(pady=10, padx=5, fill='x')
 
     def get_total_commits(self):
@@ -129,11 +153,11 @@ class MainView:
 
         # Create a sidebar in the new window
         sidebar_frame = ctk.CTkFrame(new_window, corner_radius=10)
-        sidebar_frame.pack(side="right", fill="y", padx=10, pady=10)
+        sidebar_frame.pack(side="right", fill="y", padx=self.PADDING, pady=self.PADDING)
 
         # Create a main area in the new window
         main_area_frame = ctk.CTkFrame(new_window, corner_radius=10)
-        main_area_frame.pack(side="left", expand=True, fill="both", padx=10, pady=10)
+        main_area_frame.pack(side="left", expand=True, fill="both", padx=self.PADDING, pady=self.PADDING)
 
         # ANTAL COMMITS FÖR VARJE FIX
         fig1, ax1 = plt.subplots(dpi=75)  # dpi sätter size
@@ -169,29 +193,26 @@ class MainView:
         # Canvas 1
         canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
         canvas.draw()
-        canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+        canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 2
         canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
         canvas2.draw()
-        canvas2.get_tk_widget().grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
+        canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 3
         canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
         canvas3.draw()
-        canvas3.get_tk_widget().grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
+        canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 4
         canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)  # Make sure to use fig4 here instead of fig1
         canvas4.draw()
-        canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+        canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        text_color = "#3FA27B"
-
-        user_text = self.create_info_label_text_user()
-
-        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {user_text}", anchor="w", width=130, text_color=text_color)  # Adjust width here
-        info_label.pack(padx=10, pady=10, fill='x')  # Ensure label fills the sidebar frame
+        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {self.create_info_label_text_user()}",
+                                  anchor="w", width=130, text_color=self.TEXT_COLOR)
+        info_label.pack(padx=self.PADDING, pady=self.PADDING, fill='x')  # Ensure label fills the sidebar frame
 
     def create_info_label_text_user(self):
         info_text = (
@@ -213,10 +234,6 @@ class MainView:
 
     def get_most_where_of_commits_user(self):
         return info_bar_statistics_user['Where']
-
-
-    def display_data(self, data):
-        print(data)
 
     def setup_overwiew_diagrams(self):
 
@@ -254,24 +271,27 @@ class MainView:
         # Canvas 1
         canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
         canvas.draw()
-        canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+        canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 2
         canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
         canvas2.draw()
-        canvas2.get_tk_widget().grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
+        canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 3
         canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
         canvas3.draw()
-        canvas3.get_tk_widget().grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
+        canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 4
         canvas4 = FigureCanvasTkAgg(fig4, master=self.frame2)  # Make sure to use fig4 here instead of fig1
         canvas4.draw()
-        canvas4.get_tk_widget().grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+        canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
     def set_appearance_mode(self):
+        """
+        Toggles the appearance mode of the application between 'dark' and 'light' themes.
+        """
         if self.mode == "dark":
             ctk.set_appearance_mode("light")
             self.mode = "light"
@@ -281,7 +301,7 @@ class MainView:
 
     def on_closing(self):
         """
-        Handle the closing event of the application.
+        Handles the closing event of the application.
         """
         if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
             self.root.destroy()
