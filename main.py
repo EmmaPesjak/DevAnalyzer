@@ -9,6 +9,6 @@ def main():
     controller = MainController(main_model, view)
     controller.run_app()
 
-
 if __name__ == "__main__":
     main()
+
