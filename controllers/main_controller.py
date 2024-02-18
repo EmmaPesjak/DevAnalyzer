@@ -6,8 +6,6 @@ class MainController:
 
     def run_app(self):
         self.view.root.mainloop()
-        data = self.model.get_data()
-        self.view.display_data(data)
 
     # TODO get the input, verify it, and send it to the model
     def retrieve_url(self, new_url):
