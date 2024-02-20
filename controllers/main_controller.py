@@ -9,4 +9,6 @@ class MainController:
 
     # TODO get the input, verify it, and send it to the model
     def retrieve_url(self, new_url):
-        print(new_url)
+        self.model.set_repo(new_url)
+        self.model.get_authors()
+        #print(new_url)
