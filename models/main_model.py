@@ -27,6 +27,7 @@ class MainModel:
         self.repo = Repository(repo_url)
         self.process_commits()
 
+    """Retrieves the repo data and adds it to the set."""
     def process_commits(self):
         for commit in self.repo.traverse_commits():
             author_email = commit.author.email.lower()  # Using email as unique identifier
@@ -34,12 +35,11 @@ class MainModel:
                 self.author_commits[author_email] = []
             self.author_commits[author_email].append(commit.msg)
 
-        #print(self.author_commits)
-
-    def print_total_commits(self):
+    def get_total_commits(self):
         total_commits = sum(len(commits) for commits in self.author_commits.values())
-        print("Total number of commits:", total_commits)
+        return total_commits
 
+    """Saves info to json."""
     def save_to_json(self, filename):
         with open(filename, 'w') as file:
             json.dump(self.author_commits, file, indent=4)

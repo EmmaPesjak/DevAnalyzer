@@ -19,6 +19,7 @@ class MainView:
     TEXT_COLOR = "#3FA27B"
     PADDING = 10
     mode = MODE_DARK  # Light or dark
+    total_commits = 0
 
     def __init__(self):
         """
@@ -115,6 +116,10 @@ class MainView:
         )
         info_label = ctk.CTkLabel(frame3, text=info_text, text_color=self.TEXT_COLOR)
         info_label.pack(pady=10, padx=5, fill='x')
+
+    def set_total_commits(self, commits):
+        self.total_commits = commits
+        # TODO update window
 
     def get_total_commits(self):
         return info_bar_statistics['Most commits']
