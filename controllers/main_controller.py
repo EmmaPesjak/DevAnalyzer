@@ -10,5 +10,9 @@ class MainController:
     # TODO get the input, verify it, and send it to the model
     def retrieve_url(self, new_url):
         self.model.set_repo(new_url)
-        self.model.get_authors()
+        self.model.print_total_commits()
+        #self.model.save_to_json('repo_data.json')
+        #self.model.get_authors()
+        #self.model.get_commits_by_author('ebbanimer')
+        #self.model.get_total_amount_of_commits()
         #print(new_url)
