@@ -4,7 +4,8 @@
         "Merge pull request #1 from EmmaPesjak/skeleton_view\n\nSkeleton view",
         "Merge pull request #4 from EmmaPesjak/diagrams\n\nDiagrams",
         "Merge pull request #7 from EmmaPesjak/user-diagrams\n\nUser diagrams",
-        "Merge pull request #8 from EmmaPesjak/repository-mining\n\nFeature"
+        "Merge pull request #8 from EmmaPesjak/repository-mining\n\nFeature",
+        "Merge pull request #10 from EmmaPesjak/repository-mining\n\nRepository mining"
     ],
     "empe2105@student.miun.se": [
         "Initial commit\n\nMVC structure set up.",
@@ -26,7 +27,12 @@
         "Refactored diagrams\n\nChanged layout of diagrams to a grid",
         "Feature\n\nAdded diagrams for specific user.",
         "Feature\n\nAdded info-text in info-bar",
-        "Feature\n\nAdded the event listener for the repo-input, which will be passed to model for data mining"
+        "Feature\n\nAdded the event listener for the repo-input, which will be passed to model for data mining",
+        "Pydriller set up\n\nSet up PyDriller and retrieved data from repository path",
+        "Author git mining\n\nRetrieves authors from provided repository",
+        "Feature\n\nRetrieves correct amount of commits for project",
+        "Feature\n\nWrites authors with its commits to json file",
+        "Feature\n\nAdded method for getting total amount of commits, to be updated in view."
     ],
     "ebba.nimer@gmail.com": [
         "Merge pull request #2 from EmmaPesjak/exit_handling\n\nExit handling",
