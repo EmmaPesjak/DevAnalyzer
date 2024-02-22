@@ -16,7 +16,9 @@
         "Feature: user specific data\n\nAdded functionality so that a new window opens when selecting a user.",
         "Feature\n\nAdded frames to the user menu layout",
         "Fix: refactor\n\nRefactored and moved cominstance attributes to the __init__ metod.",
-        "Fix: refactor\n\nRefactored and added comments"
+        "Fix: refactor\n\nRefactored and added comments",
+        "Fix: Diagram display/update\n\nChanged so that the diagrams and repo information is only displayed after a repository has been selected. The diagrams/infobar is also updated after a new repo is selected.",
+        "Feature: Loading repo in sepatate thread\n\nAdded functionality for fetching repositories in a separate thread. Also added a loading widget"
     ],
     "76969012+ebbanimer@users.noreply.github.com": [
         "Tested commit",
@@ -39,6 +41,7 @@
         "Merge pull request #3 from EmmaPesjak/menubar\n\nMenubar",
         "Merge pull request #5 from EmmaPesjak/user_specific\n\nFeature: user specific data",
         "Merge pull request #6 from EmmaPesjak/user_analysis\n\nFeature",
-        "Merge pull request #9 from EmmaPesjak/view_cleanup\n\nView cleanup"
+        "Merge pull request #9 from EmmaPesjak/view_cleanup\n\nView cleanup",
+        "Merge pull request #11 from EmmaPesjak/widow-update\n\nWidow update"
     ]
 }
