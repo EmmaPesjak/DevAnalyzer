@@ -1,0 +1,38 @@
+{
+    "97506822+emmapesjak@users.noreply.github.com": [
+        "Initial commit",
+        "Merge pull request #1 from EmmaPesjak/skeleton_view\n\nSkeleton view",
+        "Merge pull request #4 from EmmaPesjak/diagrams\n\nDiagrams",
+        "Merge pull request #7 from EmmaPesjak/user-diagrams\n\nUser diagrams",
+        "Merge pull request #8 from EmmaPesjak/repository-mining\n\nFeature"
+    ],
+    "empe2105@student.miun.se": [
+        "Initial commit\n\nMVC structure set up.",
+        "Added gitignore",
+        "Exit handling\n\nFeature: Added functionality for closing the application.",
+        "Layout\n\nFeature:Configured a grid layout to have one side menu bar and one expandable window for the rest of the application.",
+        "Menubar created\n\nFeature: The menu bar is configured and a dark/light mode has been added.",
+        "Feature: user specific data\n\nAdded functionality so that a new window opens when selecting a user.",
+        "Feature\n\nAdded frames to the user menu layout",
+        "Fix: refactor\n\nRefactored and moved cominstance attributes to the __init__ metod.",
+        "Fix: refactor\n\nRefactored and added comments"
+    ],
+    "76969012+ebbanimer@users.noreply.github.com": [
+        "Tested commit",
+        "git commit -m \"Added test-data\" -m \"Added dummy data to configure the UI.\"",
+        "git commit -m \"Root and menu created.\" -m \"Created a base UI with an options-menu.\"",
+        "Refactored view\n\nRefactored mainview to be more readable aby separating code into methods.",
+        "Added diagrams\n\nFeature: Added charts to overview with test data, using matplot.lib",
+        "Refactored diagrams\n\nChanged layout of diagrams to a grid",
+        "Feature\n\nAdded diagrams for specific user.",
+        "Feature\n\nAdded info-text in info-bar",
+        "Feature\n\nAdded the event listener for the repo-input, which will be passed to model for data mining"
+    ],
+    "ebba.nimer@gmail.com": [
+        "Merge pull request #2 from EmmaPesjak/exit_handling\n\nExit handling",
+        "Merge pull request #3 from EmmaPesjak/menubar\n\nMenubar",
+        "Merge pull request #5 from EmmaPesjak/user_specific\n\nFeature: user specific data",
+        "Merge pull request #6 from EmmaPesjak/user_analysis\n\nFeature",
+        "Merge pull request #9 from EmmaPesjak/view_cleanup\n\nView cleanup"
+    ]
+}
