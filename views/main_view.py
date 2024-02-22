@@ -1,9 +1,11 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
+import threading
 from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from support.test_data import total_commits_by_contributor, commit_types_by_contributor, monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
+from support.test_data import total_commits_by_contributor, commit_types_by_contributor, \
+    monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
 matplotlib.use('TkAgg')
@@ -149,15 +151,46 @@ class MainView:
         dialog = ctk.CTkInputDialog(text="Enter you repository link:", title="Repository")
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
-            self.on_input_change(repo_input)
+            # Display loading message or indicator
+            self.show_loading_indicator()
 
-            self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=self.USERS, command=self.setup_user_window)
-            self.user_select.set("Select user")
-            self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
-            self.create_main_area()
-            self.create_info_bar()
+            # Start the data fetching in a separate thread
+            threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
+
         else:
             print("No input.")
+
+    def fetch_repo_data(self, repo_input):
+        if self.on_input_change:
+            self.on_input_change(repo_input)
+
+        # Once data is fetched, update UI on the main thread
+        self.root.after(0, self.update_ui_after_fetch)
+
+    def show_loading_indicator(self):
+        self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait...",
+                                          text_color=self.TEXT_COLOR)
+        self.loading_label.pack(pady=20, padx=20)
+
+    def update_ui_after_fetch(self):
+        # Hide or destroy the loading indicator
+        if hasattr(self, 'loading_label') and self.loading_label is not None:
+            self.loading_label.destroy()
+            self.loading_label = None  # Reset to None to avoid future AttributeError
+
+        # Remove the existing 'user_select' widget if it exists and is not None
+        if hasattr(self, 'user_select') and self.user_select is not None:
+            self.user_select.destroy()
+            self.user_select = None  # Reset to None to ensure it's recognized as destroyed
+
+        # Recreate the 'user_select' widget with potentially updated options
+        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=self.USERS, command=self.setup_user_window)
+        self.user_select.set("Select user")
+        self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+
+        # Now, update the main area and info bar
+        self.create_main_area()
+        self.create_info_bar()
 
     # Set the callback for changing the repo-input (used from controller)
     def set_on_input_change(self, callback):
