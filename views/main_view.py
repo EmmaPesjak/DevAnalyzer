@@ -28,9 +28,10 @@ class MainView:
         """
         self.root = ctk.CTk()
         self.on_input_change = None
-        self.frame2 = None
+        self.menu_frame = None
+        self.diagram_frame = None
         self.git_button = None
-        self.menubar = None
+        self.user_select = None
         self.mode_button = None
         self.exit_button = None
         self.setup_appearance()
@@ -58,8 +59,8 @@ class MainView:
         """
         self.setup_layout()
         self.create_sidebar()
-        self.create_main_area()
-        self.create_info_bar()
+        self.create_main_area(initial=True)
+        self.create_info_bar(initial=True)
 
     def setup_layout(self):
         """
@@ -74,48 +75,58 @@ class MainView:
         """
         Creates and configures the sidebar with various control buttons.
         """
-        frame1 = ctk.CTkFrame(self.root, corner_radius=1)
-        frame1.grid(row=0, column=0, sticky="ns")  # Expand only vertically
+        self.menu_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        self.menu_frame.grid(row=0, column=0, sticky="nswe")  # Expand North, South, West, East
 
-        self.git_button = ctk.CTkButton(frame1, text="Select repository", command=self.open_git_input)
-        self.git_button.pack(pady=self.PADDING, padx=self.PADDING)
+        self.git_button = ctk.CTkButton(self.menu_frame, text="Select repository", command=self.open_git_input)
+        self.git_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
-        self.menubar = ctk.CTkOptionMenu(frame1, values=self.USERS, command=self.setup_user_window)
-        self.menubar.set("Select user")
-        self.menubar.pack(padx=self.PADDING)
+        self.mode_button = ctk.CTkButton(self.menu_frame, text="Appearance mode", command=self.set_appearance_mode)
+        self.mode_button.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
-        self.mode_button = ctk.CTkButton(frame1, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.pack(pady=self.PADDING, padx=self.PADDING)
-
-        self.exit_button = ctk.CTkButton(frame1, text="Exit", command=self.on_closing)
-        self.exit_button.pack(padx=self.PADDING)
+        self.exit_button = ctk.CTkButton(self.menu_frame, text="Exit", command=self.on_closing)
+        self.exit_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def create_main_area(self):
+    def create_main_area(self, initial=False):
         """
         Creates the main content area of the application where the diagrams are placed.
         """
-        self.frame2 = ctk.CTkFrame(self.root, corner_radius=1)
-        self.frame2.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
-        self.setup_overwiew_diagrams()
+        self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
+        if initial:
+            # Display a placeholder message
+            self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
+                                                  text="No repository is selected, please select one with the "
+                                                       "'Select repository' button.",
+                                                  text_color=self.TEXT_COLOR)
+            self.placeholder_label.pack(pady=20, padx=20)
+        else:
+            # Clear the placeholder message and setup diagrams
+            if hasattr(self, 'placeholder_label'):  # Check if the placeholder_label exists
+                self.placeholder_label.destroy()  # Remove the placeholder message
+            self.setup_overwiew_diagrams()  # Now setup the diagrams since a repository is selected
 
-    def create_info_bar(self):
+    def create_info_bar(self, initial=False):
         """
         Creates the information bar on to display statistics.
         """
-        frame3 = ctk.CTkFrame(self.root, corner_radius=1)
-        frame3.grid(row=0, column=2, sticky="ns")  # Expand only vertically
+        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically
 
-        info_text = (
-            f"Total Commits: {self.get_total_commits()}\n"
-            f"Most Active Month: {self.get_most_active_month()}\n"
-            f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
-            f"Most Where of Commits: {self.get_most_where_of_commits()}"
-        )
-        info_label = ctk.CTkLabel(frame3, text=info_text, text_color=self.TEXT_COLOR)
-        info_label.pack(pady=10, padx=5, fill='x')
+        if initial:
+            pass  # This should be empty when starting the application
+        else:
+            info_text = (
+                f"Total Commits: {self.get_total_commits()}\n"
+                f"Most Active Month: {self.get_most_active_month()}\n"
+                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
+                f"Most Where of Commits: {self.get_most_where_of_commits()}"
+            )
+            info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
+            info_label.pack(pady=10, padx=5, fill='x')
 
     def set_total_commits(self, commits):
         self.total_commits = commits
@@ -139,6 +150,12 @@ class MainView:
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
             self.on_input_change(repo_input)
+
+            self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=self.USERS, command=self.setup_user_window)
+            self.user_select.set("Select user")
+            self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+            self.create_main_area()
+            self.create_info_bar()
         else:
             print("No input.")
 
@@ -268,28 +285,28 @@ class MainView:
         ax4.set_xlabel("Where")
         ax4.set_ylabel("Commits")
 
-        self.frame2.grid_columnconfigure(0, weight=1)
-        self.frame2.grid_columnconfigure(1, weight=1)
-        self.frame2.grid_rowconfigure(0, weight=1)
-        self.frame2.grid_rowconfigure(1, weight=1)
+        self.diagram_frame.grid_columnconfigure(0, weight=1)
+        self.diagram_frame.grid_columnconfigure(1, weight=1)
+        self.diagram_frame.grid_rowconfigure(0, weight=1)
+        self.diagram_frame.grid_rowconfigure(1, weight=1)
 
         # Canvas 1
-        canvas = FigureCanvasTkAgg(fig1, master=self.frame2)
+        canvas = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
         canvas.draw()
         canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 2
-        canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
+        canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
         canvas2.draw()
         canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 3
-        canvas3 = FigureCanvasTkAgg(fig3, master=self.frame2)
+        canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
         canvas3.draw()
         canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 4
-        canvas4 = FigureCanvasTkAgg(fig4, master=self.frame2)  # Make sure to use fig4 here instead of fig1
+        canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)  # Make sure to use fig4 here instead of fig1
         canvas4.draw()
         canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
