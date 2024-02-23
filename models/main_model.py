@@ -19,6 +19,12 @@ class MainModel:
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
 
+    def get_all_contributors(self):
+        return self.db_handler.get_all_contributors()
+
+    def get_most_active_month(self):
+        return self.db_handler.get_most_active_month()
+
     """Empties the database on exit."""
     def cleanup(self):
         self.db_handler.clear_database()

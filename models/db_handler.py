@@ -1,8 +1,7 @@
-from pydriller import Repository
-import sqlite3
 
 import sqlite3
 from pydriller import Repository
+import calendar
 
 class DBHandler:
 
@@ -66,6 +65,40 @@ class DBHandler:
 
         conn.close()
         return total_commits
+
+    def get_all_contributors(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM authors')
+
+        contributors = cursor.fetchall()
+
+        conn.commit()
+        conn.close()
+
+        return contributors
+
+    def get_most_active_month(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # Query to get month number and year, along with commit count
+        cursor.execute('SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*) FROM commits GROUP BY year, month')
+        monthly_commit_counts = cursor.fetchall()
+
+        conn.close()
+
+        if not monthly_commit_counts:
+            return None
+
+        # Find the month with the highest commit count
+        most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
+
+        # Convert month number to month name
+        month_name = calendar.month_name[int(most_active_month[0])]
+        return f"{month_name} {most_active_month[1]} with {most_active_month[2]} commits."
+
 
     def clear_database(self):
         try:
