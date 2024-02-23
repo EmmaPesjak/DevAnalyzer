@@ -54,3 +54,25 @@ class DBHandler:
 
         conn.commit()
         conn.close()
+
+    """Gets the total amount of commits."""
+    def get_total_commits(self):
+        # Connect to DB
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT COUNT(*) FROM commits')
+        total_commits = cursor.fetchone()[0]  # Count the rows
+
+        conn.close()
+        return total_commits
+
+    def clear_database(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute('DELETE FROM commits')
+        cursor.execute('DELETE FROM authors')
+
+        conn.commit()
+        conn.close()
