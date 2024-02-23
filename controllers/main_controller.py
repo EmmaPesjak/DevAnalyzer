@@ -10,3 +10,5 @@ class MainController:
     # TODO get the input, verify it, and send it to the model
     def retrieve_url(self, new_url):
         self.model.set_repo(new_url)
+        commits = self.model.get_total_amount_of_commits()
+        print("Amount of commits: " + str(commits))

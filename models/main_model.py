@@ -5,17 +5,6 @@ from collections import defaultdict
 from models.db_handler import DBHandler
 import atexit
 
-
-# TODO
-# get info from repo;
-# contributors with all its commits
-# 1. store it in a file with; author: commits[]
-# 2. to get author names, loop through the keys of the dictionary
-# 3. to get total amount of commits, count the size of each list mapped to the author
-# 4. to get author with amount of commits, get author key and size of commit list
-# 5. later; NLP categorize
-
-
 class MainModel:
 
     def __init__(self):
@@ -26,6 +15,9 @@ class MainModel:
     """Sets the repo url."""
     def set_repo(self, repo_url):
         self.db_handler.insert_data_into_db(repo_url)
+
+    def get_total_amount_of_commits(self):
+        return self.db_handler.get_total_commits()
 
     """Empties the database on exit."""
     def cleanup(self):

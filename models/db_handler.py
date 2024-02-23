@@ -68,11 +68,16 @@ class DBHandler:
         return total_commits
 
     def clear_database(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
+        try:
+            conn = sqlite3.connect(self.db_name)
+            cursor = conn.cursor()
 
-        cursor.execute('DELETE FROM commits')
-        cursor.execute('DELETE FROM authors')
+            cursor.execute('DELETE FROM commits')
+            cursor.execute('DELETE FROM authors')
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
+            print("Database successfully cleared.")
+        except Exception as e:
+            print(f"Error clearing database: {e}")
+
