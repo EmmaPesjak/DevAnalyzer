@@ -1,6 +1,7 @@
 from pydriller import Repository
 from pydriller.metrics.process.commits_count import CommitsCount
 import json
+from collections import defaultdict
 from pydriller.metrics.process.contributors_count import ContributorsCount
 
 
@@ -20,7 +21,7 @@ class MainModel:
     def __init__(self):
         self.repo = None
         self.author_commits = {}  # Store authors and their commits
-        self.authors = set()
+        self.author_commits = defaultdict(list)
 
     """Sets the repo url."""
     def set_repo(self, repo_url):
@@ -30,10 +31,18 @@ class MainModel:
     """Retrieves the repo data and adds it to the set."""
     def process_commits(self):
         for commit in self.repo.traverse_commits():
-            author_email = commit.author.email.lower()  # Using email as unique identifier
-            if author_email not in self.author_commits:
-                self.author_commits[author_email] = []
-            self.author_commits[author_email].append(commit.msg)
+            if not commit.merge:  # Ignore merge commits
+                self.author_commits[commit.author.name].append(commit.msg.strip())
+
+        # for commit in self.repo.traverse_commits():
+        #     author_email = commit.author.email.lower()  # Using email as unique identifier
+        #     if author_email not in self.author_commits:
+        #         self.author_commits[author_email] = []
+        #     self.author_commits[author_email].append(commit.msg)
+
+    def filter_contributors(self):
+        # Filter out contributors who don't have non-merge commits
+        self.author_commits = {author: commits for author, commits in self.author_commits.items() if commits}
 
     def get_total_commits(self):
         total_commits = sum(len(commits) for commits in self.author_commits.values())
