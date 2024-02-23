@@ -48,6 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
-repo_data.json
-merge_commits.json
+
+repo_data.db
 
