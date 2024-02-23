@@ -39,6 +39,8 @@ class MainView:
         self.user_select = None
         self.mode_button = None
         self.exit_button = None
+        self.info_label = None
+        self.user_windows = []
         self.setup_appearance()
         self.create_main_window()
         self.setup_ui_components()
@@ -120,23 +122,6 @@ class MainView:
                 self.placeholder_label.destroy()
             self.setup_overwiew_diagrams()
 
-    def create_info_bar(self, initial=False):
-        """
-        Creates the information bar on to display statistics.
-        """
-        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        info_frame.grid(row=0, column=2, sticky="nswe")
-
-        if not initial:
-            info_text = (
-                f"Total Commits: {self.get_total_commits()}\n"
-                f"Most Active Month: {self.get_most_active_month()}\n"
-                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
-                f"Most Where of Commits: {self.get_most_where_of_commits()}"
-            )
-            info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
-            info_label.grid(sticky="ew")
-
     def set_total_commits(self, commits):
         self.total_commits = commits
         # TODO update window
@@ -163,6 +148,7 @@ class MainView:
 
             # Start the data fetching in a separate thread
             threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
+            # TODO start thread in the model instead?  handle fetching errors!!!
 
         else:
             print("No input.")
@@ -175,7 +161,19 @@ class MainView:
         self.root.after(0, self.update_ui_after_fetch)
 
     def show_loading_indicator(self):
-        # Assuming self.diagram_frame is already using grid layout with configured rows and columns
+        # Clear existing diagrams
+        for widget in self.diagram_frame.winfo_children():
+            widget.destroy()
+
+        # Close all user-specific windows
+        for window in self.user_windows:
+            window.destroy()
+        self.user_windows.clear()
+
+        # Clear or reset the info bar
+        if hasattr(self, 'info_label') and self.info_label is not None:
+            self.info_label.destroy()  # or self.info_label.configure(text="")
+
         self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait...",
                                           text_color=self.TEXT_COLOR)
         # Place the loading label in a specific row and column, adjust as per your layout needs
@@ -200,6 +198,25 @@ class MainView:
         # Now, update the main area and info bar
         self.create_main_area()
         self.create_info_bar()
+
+    def create_info_bar(self, initial=False):
+        """
+        Creates the information bar on to display statistics.
+        """
+        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically
+
+        if initial:
+            pass  # This should be empty when starting the application
+        else:
+            info_text = (
+                f"Total Commits: {self.get_total_commits()}\n"
+                f"Most Active Month: {self.get_most_active_month()}\n"
+                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
+                f"Most Where of Commits: {self.get_most_where_of_commits()}"
+            )
+            self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
+            self.info_label.pack(pady=10, padx=5, fill='x')
 
     # Set the callback for changing the repo-input (used from controller)
     def set_on_input_change(self, callback):
@@ -264,6 +281,15 @@ class MainView:
         info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {self.create_info_label_text_user()}",
                                   anchor="w", width=130, text_color=self.TEXT_COLOR)
         info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
+
+        self.user_windows.append(new_window)
+
+        new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
+
+    def on_user_window_closing(self, window):
+        # This method is called when a user window is closed
+        window.destroy()
+        self.user_windows.remove(window)
 
     def create_info_label_text_user(self):
         info_text = (
