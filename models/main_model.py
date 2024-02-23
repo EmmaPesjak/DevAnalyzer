@@ -18,10 +18,17 @@ from pydriller.metrics.process.contributors_count import ContributorsCount
 
 class MainModel:
 
+    """TODO
+    Allt ska samlas i en fil
+    Dra ner author med commit msg, datum, samt filnamn & filepath relaterat till committen
+
+    """
+
     def __init__(self):
         self.repo = None
-        self.author_commits = {}  # Store authors and their commits
+        #self.author_commits = {}  # Store authors and their commits
         self.author_commits = defaultdict(list)
+        #self.merged_commits = defaultdict(list)
 
     """Sets the repo url."""
     def set_repo(self, repo_url):
@@ -31,54 +38,54 @@ class MainModel:
     """Retrieves the repo data and adds it to the set."""
     def process_commits(self):
         for commit in self.repo.traverse_commits():
-            if not commit.merge:  # Ignore merge commits
-                self.author_commits[commit.author.name].append(commit.msg.strip())
+            author = commit.author.name
+            if author not in self.author_commits:
+                self.author_commits[author] = []
 
-        # for commit in self.repo.traverse_commits():
-        #     author_email = commit.author.email.lower()  # Using email as unique identifier
-        #     if author_email not in self.author_commits:
-        #         self.author_commits[author_email] = []
-        #     self.author_commits[author_email].append(commit.msg)
+            commit_info = {
+                "message": commit.msg,
+                "date": commit.author_date.strftime("%Y-%m-%d %H:%M:%S"),
+                "files": [{"file_name": mod.filename, "file_path": mod.new_path} for mod in commit.modified_files]
+            }
 
-    def filter_contributors(self):
-        # Filter out contributors who don't have non-merge commits
-        self.author_commits = {author: commits for author, commits in self.author_commits.items() if commits}
+            self.author_commits[author].append(commit_info)
+            #self.author_commits[author].append(commit.msg)
 
-    def get_total_commits(self):
-        total_commits = sum(len(commits) for commits in self.author_commits.values())
-        return total_commits
 
     """Saves info to json."""
     def save_to_json(self, filename):
+        self.filename = filename
         with open(filename, 'w') as file:
             json.dump(self.author_commits, file, indent=4)
 
+    def print_out_info(self):
+        with open(self.filename, 'r') as file:
+            data = json.load(file)
 
-
-
-
+        authors = data.keys()
+        print("Authors in repo_data:")
+        for author in authors:
+            print(author)
 
     """Gets all authors for the repository."""
     def get_authors(self):
-        for commit in self.repo.traverse_commits():
+        with open(self.filename, 'r') as file:
+            data = json.load(file)
 
-            author_identity = commit.author.email.lower()  # Using email as a unique identifier
-            self.authors.add(author_identity)
+        authors = data.keys()
+        print("Authors:")
+        for author in authors:
+            print(author)
 
-        print(list(self.authors))
 
     """Gets total amount of commits."""
-    def get_total_amount_of_commits(self):
-        metric = CommitsCount(path_to_repo=self.repo)
-        files = metric.count()
-        print('Files: {}'.format(files))
-        pass
+    def get_total_commits(self):
+        total_commits = sum(len(commits) for commits in self.author_commits.values())
+        print(f"Total commits: {total_commits}")
+        return total_commits
 
     """Gets total amount of commits for contributor."""
     def get_commits_by_author(self, author_name):
         for commit in self.repo.traverse_commits():
             if commit.author.name == author_name:
                 print(commit.msg)
-
-    def get_data(self):
-        return "Hi from the Model!"
