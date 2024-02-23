@@ -6,6 +6,8 @@ import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from support.test_data import total_commits_by_contributor, commit_types_by_contributor, \
     monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
+from views.data_visualizer import DataVisualizer
+
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
 matplotlib.use('TkAgg')
@@ -28,6 +30,7 @@ class MainView:
         Initializes an instance of the MainView class. This constructor method sets up the main
         application window and its UI components.
         """
+        self.visualizer = DataVisualizer(padding=self.PADDING)
         self.root = ctk.CTk()
         self.on_input_change = None
         self.menu_frame = None
@@ -36,6 +39,8 @@ class MainView:
         self.user_select = None
         self.mode_button = None
         self.exit_button = None
+        self.info_label = None
+        self.user_windows = []
         self.setup_appearance()
         self.create_main_window()
         self.setup_ui_components()
@@ -98,37 +103,24 @@ class MainView:
         """
         self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
+        self.diagram_frame.grid_columnconfigure(0, weight=1)
+        self.diagram_frame.grid_columnconfigure(1, weight=1)
+        self.diagram_frame.grid_rowconfigure(0, weight=1)
+        self.diagram_frame.grid_rowconfigure(1, weight=1)
+
         if initial:
             # Display a placeholder message
             self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
                                                   text="No repository is selected, please select one with the "
                                                        "'Select repository' button.",
                                                   text_color=self.TEXT_COLOR)
-            self.placeholder_label.pack(pady=20, padx=20)
+            self.placeholder_label.grid(row=0, column=0, sticky="nsew")
         else:
             # Clear the placeholder message and setup diagrams
-            if hasattr(self, 'placeholder_label'):  # Check if the placeholder_label exists
-                self.placeholder_label.destroy()  # Remove the placeholder message
-            self.setup_overwiew_diagrams()  # Now setup the diagrams since a repository is selected
-
-    def create_info_bar(self, initial=False):
-        """
-        Creates the information bar on to display statistics.
-        """
-        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically
-
-        if initial:
-            pass  # This should be empty when starting the application
-        else:
-            info_text = (
-                f"Total Commits: {self.get_total_commits()}\n"
-                f"Most Active Month: {self.get_most_active_month()}\n"
-                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
-                f"Most Where of Commits: {self.get_most_where_of_commits()}"
-            )
-            info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
-            info_label.pack(pady=10, padx=5, fill='x')
+            if hasattr(self,
+                       'placeholder_label') and self.placeholder_label is not None:
+                self.placeholder_label.destroy()
+            self.setup_overwiew_diagrams()
 
     def set_total_commits(self, commits):
         self.total_commits = commits
@@ -156,6 +148,7 @@ class MainView:
 
             # Start the data fetching in a separate thread
             threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
+            # TODO start thread in the model instead?  handle fetching errors!!!
 
         else:
             print("No input.")
@@ -168,9 +161,23 @@ class MainView:
         self.root.after(0, self.update_ui_after_fetch)
 
     def show_loading_indicator(self):
+        # Clear existing diagrams
+        for widget in self.diagram_frame.winfo_children():
+            widget.destroy()
+
+        # Close all user-specific windows
+        for window in self.user_windows:
+            window.destroy()
+        self.user_windows.clear()
+
+        # Clear or reset the info bar
+        if hasattr(self, 'info_label') and self.info_label is not None:
+            self.info_label.destroy()  # or self.info_label.configure(text="")
+
         self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait...",
                                           text_color=self.TEXT_COLOR)
-        self.loading_label.pack(pady=20, padx=20)
+        # Place the loading label in a specific row and column, adjust as per your layout needs
+        self.loading_label.grid(row=0, column=0, sticky="nsew")
 
     def update_ui_after_fetch(self):
         # Hide or destroy the loading indicator
@@ -192,6 +199,25 @@ class MainView:
         self.create_main_area()
         self.create_info_bar()
 
+    def create_info_bar(self, initial=False):
+        """
+        Creates the information bar on to display statistics.
+        """
+        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically
+
+        if initial:
+            pass  # This should be empty when starting the application
+        else:
+            info_text = (
+                f"Total Commits: {self.get_total_commits()}\n"
+                f"Most Active Month: {self.get_most_active_month()}\n"
+                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
+                f"Most Where of Commits: {self.get_most_where_of_commits()}"
+            )
+            self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
+            self.info_label.pack(pady=10, padx=5, fill='x')
+
     # Set the callback for changing the repo-input (used from controller)
     def set_on_input_change(self, callback):
         self.on_input_change = callback
@@ -201,49 +227,34 @@ class MainView:
         pass
 
     def setup_user_window(self, choice):
-        # Create a new Toplevel window
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information for {choice}")
-        new_window.geometry(self.WINDOW_GEOMETRY)  # Adjust the size as needed
+        new_window.geometry(self.WINDOW_GEOMETRY)
 
-        # Create a sidebar in the new window
-        sidebar_frame = ctk.CTkFrame(new_window, corner_radius=10)
-        sidebar_frame.pack(side="right", fill="y", padx=self.PADDING, pady=self.PADDING)
+        # Configure grid layout for new_window
+        new_window.grid_columnconfigure(0, weight=1)
+        new_window.grid_rowconfigure(0, weight=1)
 
-        # Create a main area in the new window
-        main_area_frame = ctk.CTkFrame(new_window, corner_radius=10)
-        main_area_frame.pack(side="left", expand=True, fill="both", padx=self.PADDING, pady=self.PADDING)
+        sidebar_frame = ctk.CTkFrame(new_window, corner_radius=1)
+        # Adjust sidebar_frame grid placement
+        sidebar_frame.grid(row=0, column=1, sticky="ns")
+        new_window.grid_columnconfigure(1, minsize=200)  # Adjust the sidebar width if necessary
 
-        # ANTAL COMMITS FÖR VARJE FIX
-        fig1, ax1 = plt.subplots(dpi=75)  # dpi sätter size
-        ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
-        ax1.set_title("What")
-        ax1.set_xlabel("Type")
-        ax1.set_ylabel("Commits")
-
-        # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
-        fig2, ax2 = plt.subplots(dpi=75)  # dpi sätter size
-        ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
-        ax2.set_title("Total commits by contributor")
-
-        # TIMELINE
-        fig3, ax3 = plt.subplots(dpi=75)
-        ax3.plot(total_monthly_commits.keys(), total_monthly_commits.values())
-        ax3.set_title("Total monthly commits")
-        ax3.set_xlabel("Month")
-        ax3.set_ylabel("Commits")
-
-        # TO BE CHANGED
-        fig4, ax4 = plt.subplots(dpi=75)  # dpi sätter size
-        ax4.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
-        ax4.set_title("Where")
-        ax4.set_xlabel("Where")
-        ax4.set_ylabel("Commits")
-
+        main_area_frame = ctk.CTkFrame(new_window, corner_radius=1)
+        main_area_frame.grid(row=0, column=0, sticky="nsew")
         main_area_frame.grid_columnconfigure(0, weight=1)
         main_area_frame.grid_columnconfigure(1, weight=1)
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
+
+        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
+                                                  ylabel="Commits")
+        fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
+                                                  title="Total commits by contributor")
+        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits",
+                                                  xlabel="Month", ylabel="Commits")
+        fig4, ax4 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="Where",
+                                                  xlabel="Where", ylabel="Commits")
 
         # Canvas 1
         canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
@@ -265,9 +276,20 @@ class MainView:
         canvas4.draw()
         canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        # Configure grid layout for sidebar_frame to properly align info_label
+        sidebar_frame.grid_rowconfigure(0, weight=1)
         info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {self.create_info_label_text_user()}",
                                   anchor="w", width=130, text_color=self.TEXT_COLOR)
-        info_label.pack(padx=self.PADDING, pady=self.PADDING, fill='x')  # Ensure label fills the sidebar frame
+        info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
+
+        self.user_windows.append(new_window)
+
+        new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
+
+    def on_user_window_closing(self, window):
+        # This method is called when a user window is closed
+        window.destroy()
+        self.user_windows.remove(window)
 
     def create_info_label_text_user(self):
         info_text = (
@@ -291,37 +313,15 @@ class MainView:
         return info_bar_statistics_user['Where']
 
     def setup_overwiew_diagrams(self):
-
-        # ANTAL COMMITS FÖR VARJE FIX
-        fig1, ax1 = plt.subplots(dpi=75) # dpi sätter size
-        ax1.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
-        ax1.set_title("What")
-        ax1.set_xlabel("Type")
-        ax1.set_ylabel("Commits")
-
-        # PROCENTUELLT VARJE COMMITS PER CONTRIBUTOR
-        fig2, ax2 = plt.subplots(dpi=75) # dpi sätter size
-        ax2.pie(total_commits_by_contributor.values(), labels=total_commits_by_contributor.keys(), autopct='%1.1f')
-        ax2.set_title("Total commits by contributor")
-
-        # TIMELINE
-        fig3, ax3 = plt.subplots(dpi=75)
-        ax3.plot(total_monthly_commits.keys(), total_monthly_commits.values())
-        ax3.set_title("Total monthly commits")
-        ax3.set_xlabel("Month")
-        ax3.set_ylabel("Commits")
-
-        # TO BE CHANGED
-        fig4, ax4 = plt.subplots(dpi=75)  # dpi sätter size
-        ax4.bar(total_commits_by_contributor.keys(), total_commits_by_contributor.values())  # x; name, y; amount
-        ax4.set_title("Where")
-        ax4.set_xlabel("Where")
-        ax4.set_ylabel("Commits")
-
-        self.diagram_frame.grid_columnconfigure(0, weight=1)
-        self.diagram_frame.grid_columnconfigure(1, weight=1)
-        self.diagram_frame.grid_rowconfigure(0, weight=1)
-        self.diagram_frame.grid_rowconfigure(1, weight=1)
+        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,
+                                                  title="Total Commits by Contributor",
+                                                  xlabel="Contributor", ylabel="Commits")
+        fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
+                                                  title="Total commits by contributor")
+        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total Monthly Commits",
+                                                  xlabel="Month", ylabel="Commits")
+        fig4, ax4 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="Where",
+                                                  xlabel="Where", ylabel="Commits")
 
         # Canvas 1
         canvas = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
@@ -339,7 +339,7 @@ class MainView:
         canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Canvas 4
-        canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)  # Make sure to use fig4 here instead of fig1
+        canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
         canvas4.draw()
         canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
