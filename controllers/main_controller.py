@@ -22,3 +22,6 @@ class MainController:
 
         author_info = self.model.get_commit_data_with_files_for_author('ebba.nimer@gmail.com')
         print(str(author_info))
+
+        activity_info = self.model.get_all_months_activity()
+        print(str(activity_info))

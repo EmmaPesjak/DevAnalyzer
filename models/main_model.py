@@ -24,6 +24,10 @@ class MainModel:
     def get_most_active_month(self):
         return self.db_handler.get_most_active_month()
 
+    def get_all_months_activity(self):
+        return self.db_handler.get_commit_counts_past_year()
+
+    # TODO get the commit messages for user to process.
     def get_commit_data_with_files_for_author(self, author_email):
         self.db_handler.get_commit_data_with_files_for_author(author_email)
 

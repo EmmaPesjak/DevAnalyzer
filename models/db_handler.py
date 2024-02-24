@@ -2,8 +2,14 @@
 import sqlite3
 from pydriller import Repository
 import calendar
+from datetime import datetime, timedelta
 
 class DBHandler:
+
+    """TODO
+    1. Method for getting values for activity the past 12 months
+    2. Method for getting all commit messages (to be processed in categories in model for NLP. Need for each user and all)
+    3. Fix current methods (see 'todo' for details)"""
 
     def __init__(self, db_name):
         self.db_name = db_name
@@ -86,6 +92,7 @@ class DBHandler:
         return total_commits
 
     def get_all_contributors(self):
+        """TODO fix so only names are returned."""
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -102,22 +109,56 @@ class DBHandler:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # Query to get month number and year, along with commit count
-        cursor.execute('SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*) FROM commits GROUP BY year, month')
-        monthly_commit_counts = cursor.fetchall()
+        # Get date 12 months ago
+        twelve_months_ago = datetime.now() - timedelta(days=365)
+        formatted_date = twelve_months_ago.strftime("%Y-%m-%d")
 
-        conn.close()
+        cursor.execute('''
+                    SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*)
+                    FROM commits
+                    WHERE date >= ?
+                    GROUP BY year, month
+                ''', (formatted_date,))
+        monthly_commit_counts = cursor.fetchall()
 
         if not monthly_commit_counts:
             return None
 
-        # Find the month with the highest commit count
+        # Convert month number to month name TODO fix so only month returns
         most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
 
-        # Convert month number to month name
+        # Find the month with the highest commit count
         month_name = calendar.month_name[int(most_active_month[0])]
         return f"{month_name} {most_active_month[1]} with {most_active_month[2]} commits."
 
+    def get_commit_counts_past_year(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # TODO fix so all months get values, now only gets the previous month.
+        # Prepare the list for the last 12 months
+        last_12_months = [(datetime.now() - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(11, -1, -1)]
+
+        # Initialize commit counts for each month with 0
+        commit_counts = dict.fromkeys(last_12_months, 0)
+
+        # Query to get commit counts for available months in the last year
+        cursor.execute('''
+            SELECT strftime("%Y-%m", date) AS month, COUNT(*) 
+            FROM commits 
+            WHERE date >= ?
+            GROUP BY month
+        ''', (last_12_months[-1],))
+
+        # Update commit counts for months present in the database
+        for month, count in cursor.fetchall():
+            if month in commit_counts:
+                commit_counts[month] = count
+
+        conn.close()
+
+        # Return commit counts as a list
+        return [commit_counts[month] for month in last_12_months]
     """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
     def get_commit_data_with_files_for_author(self, author_email):
         conn = sqlite3.connect(self.db_name)
@@ -136,7 +177,7 @@ class DBHandler:
 
         conn.close()
 
-        # Process rows to structure them
+        # Process rows. TODO other values to return
         commit_data = {}
         for row in rows:
             commit_id, message, date, author_name, author_email, file_name, file_path = row
