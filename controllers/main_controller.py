@@ -9,6 +9,7 @@ class MainController:
 
     # TODO get the input, verify it, and send it to the model
     def retrieve_url(self, new_url):
+        self.model.cleanup()
         self.model.set_repo(new_url)
         commits = self.model.get_total_amount_of_commits()
         print("Amount of commits: " + str(commits))
@@ -18,3 +19,6 @@ class MainController:
 
         most_active_month = self.model.get_most_active_month()
         print("Most active month: " + str(most_active_month))
+
+        author_info = self.model.get_commit_data_with_files_for_author('ebba.nimer@gmail.com')
+        print(str(author_info))
