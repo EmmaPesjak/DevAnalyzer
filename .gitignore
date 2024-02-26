@@ -48,3 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+
+repo_data.db
+
