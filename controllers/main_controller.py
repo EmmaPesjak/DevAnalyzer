@@ -21,7 +21,7 @@ class MainController:
         print("Most active month: " + str(most_active_month))
 
         author_info = self.model.get_commit_data_with_files_for_author('ebba.nimer@gmail.com')
-        print(str(author_info))
+        print("Commit data for ebba.nimer@gmail.com: " + str(author_info))
 
         activity_info = self.model.get_all_months_activity()
-        print(str(activity_info))
+        print("All months activity: " + str(activity_info))

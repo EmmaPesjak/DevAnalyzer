@@ -164,6 +164,7 @@ class DBHandler:
 
         # Return commit counts as a list
         return [commit_counts[month] for month in last_12_months]
+
     """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
     def get_commit_data_with_files_for_author(self, author_email):
         conn = sqlite3.connect(self.db_name)
@@ -195,7 +196,7 @@ class DBHandler:
                 }
             if file_name:  # Check if file_name is not None
                 commit_data[commit_id]["files"].append({"file_name": file_name, "file_path": file_path})
-
+ 
         return commit_data
 
     def database_has_values(self):
