@@ -95,7 +95,8 @@ class DBHandler:
         cursor = conn.cursor()
 
         cursor.execute('SELECT message FROM commits')
-        commits = cursor.fetchall()
+        # Fetch all results and transform each tuple to its first element
+        commits = [commit[0] for commit in cursor.fetchall()]
 
         conn.close()
         return commits
