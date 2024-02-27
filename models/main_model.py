@@ -18,6 +18,9 @@ class MainModel:
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
 
+    def get_all_commits(self):
+        return self.db_handler.get_all_commits()
+
     def get_all_contributors(self):
         return self.db_handler.get_all_contributors()
 
@@ -29,7 +32,7 @@ class MainModel:
 
     # TODO get the commit messages for user to process.
     def get_commit_data_with_files_for_author(self, author_email):
-        self.db_handler.get_commit_data_with_files_for_author(author_email)
+        return self.db_handler.get_commit_data_with_files_for_author(author_email)
 
     # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
