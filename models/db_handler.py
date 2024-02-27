@@ -1,5 +1,7 @@
 
 import sqlite3
+
+from git import GitCommandError
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
@@ -52,11 +54,11 @@ class DBHandler:
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
-        global conn
+        self.create_database()  # Ensure the database and tables exist
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
         try:
-            self.create_database()  # Ensure the database and tables exist
-            conn = sqlite3.connect(self.db_name)
-            cursor = conn.cursor()
 
             # For each commit, insert the author and commit info into the tables.
             for commit in Repository(repo_url).traverse_commits():
@@ -77,19 +79,15 @@ class DBHandler:
                     cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
                                    (commit_id, mod.filename, mod.new_path))
 
-            conn.commit()
-        except GithubException as e:
-            if e.status == 404:
-                return "Repository not found"
-            elif e.status == 409:  # Example: might indicate an empty repository or similar issue
-                return "Repository is empty"
-            else:
-                return "An error occurred while fetching the repository"
+                conn.commit()
         except Exception as e:
-            return f"An unexpected error occurred: {e}"
+            error_message = "Please try again with an existing repository."
+        else:
+            return "Success"
         finally:
-            conn.close()
-        return "Success"  # Indicate success if no exceptions were caught
+            if 'conn' in locals():
+                conn.close()
+        return error_message
 
     """Gets the total amount of commits."""
     def get_total_commits(self):

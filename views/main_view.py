@@ -362,5 +362,5 @@ class MainView:
             self.root.destroy()
 
     def show_error_message(self, message):
-        # This is just a placeholder. Use your GUI framework's method to show a message box
-        messagebox.showerror("Error", message) 
+        # TODO fix GUI
+        messagebox.showerror("Error", message)
