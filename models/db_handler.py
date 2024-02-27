@@ -1,8 +1,11 @@
 
 import sqlite3
+
+from git import GitCommandError
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
+from github import Github, GithubException
 
 class DBHandler:
 
@@ -55,27 +58,36 @@ class DBHandler:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # For each commit, insert the author and commit info into the tables.
-        for commit in Repository(repo_url).traverse_commits():
-            # Insert author if not exists
-            cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
-                           (commit.author.name, commit.author.email))
-            cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
-            author_id = cursor.fetchone()[0]
+        try:
 
-            # Format the date and insert commit
-            formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
-            cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
-                           (author_id, commit.msg, formatted_date))
-            commit_id = cursor.lastrowid
+            # For each commit, insert the author and commit info into the tables.
+            for commit in Repository(repo_url).traverse_commits():
+                # Insert author if not exists
+                cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
+                               (commit.author.name, commit.author.email))
+                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
+                author_id = cursor.fetchone()[0]
 
-            # For each modified file in the commit, add the modified files and their filepaths.
-            for mod in commit.modified_files:
-                cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
-                               (commit_id, mod.filename, mod.new_path))
+                # Format the date and insert commit
+                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
+                cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
+                               (author_id, commit.msg, formatted_date))
+                commit_id = cursor.lastrowid
 
-        conn.commit()
-        conn.close()
+                # For each modified file in the commit, add the modified files and their filepaths.
+                for mod in commit.modified_files:
+                    cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
+                                   (commit_id, mod.filename, mod.new_path))
+
+                conn.commit()
+        except Exception as e:
+            error_message = "Please try again with an existing repository."
+        else:
+            return "Success"
+        finally:
+            if 'conn' in locals():
+                conn.close()
+        return error_message
 
     """Gets the total amount of commits."""
     def get_total_commits(self):
