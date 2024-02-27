@@ -136,11 +136,11 @@ class DBHandler:
         month_name = calendar.month_name[int(most_active_month[0])]
         return f"{month_name} {most_active_month[1]} with {most_active_month[2]} commits."
 
+    """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # TODO fix so all months get values, now only gets the previous month.
         # Prepare the list for the last 12 months
         last_12_months = [(datetime.now() - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(11, -1, -1)]
 
@@ -153,10 +153,13 @@ class DBHandler:
             FROM commits 
             WHERE date >= ?
             GROUP BY month
-        ''', (last_12_months[-1],))
+        ''', (last_12_months[0],))
 
-        # Update commit counts for months present in the database
-        for month, count in cursor.fetchall():
+        # Fetch the results once and store them
+        total_commits = cursor.fetchall()
+
+        # Use the stored results
+        for month, count in total_commits:
             if month in commit_counts:
                 commit_counts[month] = count
 
@@ -196,7 +199,7 @@ class DBHandler:
                 }
             if file_name:  # Check if file_name is not None
                 commit_data[commit_id]["files"].append({"file_name": file_name, "file_path": file_path})
- 
+
         return commit_data
 
     def database_has_values(self):
