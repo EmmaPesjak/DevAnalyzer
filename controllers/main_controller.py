@@ -9,9 +9,17 @@ class MainController:
         self.view.root.mainloop()
 
     # TODO get the input, verify it, and send it to the model
+
     def retrieve_url(self, new_url):
         self.main_model.cleanup()
-        self.main_model.set_repo(new_url)
+        result = self.main_model.set_repo(new_url)
+
+        # TODO stop UI update in view
+        if result != "Success":
+            self.view.show_error_message(
+                result)
+            return
+        
         commits = self.main_model.get_total_amount_of_commits()
         print("Amount of commits: " + str(commits))
 

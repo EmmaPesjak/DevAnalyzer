@@ -3,6 +3,7 @@ import sqlite3
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
+from github import Github, GithubException
 
 class DBHandler:
 
@@ -51,31 +52,44 @@ class DBHandler:
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
-        self.create_database()  # Ensure the database and tables exist
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
+        global conn
+        try:
+            self.create_database()  # Ensure the database and tables exist
+            conn = sqlite3.connect(self.db_name)
+            cursor = conn.cursor()
 
-        # For each commit, insert the author and commit info into the tables.
-        for commit in Repository(repo_url).traverse_commits():
-            # Insert author if not exists
-            cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
-                           (commit.author.name, commit.author.email))
-            cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
-            author_id = cursor.fetchone()[0]
+            # For each commit, insert the author and commit info into the tables.
+            for commit in Repository(repo_url).traverse_commits():
+                # Insert author if not exists
+                cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
+                               (commit.author.name, commit.author.email))
+                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
+                author_id = cursor.fetchone()[0]
 
-            # Format the date and insert commit
-            formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
-            cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
-                           (author_id, commit.msg, formatted_date))
-            commit_id = cursor.lastrowid
+                # Format the date and insert commit
+                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
+                cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
+                               (author_id, commit.msg, formatted_date))
+                commit_id = cursor.lastrowid
 
-            # For each modified file in the commit, add the modified files and their filepaths.
-            for mod in commit.modified_files:
-                cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
-                               (commit_id, mod.filename, mod.new_path))
+                # For each modified file in the commit, add the modified files and their filepaths.
+                for mod in commit.modified_files:
+                    cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
+                                   (commit_id, mod.filename, mod.new_path))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+        except GithubException as e:
+            if e.status == 404:
+                return "Repository not found"
+            elif e.status == 409:  # Example: might indicate an empty repository or similar issue
+                return "Repository is empty"
+            else:
+                return "An error occurred while fetching the repository"
+        except Exception as e:
+            return f"An unexpected error occurred: {e}"
+        finally:
+            conn.close()
+        return "Success"  # Indicate success if no exceptions were caught
 
     """Gets the total amount of commits."""
     def get_total_commits(self):

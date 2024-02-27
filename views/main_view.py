@@ -360,3 +360,7 @@ class MainView:
         """
         if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
             self.root.destroy()
+
+    def show_error_message(self, message):
+        # This is just a placeholder. Use your GUI framework's method to show a message box
+        messagebox.showerror("Error", message) 

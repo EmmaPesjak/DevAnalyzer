@@ -13,7 +13,8 @@ class MainModel:
 
     """Inserts the repository into DB."""
     def set_repo(self, repo_url):
-        self.db_handler.insert_data_into_db(repo_url)
+        result = self.db_handler.insert_data_into_db(repo_url)
+        return result
 
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
