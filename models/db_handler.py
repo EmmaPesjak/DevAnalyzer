@@ -15,6 +15,7 @@ class DBHandler:
         self.db_name = db_name
         self.create_database()
 
+    """Creates the database with author, commit, and commit-files tables."""
     def create_database(self):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -53,11 +54,13 @@ class DBHandler:
         conn.commit()
         conn.close()
 
+    """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
+        # For each commit, insert the author and commit info into the tables.
         for commit in Repository(repo_url).traverse_commits():
             # Insert author if not exists
             cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
@@ -96,11 +99,12 @@ class DBHandler:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM authors')
+        # Select only the name column from the authors table
+        cursor.execute('SELECT name FROM authors')
 
-        contributors = cursor.fetchall()
+        # Fetch all results and extract names from tuples
+        contributors = [row[0] for row in cursor.fetchall()]
 
-        conn.commit()
         conn.close()
 
         return contributors
@@ -120,6 +124,7 @@ class DBHandler:
                     GROUP BY year, month
                 ''', (formatted_date,))
         monthly_commit_counts = cursor.fetchall()
+        conn.close()
 
         if not monthly_commit_counts:
             return None
