@@ -25,3 +25,6 @@ class MainController:
 
         activity_info = self.model.get_all_months_activity()
         print("All months activity: " + str(activity_info))
+
+        all_commits = self.model.get_all_commits()
+        print("All commits: " + str(all_commits))

@@ -6,11 +6,6 @@ from datetime import datetime, timedelta
 
 class DBHandler:
 
-    """TODO
-    1. Method for getting values for activity the past 12 months
-    2. Method for getting all commit messages (to be processed in categories in model for NLP. Need for each user and all)
-    3. Fix current methods (see 'todo' for details)"""
-
     def __init__(self, db_name):
         self.db_name = db_name
         self.create_database()
@@ -94,8 +89,19 @@ class DBHandler:
         conn.close()
         return total_commits
 
+    def get_all_commits(self):
+        # Connect to DB
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT message FROM commits')
+        commits = cursor.fetchall()
+
+        conn.close()
+        return commits
+
+    """Gets the names of all contributors."""
     def get_all_contributors(self):
-        """TODO fix so only names are returned."""
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -109,6 +115,7 @@ class DBHandler:
 
         return contributors
 
+    """Gets the most active month."""
     def get_most_active_month(self):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -129,12 +136,12 @@ class DBHandler:
         if not monthly_commit_counts:
             return None
 
-        # Convert month number to month name TODO fix so only month returns
+        # Convert month number to month name
         most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
 
         # Find the month with the highest commit count
         month_name = calendar.month_name[int(most_active_month[0])]
-        return f"{month_name} {most_active_month[1]} with {most_active_month[2]} commits."
+        return f"{month_name}"
 
     """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):

@@ -18,6 +18,9 @@ class MainModel:
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
 
+    def get_all_commits(self):
+        return self.db_handler.get_all_commits()
+
     def get_all_contributors(self):
         return self.db_handler.get_all_contributors()
 
