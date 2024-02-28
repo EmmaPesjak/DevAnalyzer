@@ -38,4 +38,4 @@ class MainController:
             print("All commits: " + str(all_commits))
 
             print("-----")
-            self.commit_analyzer.preprocess_data(all_commits)
+            self.commit_analyzer.nlp(all_commits)
