@@ -24,8 +24,11 @@ class CommitAnalyzer:
 
         for commit in all_commits:
 
+            # Lowercase the commit message.
+            commit = commit.lower()
+
             # Check if the commit contains "Merge pull request".
-            if "Merge pull request" in commit:
+            if "merge pull request" in commit:
                 print("Skipping: Contains 'Merge pull request'")
                 continue  # Skip this commit- skip och sortera automatiskt som merge commit???
 
@@ -34,6 +37,20 @@ class CommitAnalyzer:
 
             # Adding custom stopwords.
             nlp.Defaults.stop_words.add("\n\n")
+
+            # POS-tags, NER-tags, dependency injection can be very good but might add unnecessary
+            # overhead as training the model is computationally heavy.
+            # Här fins POS tags
+            # for token in doc:
+                # print(token.text, token.pos_, token.tag_)
+            #
+            # NER tags
+            # for ent in doc.ents:
+            #     print(ent.text, ent.label_)
+            #
+            # Depencency injection
+            # for chunk in doc.noun_chunks:
+            #     print(chunk.text, chunk.root.dep_, chunk.root.head.text)
 
             # Filtering out stopwords, punctuation, numbers, and  (duplicates can occur when the
             # commit messages contains both a title and a message with the same words). Also lemmatizing.
