@@ -2,7 +2,8 @@ import gensim.models
 import spacy
 from gensim import corpora
 from gensim import models
-
+from gensim.models import LdaModel
+import pyLDAvis.gensim
 
 class CommitAnalyzer:
     def __init__(self):
@@ -15,7 +16,11 @@ class CommitAnalyzer:
 
     def nlp(self, all_commits):
         preprocessed_commits = self.preprocess_data(all_commits)
-        word2vec_model = self.vectorize_data(preprocessed_commits)
+        dictionary, bow_corpus = self.vectorize_data(preprocessed_commits)
+
+        # Now perform LDA topic modeling.
+        lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
+
 
     # SpaCy first step - preprocess data - get rid of all information that will not be used for the final output
     def preprocess_data(self, all_commits):
@@ -30,6 +35,8 @@ class CommitAnalyzer:
             # Check if the commit contains "Merge pull request".
             if "merge pull request" in commit:
                 print("Skipping: Contains 'Merge pull request'")
+                # kanske ska ha
+                # filtered_tokens = ['merge'] ?
                 continue  # Skip this commit- skip och sortera automatiskt som merge commit???
 
             doc = nlp(commit)
@@ -37,6 +44,11 @@ class CommitAnalyzer:
 
             # Adding custom stopwords.
             nlp.Defaults.stop_words.add("\n\n")
+
+            stop_words = ["\n\n"]
+            for stop_word in stop_words:
+                lexeme = nlp.vocab[stop_word]
+                lexeme.is_stop = True
 
             # POS-tags, NER-tags, dependency injection can be very good but might add unnecessary
             # overhead as training the model is computationally heavy.
@@ -95,6 +107,31 @@ class CommitAnalyzer:
         bigram = gensim.models.Phrases(preprocessed_commits)
         preprocessed_commits = [bigram[line] for line in preprocessed_commits]
         print(preprocessed_commits)
+
+        return dictionary, bow_corpus
+
+    def perform_lda_topic_modeling(self, bow_corpus, dictionary):
+        # Number of topics
+        num_topics = 10  # Adjust based on your needs
+
+        # Train LDA model on the Bag of Words corpus OBS alla parametrar måste vi kirra ordentligt
+        lda_model = LdaModel(corpus=bow_corpus, id2word=dictionary, num_topics=num_topics, random_state=100,
+                             update_every=1, chunksize=100, passes=10, alpha='auto', per_word_topics=True)
+
+        # Print the topics found by the LDA model
+        for idx, topic in lda_model.print_topics(-1):
+            print('Topic: {} \nWords: {}'.format(idx, topic))
+
+
+        # Man kan visualisera den tränade lda modellen i jupyter eller som HTML:
+        visualization = pyLDAvis.gensim.prepare(lda_model, bow_corpus, dictionary)
+        # Display in Jupyter Notebook.
+        #pyLDAvis.display(visualization)
+        # Or save to a standalone HTML file.
+        # tar man denna kan man köra det i sin webbläsare genom att i sin terminal skriva "start lda_visualization.html"
+        pyLDAvis.save_html(visualization, "lda_visualization.html")
+        return lda_model
+
 
 
     # POS-tagging - behövs det i preprocessingen??
