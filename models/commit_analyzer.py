@@ -8,21 +8,21 @@ import pyLDAvis.gensim
 class CommitAnalyzer:
     def __init__(self):
         self.categories = {
-            'BUG_FIXES': ['error fix', 'error', 'bug', 'issue', 'correct', 'resolve', 'patch'],
+            'BUG_FIXES': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch'],
             'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'new', 'introduce', 'create'],
             'DOCUMENTATION': ['doc', 'readme', 'comment', 'tutorial', 'documentation', 'wiki'],
             'REFACTORING': ['refactor', 'clean', 'improve', 'performance', 'optimize', 'restructure'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert'],
-            'MERGE_OPERATIONS': ['merge', 'branch', 'pull request', 'integrate', 'merge conflict'],
+            'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
             'STYLING': ['style', 'format', 'lint', 'styling', 'convention', 'formatting'],
-            'DEPLOYMENT': ['deploy', 'release', 'production deployment', 'rollout', 'launch'],
-            'SECURITY': ['security fix', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication'],
+            'DEPLOYMENT': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch'],
+            'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication'],
             'CLEANUP': ['cleanup', 'tidy', 'remove', 'delete', 'prune', 'clean', 'refine'],
-            'PROJECT_SETUP': ['initial setup', 'first commit', 'setup', 'installation', 'config'],
+            'PROJECT_SETUP': ['initial', 'setup', 'first', 'setup', 'installation', 'config'],
             'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version'],
             'REVERT': ['revert', 'undo', 'rollback', 'reverse'],
             'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize'],
-            'ERROR_HANDLING': ['error handling', 'exception management', 'error logging'],
+            #'ERROR_HANDLING': ['error handling', 'exception management', 'error logging'], # BEHÅLLA?
             # TODO: här måste det förbättras som tusan!
         }
 
