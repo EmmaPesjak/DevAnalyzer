@@ -27,6 +27,7 @@ class CommitAnalyzer:
         }
 
 
+
         # TODO måste bestämma om vi ska träna modellen på repots egna data, eller om vi ska träna på annan data.
 
     def nlp(self, all_commits):
@@ -59,11 +60,11 @@ class CommitAnalyzer:
             commit = commit.lower()
 
             # Check if the commit contains "Merge pull request".
-            # if "merge pull request" in commit:
-            #     print("Skipping: Contains 'Merge pull request'")
-            #     # kanske ska ha
-            #     # filtered_tokens = ['merge'] ?
-            #     continue  # Skip this commit- skip och sortera automatiskt som merge commit???
+            if "merge pull request" in commit:
+                print("Skipping: Contains 'Merge pull request'")
+                # kanske ska ha
+                # filtered_tokens = ['merge'] ?
+                continue  # Skip this commit- skip och sortera automatiskt som merge commit???
 
             # Tokenize the commit
             doc = nlp(commit)
@@ -192,17 +193,35 @@ class CommitAnalyzer:
         return topic_keywords, lda_model
 
     def map_topics_to_categories(self, topic_keywords):
+
+        # Define priority keywords for certain categories
+        priority_keywords = {
+            'BUG_FIXES': ['error', 'bug'],
+            'DOCUMENTATION': ['readme', 'documentation', 'javadoc'],
+            'TESTING': ['testing', 'test']
+        }
+
         topic_category_mapping = []
 
         for i, keywords in enumerate(topic_keywords):
             best_match = None
+            highest_priority_score = 0
             best_score = 0
 
-            for category, cat_keywords in self.categories.items():
-                score = sum(1 for word in keywords if word in cat_keywords)
-                if score > best_score:
-                    best_score = score
+            # First, check for priority keyword matches
+            for category, priority_words in priority_keywords.items():
+                if any(word in keywords for word in priority_words):
                     best_match = category
+                    highest_priority_score = float('inf')  # Assign infinite score for priority match
+                    break  # Stop searching if a priority match is found
+
+            # If no priority match is found, proceed with general matching
+            if highest_priority_score == 0:
+                for category, cat_keywords in self.categories.items():
+                    score = sum(1 for word in keywords if word in cat_keywords)
+                    if score > best_score:
+                        best_score = score
+                        best_match = category
 
             topic_category_mapping.append((i, best_match))
 
