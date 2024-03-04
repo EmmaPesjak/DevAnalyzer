@@ -26,6 +26,28 @@ class CommitAnalyzer:
         }
         # TODO måste bestämma om vi ska träna modellen på repots egna data, eller om vi ska träna på annan data.
 
+
+    def save_and_load_model(self):
+        # TODO save and reload model later
+        # trained LdaModel instance and dictionary is the Gensim dictionary used for the model
+        # lda_model.save('lda_model.gensim')
+        # dictionary.save('dictionary.gensim')
+        #
+        # # Other components to save
+        # with open('topic_to_category_mapping.pkl', 'wb') as f:
+        #     pickle.dump(topic_category_mapping, f)
+        #
+        # # When program starts, open the model
+        # # Load the LDA model and dictionary
+        # lda_model = LdaModel.load('lda_model.gensim')
+        # dictionary = Dictionary.load('dictionary.gensim')
+        #
+        # # Load the topic-to-category mapping
+        # with open('topic_to_category_mapping.pkl', 'rb') as f:
+        #     topic_category_mapping = pickle.load(f)
+        pass
+
+
     def nlp(self, all_commits):
 
         # Preprocess the commits
