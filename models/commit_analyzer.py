@@ -8,26 +8,22 @@ import pyLDAvis.gensim
 class CommitAnalyzer:
     def __init__(self):
         self.categories = {
-            'BUG_FIXES': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch'],
-            'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'new', 'introduce', 'create'],
-            'DOCUMENTATION': ['doc', 'readme', 'comment', 'tutorial', 'documentation', 'wiki'],
-            'REFACTORING': ['refactor', 'clean', 'improve', 'performance', 'optimize', 'restructure'],
+            'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug', 'exception'],
+            'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'implementation', 'new', 'introduce', 'create', 'generate','method'],
+            'DOCUMENTATION': ['doc', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',  'javadocs', 'readme.md'],
+            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'performance', 'optimize', 'restructure', 'move', 'replace', 'typo', 'change'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert'],
             'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
             'STYLING': ['style', 'format', 'lint', 'styling', 'convention', 'formatting'],
-            'DEPLOYMENT': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch'],
+            'DEPLOYMENT/PUBLISH': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch', 'migration', 'dev', 'publish', 'build', 'compile'],
             'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication'],
             'CLEANUP': ['cleanup', 'tidy', 'remove', 'delete', 'prune', 'clean', 'refine'],
-            'PROJECT_SETUP': ['initial', 'setup', 'first', 'setup', 'installation', 'config'],
-            'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version'],
+            'SETUP': ['initial', 'init', 'introduce', 'setup', 'first', 'installation', 'config', 'tool', 'dependency', 'api', 'apis', 'import', 'template', 'library', 'lib', 'libs', 'plugin'],
+            'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version', 'change'],
             'REVERT': ['revert', 'undo', 'rollback', 'reverse'],
-            'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize'],
-            #'ERROR_HANDLING': ['error handling', 'exception management', 'error logging'], # BEHÅLLA?
-            # TODO: här måste det förbättras som tusan!
+            'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize', 'improve'],
+            'DATABASE': ['database', 'db', 'sql', 'table', 'schema', 'entity', 'query', 'join', 'sqlcipher', 'relationship']
         }
-
-
-
         # TODO måste bestämma om vi ska träna modellen på repots egna data, eller om vi ska träna på annan data.
 
     def nlp(self, all_commits):
@@ -39,15 +35,27 @@ class CommitAnalyzer:
         dictionary, bow_corpus = self.vectorize_data(preprocessed_commits)
 
         # Perform LDA topic modeling and get top keywords for each topic
-        topic_keywords, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
+        #topic_keywords, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
+        # Perform LDA topic modeling and get top keywords for each topic with their weights
+        topic_keywords_with_weights, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
 
         # Map topics to categories
-        topic_category_mapping = self.map_topics_to_categories(topic_keywords)
+        #topic_category_mapping = self.map_topics_to_categories(topic_keywords)
+        topic_category_mapping = self.map_topics_to_categories(topic_keywords_with_weights, self.categories)
 
         # Print the top 10 topic-category mappings
-        print("Top 10 Topic-Category Mappings:")
-        for i, (topic, category) in enumerate(topic_category_mapping[:10], 1):
-            print(f"{i}. Topic {topic} -> Category: {category}")
+        # print("Top 10 Topic-Category Mappings:")
+        # for i, (topic, category) in enumerate(topic_category_mapping[:10], 1):
+        #     print(f"{i}. Topic {topic} -> Category: {category}")
+        # Print the top mappings
+        print("Top Topic-Category Mappings:")
+        for i, (topic_num, best_category, weight) in enumerate(topic_category_mapping, 1):
+            # Access the keywords and their weights for the current topic
+            keywords_with_weights = topic_keywords_with_weights.get(topic_num, [])
+            # Format the keywords and weights for printing
+            keywords_str = " + ".join([f"{weight:.3f}*\"{word}\"" for word, weight in keywords_with_weights])
+            print(
+                f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
         # TODO: sen här behöver vi kategorisera varje commit till varje topic, obs det kan finnas dubbletter här
 
     # SpaCy first step - preprocess data - get rid of all information that will not be used for the final output
@@ -61,10 +69,13 @@ class CommitAnalyzer:
 
             # Check if the commit contains "Merge pull request".
             if "merge pull request" in commit:
-                print("Skipping: Contains 'Merge pull request'")
+                #print("Skipping: Contains 'Merge pull request'")
                 # kanske ska ha
                 # filtered_tokens = ['merge'] ?
                 continue  # Skip this commit- skip och sortera automatiskt som merge commit???
+
+            if "merge branch" in commit:
+                continue  # Skip this commit
 
             # Tokenize the commit
             doc = nlp(commit)
@@ -73,52 +84,35 @@ class CommitAnalyzer:
             # Adding custom stopwords.
             nlp.Defaults.stop_words.add("\n\n")
 
-            stop_words = ["\n\n", "a", "the", "and"] # fler?
+            # TODO ta bort alla version grejer + alla som är 0.0.1 etc
+            stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
+                          "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
 
 
             for stop_word in stop_words:
                 lexeme = nlp.vocab[stop_word]
                 lexeme.is_stop = True
 
-            # POS-tags, NER-tags, dependency injection can be very good but might add unnecessary
-            # overhead as training the model is computationally heavy.
-            # Här fins POS tags
-            # for token in doc:
-                # print(token.text, token.pos_, token.tag_)
-            #
-            # NER tags
-            # for ent in doc.ents:
-            #     print(ent.text, ent.label_)
-            #
-            # Depencency injection
-            # for chunk in doc.noun_chunks:
-            #     print(chunk.text, chunk.root.dep_, chunk.root.head.text)
-
             # Filtering out stopwords, punctuation, numbers, and  (duplicates can occur when the
             # commit messages contains both a title and a message with the same words). Also lemmatizing.
             filtered_tokens = set(
-                [token.lemma_ for token in doc if not token.is_stop and not token.is_punct and not token.like_num])
+                [token.lemma_ for token in doc if not token.is_stop and not token.is_punct and not token.like_num and
+                 not token.like_url and not token.like_url])
 
-            print(f"Filtered Tokens: {filtered_tokens}")
+            #print(f"Filtered Tokens: {filtered_tokens}")
             preprocessed_commits.append(filtered_tokens)
 
         return preprocessed_commits
 
+
     # Gensim vectorizing text feature extraction, OBS this is also a part of the pre-processing
     def vectorize_data(self, preprocessed_commits):
-
-        # Vectorize; bag-of-words, TF-IDF, word2vec (chapter 8, chapter 12)
-        # these vectors can will be passed into the LDA algorithms
-        # TF-IDF is good for measuring how common or rare the word is among the docs, ignores common words - but
-        # not good for us because commit messages are already small?? will it ignore "fix" for example?
 
         # Create a dictionary object from preprocessed_commits (assigns a unique ID to each unique token)
         dictionary = corpora.Dictionary(preprocessed_commits)
 
         # Filter out low frequency words (remove rare words and limit the vocabulary size)
-        # get rid of words that occur in less than 2 documents or que ??? keep_n?
         dictionary.filter_extremes(no_below=2, keep_n=5000)  # might adjust these limits.
-        #print(dictionary.token2id)
 
         # Create a bag of words (a way to count the number of words in each doc)
         bow_corpus = [dictionary.doc2bow(commit) for commit in preprocessed_commits]
@@ -126,17 +120,15 @@ class CommitAnalyzer:
         # # Serialize the dictionary and BoW corpus to disk, saving memory
         dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
         corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
-        #
+
         # # To demonstrate loading them back, not sure what exactly is necessary here yet.
         # loaded_dict = corpora.Dictionary.load('support/commit_dictionary.dict')
         # loaded_bow_corpus = corpora.MmCorpus('support/commit_bow_corpus.mm')
-        #
         # print(list(loaded_bow_corpus))  # This will print the loaded corpus without loading it entirely into memory
 
         # TF-IDF stands for Term Frequency Inverse Document Frequency of records. It can be defined as the
         # calculation of how relevant a word in a series or corpus is to a text.
         # tfidf = models.TfidfModel(loaded_bow_corpus)
-        #
         # for document in tfidf[loaded_bow_corpus]:
         #     print(document)
             # The float printed next to each word id is the product of the TF and IDF scores,
@@ -152,80 +144,71 @@ class CommitAnalyzer:
         return dictionary, bow_corpus
 
 
-    def context_analysis(self):
-        # TODO do context analysis to be analyze the context of the commit message. for example, if the message
-        #  is "README: fix ...", it should belong to "DOCUMENTATION" and not "BUG_FIX". eller ge ord en range?
-        #  t.ex README har högre rankning...eller ngt sånt mög
-        pass
-
     def perform_lda_topic_modeling(self, bow_corpus, dictionary):
         # Number of topics
         num_topics = 10  # Adjust based on how many topics we want
 
         # Train LDA model on the Bag of Words corpus OBS alla parametrar måste vi kirra ordentligt
-        # corpus = the dataset the LDA model will be trained
-        # id2word = mapping from word IDs to words
-        # num_topics = number of topics to extract from corpus
-        # random_state = ensure reproducibility of the results
-        # update_every = how often the model parameters should be updated (1 is updated after each batch of docs processed)
-        # chunksize = number of documents to be used in each traning chunk
-        # passes = total number of passes over the corpus during training
-        # alpha = 'auto 'allows the model to automatically learn an optimal value
-        # per_word_topics = True; computes a list of topics sorted in descending order of most likely topics for each word
         lda_model = LdaModel(corpus=bow_corpus, id2word=dictionary, num_topics=num_topics, random_state=100,
                              update_every=1, chunksize=100, passes=15, alpha='auto', per_word_topics=True)
 
-        topic_keywords = []
-        # Print the topics found by the LDA model
-        for idx, topic in lda_model.print_topics(-1):
-            # Extract only the words
-            words = [word for word, _ in lda_model.show_topic(idx)]
-            topic_keywords.append(words)
-            print('Topic: {} \nWords: {}'.format(idx, topic))
+        topic_keywords_with_weights = {}
+        for idx, topic in lda_model.show_topics(num_topics=-1, formatted=False):
+            # Extract keywords and their weights
+            keywords_with_weights = [(word, round(weight, 4)) for word, weight in topic]
+            topic_keywords_with_weights[idx] = keywords_with_weights
+
+        # topic_keywords = []
+        # # Print the topics found by the LDA model
+        # for idx, topic in lda_model.print_topics(-1):
+        #     # Extract only the words
+        #     words = [word for word, _ in lda_model.show_topic(idx)]
+        #     topic_keywords.append(words)
+        #     print('Topic: {} \nWords: {}'.format(idx, topic))
 
         # Man kan visualisera den tränade lda modellen i jupyter eller som HTML:
         visualization = pyLDAvis.gensim.prepare(lda_model, bow_corpus, dictionary)
-        # Display in Jupyter Notebook.
-        #pyLDAvis.display(visualization)
-        # Or save to a standalone HTML file.
-        # tar man denna kan man köra det i sin webbläsare genom att i sin terminal skriva "start lda_visualization.html"
+        # To run, write "start lda_visualization.html" in terminal
         pyLDAvis.save_html(visualization, "lda_visualization.html")
-        return topic_keywords, lda_model
 
-    def map_topics_to_categories(self, topic_keywords):
+        #return topic_keywords, lda_model
+        return topic_keywords_with_weights, lda_model
 
-        # Define priority keywords for certain categories
-        priority_keywords = {
-            'BUG_FIXES': ['error', 'bug'],
-            'DOCUMENTATION': ['readme', 'documentation', 'javadoc'],
-            'TESTING': ['testing', 'test']
-        }
+    def map_topics_to_categories(self, topic_keywords_with_weights, categories):
 
-        topic_category_mapping = []
+        topic_category_mappings = []
 
-        for i, keywords in enumerate(topic_keywords):
-            best_match = None
-            highest_priority_score = 0
-            best_score = 0
+        # Loop over each topic with its keywords + weights.
+        for topic_num, keywords_with_weights in topic_keywords_with_weights.items():
+            # Initialize a dictionary to hold cumulative weights for each category
+            category_weights = {category: 0 for category in categories.keys()}
 
-            # First, check for priority keyword matches
-            for category, priority_words in priority_keywords.items():
-                if any(word in keywords for word in priority_words):
-                    best_match = category
-                    highest_priority_score = float('inf')  # Assign infinite score for priority match
-                    break  # Stop searching if a priority match is found
+            # For each keyword and its weight...
+            for keyword, weight in keywords_with_weights:
+                # For each category with its keywords...
+                for category, keywords in categories.items():
+                    # If the keyword is in the keywords of the categories, accumulate the weight.
+                    if keyword in keywords:
+                        category_weights[category] += weight
 
-            # If no priority match is found, proceed with general matching
-            if highest_priority_score == 0:
-                for category, cat_keywords in self.categories.items():
-                    score = sum(1 for word in keywords if word in cat_keywords)
-                    if score > best_score:
-                        best_score = score
-                        best_match = category
+            # Determine the category with the highest cumulative weight for this topic
+            best_category = max(category_weights, key=category_weights.get)
+            topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
 
-            topic_category_mapping.append((i, best_match))
+        # topic_category_mapping = []
+        #
+        # for i, keywords in enumerate(topic_keywords):
+        #     best_match = None
+        #     best_score = 0
+        #         for category, cat_keywords in self.categories.items():
+        #             score = sum(1 for word in keywords if word in cat_keywords)
+        #             if score > best_score:
+        #                 best_score = score
+        #                 best_match = category
+        #
+        #     topic_category_mapping.append((i, best_match))
 
-        return topic_category_mapping
+        return topic_category_mappings
 
     #TODO: Vi behöver refina modellen, tuna alla parametrar, improva preprocessing, definera categorierna mycket mycket bättre
 
@@ -248,6 +231,4 @@ class CommitAnalyzer:
     # named-entity-recognition. behövs ej
 
     # Dependency parsing
-
-
     # TODO after training the model, serialize the model??? scikit-learn is joblib or pickle
