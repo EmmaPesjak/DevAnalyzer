@@ -19,7 +19,6 @@ class MainView:
     DEFAULT_THEME = "green"  # blue green or dark-blue
     WINDOW_TITLE = "DevAnalyzer"
     WINDOW_GEOMETRY = "1200x600"
-    USERS = ["Anna", "Clara", "Stina"]  # TODO: get this from model when analyzing the repo
     TEXT_COLOR = "#3FA27B"
     PADDING = 10
     mode = MODE_DARK  # Light or dark
@@ -125,10 +124,6 @@ class MainView:
                 self.placeholder_label.destroy()
             self.setup_overwiew_diagrams()
 
-    def set_total_commits(self, commits):
-        self.total_commits = commits
-        # TODO update window
-
     def get_total_commits(self):
         return info_bar_statistics['Most commits']
 
@@ -149,19 +144,14 @@ class MainView:
             # Display loading message or indicator
             self.show_loading_indicator()
 
+            self.fetch_repo_data(repo_input)
             # Start the data fetching in a separate thread
-            threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
-            # TODO start thread in the model instead?  handle fetching errors!!!
-
-        else:
-            print("No input.")
+            # threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
+            # # TODO start thread in the model instead?  handle fetching errors!!!
 
     def fetch_repo_data(self, repo_input):
         if self.on_input_change:
             self.on_input_change(repo_input)
-
-        # Once data is fetched, update UI on the main thread
-        #self.root.after(0, self.update_ui_after_fetch)
 
     def show_loading_indicator(self):
         # Clear existing diagrams
@@ -193,8 +183,11 @@ class MainView:
             self.user_select.destroy()
             self.user_select = None  # Reset to None to ensure it's recognized as destroyed
 
+        # Create a list of the users.
+        users = list(total_commits_by_contributor.keys())
+
         # Recreate the 'user_select' widget with potentially updated options
-        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=self.USERS, command=self.setup_user_window)
+        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users, command=self.setup_user_window)
         self.user_select.set("Select user")
         self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
