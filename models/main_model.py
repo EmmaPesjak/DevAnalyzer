@@ -13,8 +13,6 @@ class MainModel:
         self.db_handler = DBHandler('repo_data.db')
         atexit.register(self.cleanup)
 
-    def calc_data(self):
-        return True
 
     """Inserts the repository into DB."""
     def set_repo(self, repo_url, callback=None):
