@@ -58,12 +58,21 @@ class MainModel:
 
     def write_to_file(self):
         filename = "support//repo_stats.py"
-        total_commits_by_contributor = self.get_authors_with_amount_of_commits()
-        data_str = f"total_commits_by_contributor = {total_commits_by_contributor}\n"
+
+        total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        top_5_changed_files = self.db_handler.get_top_5_changed_files()
+
+        # Prepare the content to be written as valid Python code
+        content_to_write = (
+            f"total_commits_by_contributor = {total_commits_by_contributor}\n"
+            f"top_5_changed_files = {top_5_changed_files}\n"
+        )
 
         with open(filename, "w", encoding="utf-8") as file:
-            file.write(data_str)
+            file.write(content_to_write)
             print("Saved")
+            return True
+
 
     # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
