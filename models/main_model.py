@@ -1,5 +1,7 @@
 import threading
+from datetime import datetime
 
+from dateutil.relativedelta import relativedelta
 from pydriller import Repository
 import json
 from collections import defaultdict
@@ -54,16 +56,57 @@ class MainModel:
     def get_commit_data_with_files_for_author(self, author_email):
         return self.db_handler.get_commit_data_with_files_for_author(author_email)
 
+    def get_top_5_files_per_user(self):
+        data = self.db_handler.get_top_files_per_user()
+        top_5_per_user = {}
+
+        for name, file_name, changes in data:
+            if name not in top_5_per_user:
+                top_5_per_user[name] = {}
+
+            # Only keep top 5 entries per user
+            if len(top_5_per_user[name]) < 5:
+                top_5_per_user[name][file_name] = changes
+
+        return top_5_per_user
+
+    def structure_monthly_activity_by_author(self):
+        # Get today's date and the date 12 months ago
+        today = datetime.now()
+
+        data = self.db_handler.get_monthly_commits_by_author()
+        # Initialize a dictionary for the past 12 months
+        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): {} for i in range(12, -1, -1)}
+
+        # Fill in the data
+        for month_year, name, commits_count in data:
+            if month_year in structured_data:
+                structured_data[month_year][name] = commits_count
+
+        # Convert 'month_year' to a more readable format
+        readable_format_data = {}
+        for month_year, authors_commits in structured_data.items():
+            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%B %Y")
+            readable_format_data[month_name] = authors_commits
+
+        return readable_format_data
+
     def write_to_file(self):
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
         top_5_changed_files = self.db_handler.get_top_5_changed_files()
+        top_5_per_user = self.get_top_5_files_per_user()
+        monthly_commits_by_users = self.structure_monthly_activity_by_author()
+
+        #TODO commit_types_by_contributor (topics from commitanalyzer)
 
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
             f"top_5_changed_files = {top_5_changed_files}\n"
+            f"top_5_per_user = {top_5_per_user}\n"
+            f"monthly_commits_by_contributor = {monthly_commits_by_users}"
         )
 
         with open(filename, "w", encoding="utf-8") as file:
