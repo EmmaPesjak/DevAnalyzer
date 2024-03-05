@@ -58,7 +58,7 @@ total_monthly_commits = {
 }
 
 info_bar_statistics = {
-    'Most commits': 'Alice',
+    'Total commits': 234,
     'Most active month': 'January',
     'Most changes in': 'Backend',
     'Most type': 'Bugfix'

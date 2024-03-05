@@ -118,6 +118,10 @@ class MainModel:
     # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
     def cleanup(self):
+
+        filename = "support//repo_stats.py"
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write("")
         if self.db_handler.database_has_values():
             self.db_handler.clear_database()
         print("Database cleared.")

@@ -4,9 +4,11 @@ import threading
 from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from support.test_data import total_commits_by_contributor, commit_types_by_contributor, \
+from support.test_data import commit_types_by_contributor, \
     monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 from views.data_visualizer import DataVisualizer
+
+from support.repo_stats import total_commits_by_contributor  # TODO detta måste göras varje gång UIt ska uppdateras
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
@@ -45,6 +47,9 @@ class MainView:
         self.setup_ui_components()
 
     def mainloop(self):
+        """
+        Starts the main event loop of the tkinter window. The event loop continues running until the window is closed.
+        """
         self.root.mainloop()
 
     def setup_appearance(self):
@@ -125,7 +130,11 @@ class MainView:
             self.setup_overwiew_diagrams()
 
     def get_total_commits(self):
-        return info_bar_statistics['Most commits']
+        return info_bar_statistics['Total commits']
+
+    def get_most_commits_from(self):
+        contributor_with_most_commits = max(total_commits_by_contributor, key=total_commits_by_contributor.get)
+        return contributor_with_most_commits
 
     def get_most_active_month(self):
         return info_bar_statistics['Most active month']
@@ -136,24 +145,42 @@ class MainView:
     def get_most_where_of_commits(self):
         return info_bar_statistics['Most changes in']
 
-    # Open the dialog and call the method for input_change
     def open_git_input(self):
+        """
+        Opens a dialog box for the user to enter a GitHub repository link. Upon receiving input,
+        it displays a loading indicator and initiates the process of fetching repository data.
+        """
         dialog = ctk.CTkInputDialog(text="Enter you repository link:", title="Repository")
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
             # Display loading message or indicator
             self.show_loading_indicator()
-
             self.fetch_repo_data(repo_input)
-            # Start the data fetching in a separate thread
-            # threading.Thread(target=self.fetch_repo_data, args=(repo_input,), daemon=True).start()
-            # # TODO start thread in the model instead?  handle fetching errors!!!
 
     def fetch_repo_data(self, repo_input):
+        """
+        Initiates the process of fetching repository data. It triggers the `on_input_change`
+        callback with the provided repository URL.
+        """
         if self.on_input_change:
             self.on_input_change(repo_input)
 
+    def set_on_input_change(self, callback):
+        """
+        Registers a callback function to be invoked when the repository URL input changes.
+        """
+        self.on_input_change = callback
+
+    def on_input_change(self):
+        """
+        A placeholder method meant to be overridden by `set_on_input_change`.
+        """
+        pass
+
     def show_loading_indicator(self):
+        """
+        Clears the UI and displays a loading indicator in the UI and prepares the interface for data loading.
+        """
         # Clear existing diagrams
         for widget in self.diagram_frame.winfo_children():
             widget.destroy()
@@ -173,25 +200,29 @@ class MainView:
         self.loading_label.grid(row=0, column=0, sticky="nsew")
 
     def update_ui_after_fetch(self):
-        # Hide or destroy the loading indicator
+        """
+        Updates the UI elements after data fetching is complete.
+        """
+        # Destroy the loading indicator
         if hasattr(self, 'loading_label') and self.loading_label is not None:
             self.loading_label.destroy()
-            self.loading_label = None  # Reset to None to avoid future AttributeError
+            self.loading_label = None  # Reset to None to avoid future AttributeError.
 
-        # Remove the existing 'user_select' widget if it exists and is not None
+        # Remove the existing 'user_select' widget if it exists and is not None.
         if hasattr(self, 'user_select') and self.user_select is not None:
             self.user_select.destroy()
-            self.user_select = None  # Reset to None to ensure it's recognized as destroyed
+            self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
 
+        from support.repo_stats import total_commits_by_contributor
         # Create a list of the users.
         users = list(total_commits_by_contributor.keys())
 
-        # Recreate the 'user_select' widget with potentially updated options
+        # Recreate the 'user_select' widget with potentially updated options.
         self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users, command=self.setup_user_window)
         self.user_select.set("Select user")
         self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
-        # Now, update the main area and info bar
+        # Update the main area and info bar.
         self.create_main_area()
         self.create_info_bar()
 
@@ -200,41 +231,34 @@ class MainView:
         Creates the information bar on to display statistics.
         """
         info_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically
+        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically.
 
         if initial:
-            pass  # This should be empty when starting the application
+            pass  # This should be empty when starting the application.
         else:
             info_text = (
-                f"Total Commits: {self.get_total_commits()}\n"
-                f"Most Active Month: {self.get_most_active_month()}\n"
-                f"Most Type of Commits: {self.get_most_type_of_commits()}\n"
-                f"Most Where of Commits: {self.get_most_where_of_commits()}"
+                f"Total number of commits: {self.get_total_commits()}\n"
+                f"Most commits from: {self.get_most_commits_from()}\n"
+                f"Most active month\nlast 12 months: {self.get_most_active_month()}\n"
+                f"Most commits of type: {self.get_most_type_of_commits()}\n"
+                f"Most commits in: {self.get_most_where_of_commits()}"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
 
-    # Set the callback for changing the repo-input (used from controller)
-    def set_on_input_change(self, callback):
-        self.on_input_change = callback
-
-    # Acts like a placeholder, is defined in controller.
-    def on_input_change(self):
-        pass
-
     def setup_user_window(self, choice):
         new_window = ctk.CTkToplevel(self.root)
-        new_window.title(f"Information for {choice}")
+        new_window.title(f"Information about {choice}")
         new_window.geometry(self.WINDOW_GEOMETRY)
 
-        # Configure grid layout for new_window
+        # Configure grid layout for new_window.
         new_window.grid_columnconfigure(0, weight=1)
         new_window.grid_rowconfigure(0, weight=1)
 
         sidebar_frame = ctk.CTkFrame(new_window, corner_radius=1)
-        # Adjust sidebar_frame grid placement
+        # Adjust sidebar_frame grid placement.
         sidebar_frame.grid(row=0, column=1, sticky="ns")
-        new_window.grid_columnconfigure(1, minsize=200)  # Adjust the sidebar width if necessary
+        new_window.grid_columnconfigure(1, minsize=200)  # Adjust the sidebar width if necessary.
 
         main_area_frame = ctk.CTkFrame(new_window, corner_radius=1)
         main_area_frame.grid(row=0, column=0, sticky="nsew")
