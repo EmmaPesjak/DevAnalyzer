@@ -1,3 +1,5 @@
+import threading
+
 from pydriller import Repository
 import json
 from collections import defaultdict
@@ -12,12 +14,25 @@ class MainModel:
         atexit.register(self.cleanup)
 
     def calc_data(self):
-        pass
+        return True
 
     """Inserts the repository into DB."""
-    def set_repo(self, repo_url):
-        result = self.db_handler.insert_data_into_db(repo_url)
-        return result
+    def set_repo(self, repo_url, callback=None):
+        def background_task():
+            try:
+                # Assuming this function returns some result or raises an exception upon failure
+                result = self.db_handler.insert_data_into_db(repo_url)
+                if callback:
+                    # Use callback to send success data back
+                    callback(result, None)
+            except Exception as e:
+                if callback:
+                    # Use callback to send the exception back
+                    callback(None, e)
+
+        # Start the background task
+        thread = threading.Thread(target=background_task, daemon=True)
+        thread.start()
 
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
