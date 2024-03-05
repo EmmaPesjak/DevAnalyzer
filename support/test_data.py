@@ -42,7 +42,6 @@ monthly_commits_by_contributor = {
     'December': {'Alice': 10, 'Bob': 11, 'Charlie': 9, 'Diana': 10}
 }
 
-
 total_monthly_commits = {
     'January': 34,
     'February': 39,

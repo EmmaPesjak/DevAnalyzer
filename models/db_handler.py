@@ -1,4 +1,6 @@
 import sqlite3
+
+from dateutil.relativedelta import relativedelta
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
@@ -137,6 +139,52 @@ class DBHandler:
         # Convert the results into a dictionary
         top_5_changed_files = {file_name: occurrence for file_name, occurrence in results}
         return top_5_changed_files
+
+    def get_top_files_per_user(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # Fetches the number of times each file has been modified by each author
+        cursor.execute('''
+            SELECT a.name, cf.file_name, COUNT(cf.file_name) as changes
+            FROM commit_files cf
+            JOIN commits c ON cf.commit_id = c.id
+            JOIN authors a ON c.author_id = a.id
+            GROUP BY a.id, cf.file_name
+            ORDER BY a.name, changes DESC
+        ''')
+
+        results = cursor.fetchall()
+        conn.close()
+        return results
+
+    def get_monthly_commits_by_author(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # Get today's date and the date 12 months ago
+        today = datetime.now()
+        twelve_months_ago = today - relativedelta(months=12)
+
+        cursor.execute('''
+                SELECT 
+                    strftime('%Y-%m', date) AS month_year, 
+                    a.name, 
+                    COUNT(*) AS commits_count
+                FROM 
+                    commits c
+                    JOIN authors a ON c.author_id = a.id
+                WHERE 
+                    c.date >= ?
+                GROUP BY 
+                    month_year, a.name
+                ORDER BY 
+                    month_year ASC
+            ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
+
+        results = cursor.fetchall()
+        conn.close()
+        return results
 
     """Gets the total amount of commits."""
     def get_total_commits(self):
