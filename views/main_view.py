@@ -45,6 +45,9 @@ class MainView:
         self.create_main_window()
         self.setup_ui_components()
 
+    def mainloop(self):
+        self.root.mainloop()
+
     def setup_appearance(self):
         """
         Sets the appearance mode and color theme for the application.
@@ -158,7 +161,7 @@ class MainView:
             self.on_input_change(repo_input)
 
         # Once data is fetched, update UI on the main thread
-        self.root.after(0, self.update_ui_after_fetch)
+        #self.root.after(0, self.update_ui_after_fetch)
 
     def show_loading_indicator(self):
         # Clear existing diagrams

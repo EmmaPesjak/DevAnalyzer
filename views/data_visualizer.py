@@ -1,5 +1,6 @@
+import matplotlib
 from matplotlib import pyplot as plt
-
+matplotlib.use('agg')
 
 class DataVisualizer:
     def __init__(self, padding):

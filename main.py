@@ -10,7 +10,8 @@ def main():
     view = MainView()
     commit_analyzer = CommitAnalyzer()
     controller = MainController(main_model, view, commit_analyzer)
-    controller.run_app()
+    # controller.run_app()
+    view.mainloop()
 
 if __name__ == "__main__":
     main()
