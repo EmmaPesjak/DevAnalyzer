@@ -5,8 +5,8 @@ class MainController:
         self.commit_analyzer = commit_analyzer
         self.view.set_on_input_change(self.retrieve_url)
 
-    def run_app(self):
-        self.view.root.mainloop()
+    # def run_app(self):
+    #     self.view.root.mainloop()
 
     # TODO get the input, verify it, and send it to the model
 
@@ -19,6 +19,13 @@ class MainController:
             self.view.show_error_message(
                 result)
         else:
+
+            if self.main_model.calc_data():
+                self.view.root.after(0, self.view.update_ui_after_fetch)
+            else:
+                #Felmeddelande
+                pass
+
             commits = self.main_model.get_total_amount_of_commits()
             #print("Amount of commits: " + str(commits))
 
@@ -39,3 +46,6 @@ class MainController:
 
             #print("-----")
             self.commit_analyzer.nlp(all_commits)
+
+
+

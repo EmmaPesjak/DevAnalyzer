@@ -5,6 +5,21 @@ total_commits_by_contributor = {
     "Diana": 105
 }
 
+top_5_where = {
+    "Model": 45,
+    "View": 675,
+    "Controller": 768,
+    "README": 67,
+    "Utility": 67
+}
+
+top_5_per_user = {
+    "Alice": {"Model": 30, "View": 50, "Controller": 10, "README": 20, "Utility": 10},
+    "Bob": {"Model": 20, "View": 40, "Controller": 15, "README": 10, "Utility": 10},
+    "Charlie": {"Model": 25, "View": 30, "Controller": 5, "README": 15, "Utility": 5},
+    "Diana": {"Model": 35, "View": 45, "Controller": 10, "README": 5, "Utility": 10}
+}
+
 commit_types_by_contributor = {
     "Alice": {"Bug Fixes": 30, "Feature Additions": 50, "Documentation": 10, "Refactoring": 20, "Others": 10},
     "Bob": {"Bug Fixes": 20, "Feature Additions": 40, "Documentation": 15, "Refactoring": 10, "Others": 10},
