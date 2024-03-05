@@ -8,7 +8,7 @@ from support.test_data import commit_types_by_contributor, \
     monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 from views.data_visualizer import DataVisualizer
 
-from support.repo_stats import total_commits_by_contributor
+from support.repo_stats import total_commits_by_contributor  # TODO detta måste göras varje gång UIt ska uppdateras
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
@@ -213,6 +213,7 @@ class MainView:
             self.user_select.destroy()
             self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
 
+        from support.repo_stats import total_commits_by_contributor
         # Create a list of the users.
         users = list(total_commits_by_contributor.keys())
 
