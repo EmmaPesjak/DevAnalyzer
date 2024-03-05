@@ -1,13 +1,12 @@
-
 import sqlite3
-
-from git import GitCommandError
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
-from github import Github, GithubException
 
 class DBHandler:
+    # TODO fixa så att det skrivs i filer engligt dummy fil
+    # TODO fixa 5 top filer med antal commits
+    # TODO fixa varje authors top 5 med antal commits
 
     def __init__(self, db_name):
         self.db_name = db_name
@@ -60,13 +59,12 @@ class DBHandler:
         cursor = conn.cursor()
 
         try:
-
             # For each commit, insert the author and commit info into the tables.
             for commit in Repository(repo_url).traverse_commits():
                 # Insert author if not exists
                 cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
-                               (commit.committer.name, commit.committer.email))
-                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.committer.email,))
+                               (commit.author.name, commit.author.email))
+                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
                 author_id = cursor.fetchone()[0]
 
 
@@ -92,6 +90,53 @@ class DBHandler:
             if 'conn' in locals():
                 conn.close()
         return error_message
+
+    def get_authors_with_amount_of_commits(self):
+        # Connect to the database
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # SQL query to count commits per author
+        cursor.execute('''
+                SELECT a.name, COUNT(c.id) AS total_commits
+                FROM authors a
+                JOIN commits c ON a.id = c.author_id
+                GROUP BY a.id
+            ''')
+
+        # Fetch the results
+        results = cursor.fetchall()
+
+        # Close the database connection
+        conn.close()
+
+        # Convert the results into a dictionary
+        total_commits_by_contributor = {name: total_commits for name, total_commits in results}
+        return total_commits_by_contributor
+
+    def get_top_5_changed_files(self):
+        # Connect to the database
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # SQL query to find the top 5 file names by occurrence
+        cursor.execute('''
+               SELECT file_name, COUNT(file_name) AS occurrence
+               FROM commit_files
+               GROUP BY file_name
+               ORDER BY occurrence DESC
+               LIMIT 5
+           ''')
+
+        # Fetch the results
+        results = cursor.fetchall()
+
+        # Close the database connection
+        conn.close()
+
+        # Convert the results into a dictionary
+        top_5_changed_files = {file_name: occurrence for file_name, occurrence in results}
+        return top_5_changed_files
 
     """Gets the total amount of commits."""
     def get_total_commits(self):

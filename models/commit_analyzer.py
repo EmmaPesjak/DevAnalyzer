@@ -196,7 +196,6 @@ class CommitAnalyzer:
                 for category, cat_keywords in self.categories.items():
                     # If the keyword contains any of the substrings from cat_keywords...
                     if any(sub_keyword in keyword for sub_keyword in cat_keywords):
-                        print("If hej Keyword: " + str(keyword))
                         # Accumulate the weight for that category.
                         category_weights[category] += weight
                 #TODO Should none matched be handled differently

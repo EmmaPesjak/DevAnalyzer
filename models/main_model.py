@@ -13,8 +13,6 @@ class MainModel:
         self.db_handler = DBHandler('repo_data.db')
         atexit.register(self.cleanup)
 
-    def calc_data(self):
-        return True
 
     """Inserts the repository into DB."""
     def set_repo(self, repo_url, callback=None):
@@ -34,6 +32,9 @@ class MainModel:
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
 
+    def get_authors_with_amount_of_commits(self):
+        return self.db_handler.get_authors_with_amount_of_commits()
+
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
 
@@ -52,6 +53,24 @@ class MainModel:
     # TODO get the commit messages for user to process.
     def get_commit_data_with_files_for_author(self, author_email):
         return self.db_handler.get_commit_data_with_files_for_author(author_email)
+
+    def write_to_file(self):
+        filename = "support//repo_stats.py"
+
+        total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        top_5_changed_files = self.db_handler.get_top_5_changed_files()
+
+        # Prepare the content to be written as valid Python code
+        content_to_write = (
+            f"total_commits_by_contributor = {total_commits_by_contributor}\n"
+            f"top_5_changed_files = {top_5_changed_files}\n"
+        )
+
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write(content_to_write)
+            print("Saved")
+            return True
+
 
     # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
