@@ -16,7 +16,7 @@ class MainController:
             self.view.show_error_message(str(error))
         else:
             # Proceed with UI update or further data processing
-            if self.main_model.calc_data():
+            if self.main_model.write_to_file():
 
                 #TODO: kirra detta i model?
                 all_commits = self.main_model.get_all_commits()

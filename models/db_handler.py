@@ -59,7 +59,6 @@ class DBHandler:
         cursor = conn.cursor()
 
         try:
-
             # For each commit, insert the author and commit info into the tables.
             for commit in Repository(repo_url).traverse_commits():
                 # Insert author if not exists
@@ -91,6 +90,29 @@ class DBHandler:
             if 'conn' in locals():
                 conn.close()
         return error_message
+
+    def get_authors_with_amount_of_commits(self):
+        # Connect to the database
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # SQL query to count commits per author
+        cursor.execute('''
+                SELECT a.name, COUNT(c.id) AS total_commits
+                FROM authors a
+                JOIN commits c ON a.id = c.author_id
+                GROUP BY a.id
+            ''')
+
+        # Fetch the results
+        results = cursor.fetchall()
+
+        # Close the database connection
+        conn.close()
+
+        # Convert the results into a dictionary
+        total_commits_by_contributor = {name: total_commits for name, total_commits in results}
+        return total_commits_by_contributor
 
     """Gets the total amount of commits."""
     def get_total_commits(self):

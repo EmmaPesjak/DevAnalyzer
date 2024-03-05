@@ -34,6 +34,9 @@ class MainModel:
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
 
+    def get_authors_with_amount_of_commits(self):
+        return self.db_handler.get_authors_with_amount_of_commits()
+
     def get_total_amount_of_commits(self):
         return self.db_handler.get_total_commits()
 
@@ -52,6 +55,15 @@ class MainModel:
     # TODO get the commit messages for user to process.
     def get_commit_data_with_files_for_author(self, author_email):
         return self.db_handler.get_commit_data_with_files_for_author(author_email)
+
+    def write_to_file(self):
+        filename = "support//repo_stats.py"
+        total_commits_by_contributor = self.get_authors_with_amount_of_commits()
+        data_str = f"total_commits_by_contributor = {total_commits_by_contributor}\n"
+
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write(data_str)
+            print("Saved")
 
     # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
