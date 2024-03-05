@@ -4,9 +4,11 @@ import threading
 from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from support.test_data import total_commits_by_contributor, commit_types_by_contributor, \
+from support.test_data import commit_types_by_contributor, \
     monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 from views.data_visualizer import DataVisualizer
+
+from support.repo_stats import total_commits_by_contributor
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
@@ -128,10 +130,11 @@ class MainView:
             self.setup_overwiew_diagrams()
 
     def get_total_commits(self):
-        return info_bar_statistics['Most commits']
+        return info_bar_statistics['Total commits']
 
     def get_most_commits_from(self):
-        return "Alice"
+        contributor_with_most_commits = max(total_commits_by_contributor, key=total_commits_by_contributor.get)
+        return contributor_with_most_commits
 
     def get_most_active_month(self):
         return info_bar_statistics['Most active month']
