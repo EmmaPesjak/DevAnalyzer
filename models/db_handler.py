@@ -1,13 +1,12 @@
-
 import sqlite3
-
-from git import GitCommandError
 from pydriller import Repository
 import calendar
 from datetime import datetime, timedelta
-from github import Github, GithubException
 
 class DBHandler:
+    # TODO fixa så att det skrivs i filer engligt dummy fil
+    # TODO fixa 5 top filer med antal commits
+    # TODO fixa varje authors top 5 med antal commits
 
     def __init__(self, db_name):
         self.db_name = db_name
@@ -65,8 +64,8 @@ class DBHandler:
             for commit in Repository(repo_url).traverse_commits():
                 # Insert author if not exists
                 cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
-                               (commit.committer.name, commit.committer.email))
-                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.committer.email,))
+                               (commit.author.name, commit.author.email))
+                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
                 author_id = cursor.fetchone()[0]
 
 
