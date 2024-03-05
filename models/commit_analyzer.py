@@ -11,7 +11,7 @@ class CommitAnalyzer:
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug', 'exception'],
             'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'implementation', 'new', 'introduce', 'create', 'generate','method'],
             'DOCUMENTATION': ['doc', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',  'javadocs', 'readme.md'],
-            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'performance', 'optimize', 'restructure', 'move', 'replace', 'typo', 'change'],
+            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'performance', 'optimize', 'restructure', 'move', 'replace', 'typo', 'change', 'rename'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert'],
             'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
             'STYLING': ['style', 'format', 'lint', 'styling', 'convention', 'formatting'],
@@ -56,19 +56,12 @@ class CommitAnalyzer:
         # Vectorize the preprocessed commits
         dictionary, bow_corpus = self.vectorize_data(preprocessed_commits)
 
-        # Perform LDA topic modeling and get top keywords for each topic
-        #topic_keywords, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
         # Perform LDA topic modeling and get top keywords for each topic with their weights
         topic_keywords_with_weights, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
 
         # Map topics to categories
-        #topic_category_mapping = self.map_topics_to_categories(topic_keywords)
-        topic_category_mapping = self.map_topics_to_categories(topic_keywords_with_weights, self.categories)
+        topic_category_mapping = self.map_topics_to_categories(topic_keywords_with_weights)
 
-        # Print the top 10 topic-category mappings
-        # print("Top 10 Topic-Category Mappings:")
-        # for i, (topic, category) in enumerate(topic_category_mapping[:10], 1):
-        #     print(f"{i}. Topic {topic} -> Category: {category}")
         # Print the top mappings
         print("Top Topic-Category Mappings:")
         for i, (topic_num, best_category, weight) in enumerate(topic_category_mapping, 1):
@@ -180,14 +173,6 @@ class CommitAnalyzer:
             keywords_with_weights = [(word, round(weight, 4)) for word, weight in topic]
             topic_keywords_with_weights[idx] = keywords_with_weights
 
-        # topic_keywords = []
-        # # Print the topics found by the LDA model
-        # for idx, topic in lda_model.print_topics(-1):
-        #     # Extract only the words
-        #     words = [word for word, _ in lda_model.show_topic(idx)]
-        #     topic_keywords.append(words)
-        #     print('Topic: {} \nWords: {}'.format(idx, topic))
-
         # Man kan visualisera den tränade lda modellen i jupyter eller som HTML:
         visualization = pyLDAvis.gensim.prepare(lda_model, bow_corpus, dictionary)
         # To run, write "start lda_visualization.html" in terminal
@@ -196,39 +181,29 @@ class CommitAnalyzer:
         #return topic_keywords, lda_model
         return topic_keywords_with_weights, lda_model
 
-    def map_topics_to_categories(self, topic_keywords_with_weights, categories):
+    def map_topics_to_categories(self, topic_keywords_with_weights):
 
         topic_category_mappings = []
 
         # Loop over each topic with its keywords + weights.
         for topic_num, keywords_with_weights in topic_keywords_with_weights.items():
             # Initialize a dictionary to hold cumulative weights for each category
-            category_weights = {category: 0 for category in categories.keys()}
+            category_weights = {category: 0 for category in self.categories.keys()}
 
             # For each keyword and its weight...
             for keyword, weight in keywords_with_weights:
                 # For each category with its keywords...
-                for category, keywords in categories.items():
-                    # If the keyword is in the keywords of the categories, accumulate the weight.
-                    if keyword in keywords:
+                for category, cat_keywords in self.categories.items():
+                    # If the keyword contains any of the substrings from cat_keywords...
+                    if any(sub_keyword in keyword for sub_keyword in cat_keywords):
+                        print("If hej Keyword: " + str(keyword))
+                        # Accumulate the weight for that category.
                         category_weights[category] += weight
+                #TODO Should none matched be handled differently
 
             # Determine the category with the highest cumulative weight for this topic
             best_category = max(category_weights, key=category_weights.get)
             topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
-
-        # topic_category_mapping = []
-        #
-        # for i, keywords in enumerate(topic_keywords):
-        #     best_match = None
-        #     best_score = 0
-        #         for category, cat_keywords in self.categories.items():
-        #             score = sum(1 for word in keywords if word in cat_keywords)
-        #             if score > best_score:
-        #                 best_score = score
-        #                 best_match = category
-        #
-        #     topic_category_mapping.append((i, best_match))
 
         return topic_category_mappings
 
