@@ -32,7 +32,7 @@ class MainController:
             #print("Commit data for ebba.nimer@gmail.com: " + str(author_info))
 
             activity_info = self.main_model.get_all_months_activity()
-            #print("All months activity: " + str(activity_info))
+            print("All months activity: " + str(activity_info))
 
             all_commits = self.main_model.get_all_commits()
             #print("All commits: " + str(all_commits))

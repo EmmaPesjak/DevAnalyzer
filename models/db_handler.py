@@ -54,6 +54,7 @@ class DBHandler:
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
+        # TODO ta bort github users + lower case undvik duplicates, måste vara unik
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -64,12 +65,15 @@ class DBHandler:
             for commit in Repository(repo_url).traverse_commits():
                 # Insert author if not exists
                 cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
-                               (commit.author.name, commit.author.email))
-                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
+                               (commit.committer.name, commit.committer.email))
+                cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.committer.email,))
                 author_id = cursor.fetchone()[0]
 
+
                 # Format the date and insert commit
-                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
+                #formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
+                formatted_date = commit.committer_date.strftime("%Y-%m-%d %H:%M:%S")
+
                 cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
                                (author_id, commit.msg, formatted_date))
                 commit_id = cursor.lastrowid
