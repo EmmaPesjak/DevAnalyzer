@@ -27,7 +27,7 @@ class MainController:
                 #self.commit_analyzer.nlp(all_commits)
                 self.commit_test.analyze_commits(all_commits)
 
-                #self.view.root.after(0, self.view.update_ui_after_fetch)
+                self.view.root.after(0, self.view.update_ui_after_fetch)
             else:
                 # Handle calculation error
                 pass
