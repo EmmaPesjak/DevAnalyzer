@@ -21,8 +21,7 @@ class CommitTest:
         with open('TopicModeling/categories.pkl', 'rb') as f:
             self.categories = pickle.load(f)
 
-        # Use a defaultdict to aggregate counts by category names
-        self.category_counts = defaultdict(int)
+        self.categories_counts = {}
 
 
     def analyze_commits(self, commit_messages):
@@ -48,18 +47,26 @@ class CommitTest:
         dominant_topic = max(topic_distribution, key=lambda x: x[1])[0]
         #print("Dominant topic: " + str(dominant_topic))
 
-        # Map the dominant topic to a category
-        category = self.topic_category_mapping[dominant_topic]
-        # Increment the count for the determined category
-        #self.category_counts[category] += 1
+        # # Map the dominant topic to a category
+        # category = self.topic_category_mapping[dominant_topic]
+        # # Increment the count for the determined category
+        # #self.category_counts[category] += 1
+        #
+        # # After determining the category, update the counts
+        # # Assuming topic_category_mapping is a mapping from topic numbers to categories
+        # category_info = self.topic_category_mapping[dominant_topic]  # This retrieves the category info tuple
+        # category_name = category_info[1]  # Assuming the second element is the category name
+        #
+        # # Aggregate counts by category name
+        # self.category_counts[category_name] += 1
 
-        # After determining the category, update the counts
-        # Assuming topic_category_mapping is a mapping from topic numbers to categories
-        category_info = self.topic_category_mapping[dominant_topic]  # This retrieves the category info tuple
-        category_name = category_info[1]  # Assuming the second element is the category name
+        category_name = self.topic_category_mapping[dominant_topic][1]
 
-        # Aggregate counts by category name
-        self.category_counts[category_name] += 1
+        # Update the counts in the dictionary
+        if category_name in self.categories_counts:
+            self.categories_counts[category_name] += 1
+        else:
+            self.categories_counts[category_name] = 1
 
         # Print the result
         #print(f"Commit Message: \"{commit_message}\"")
@@ -98,8 +105,18 @@ class CommitTest:
 
     def summarize_results(self):
         print("Commit Category Counts:")
-        for category, count in self.category_counts.items():
-            print(f"{category}: {count}")
+        #print(self.categories_counts)
+
+        content = f"type_of_commits = {self.categories_counts}\n"
+
+        # Append the string to the file
+        with open('support/repo_stats.py', 'a', encoding="utf-8") as file:
+            file.write(content)
+
+
+
+        # for category, count in self.category_counts.items():
+        #     print(f"{category}: {count}")
 
     # def map_topics_to_category(self, topics):
     #     # Map topics to categories using self.topic_category_mappings
