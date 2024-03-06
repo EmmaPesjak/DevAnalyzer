@@ -258,32 +258,56 @@ class DBHandler:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # Prepare the list for the last 12 months
-        last_12_months = [(datetime.now() - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(11, -1, -1)]
+        # Get today's date and the date 12 months ago
+        today = datetime.now()
+        twelve_months_ago = today - relativedelta(months=12)
 
-        # Initialize commit counts for each month with 0
-        commit_counts = dict.fromkeys(last_12_months, 0)
-
-        # Query to get commit counts for available months in the last year
         cursor.execute('''
-            SELECT strftime("%Y-%m", date) AS month, COUNT(*) 
-            FROM commits 
-            WHERE date >= ?
-            GROUP BY month
-        ''', (last_12_months[0],))
+                SELECT 
+                    strftime('%Y-%m', date) AS month_year, 
+                    COUNT(*) AS commits_count
+                FROM 
+                    commits 
+                WHERE 
+                    date >= ?
+                GROUP BY 
+                    month_year
+                ORDER BY 
+                    month_year ASC
+            ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
 
-        # Fetch the results once and store them
-        total_commits = cursor.fetchall()
-
-        # Use the stored results
-        for month, count in total_commits:
-            if month in commit_counts:
-                commit_counts[month] = count
-
+        results = cursor.fetchall()
         conn.close()
-
-        # Return commit counts as a list
-        return [commit_counts[month] for month in last_12_months]
+        return results
+        # conn = sqlite3.connect(self.db_name)
+        # cursor = conn.cursor()
+        #
+        # # Prepare the list for the last 12 months
+        # last_12_months = [(datetime.now() - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(11, -1, -1)]
+        #
+        # # Initialize commit counts for each month with 0
+        # commit_counts = dict.fromkeys(last_12_months, 0)
+        #
+        # # Query to get commit counts for available months in the last year
+        # cursor.execute('''
+        #     SELECT strftime("%Y-%m", date) AS month, COUNT(*)
+        #     FROM commits
+        #     WHERE date >= ?
+        #     GROUP BY month
+        # ''', (last_12_months[0],))
+        #
+        # # Fetch the results once and store them
+        # total_commits = cursor.fetchall()
+        #
+        # # Use the stored results
+        # for month, count in total_commits:
+        #     if month in commit_counts:
+        #         commit_counts[month] = count
+        #
+        # conn.close()
+        #
+        # # Return commit counts as a list
+        # return [commit_counts[month] for month in last_12_months]
 
     """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
     def get_commit_data_with_files_for_author(self, author_email):

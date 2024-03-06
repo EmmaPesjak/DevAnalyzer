@@ -91,6 +91,42 @@ class MainModel:
 
         return readable_format_data
 
+    def get_timeline(self):
+        today = datetime.now()
+        data = self.db_handler.get_commit_counts_past_year()
+
+        # Initialize a dictionary for the past 12 months
+        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12, -1, -1)}
+
+        # Fill in the data
+        for month_year, commits_count in data:
+            if month_year in structured_data:
+                structured_data[month_year] = commits_count
+
+        # Convert 'month_year' to a more readable format if needed
+        readable_format_data = {}
+        for month_year in structured_data:
+            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%B %Y")
+            readable_format_data[month_name] = structured_data[month_year]
+
+        return readable_format_data
+
+    # TODO info bar stats
+    def info_bar_stats(self):
+        # Total amount of commits
+        # Most active month
+        # Most changes in file?
+        # Most type (from categories)
+        pass
+
+    # TODO info bar user
+    def info_bar_user(self, contributor):
+        # Total amount of commits
+        # Most active month
+        # Most changes in file?
+        # Most type (from categories)
+        pass
+
     def write_to_file(self):
         filename = "support//repo_stats.py"
 
@@ -98,6 +134,9 @@ class MainModel:
         top_5_changed_files = self.db_handler.get_top_5_changed_files()
         top_5_per_user = self.get_top_5_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
+        total_monthly_commits = self.get_timeline()
+        info_bar_statistics = self.info_bar_stats()
+        #info_bar_statistics_user = self.info_bar_user(author)
 
         #TODO commit_types_by_contributor (topics from commitanalyzer)
 
@@ -106,7 +145,8 @@ class MainModel:
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
             f"top_5_changed_files = {top_5_changed_files}\n"
             f"top_5_per_user = {top_5_per_user}\n"
-            f"monthly_commits_by_contributor = {monthly_commits_by_users}"
+            f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
+            f"total_monthly_commits = {total_monthly_commits}"
         )
 
         with open(filename, "w", encoding="utf-8") as file:
