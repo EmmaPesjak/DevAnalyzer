@@ -234,17 +234,22 @@ class MainView:
             total_commits = sum(file_data['total_commits_by_contributor'].values())
             most_commits_from = max(file_data['total_commits_by_contributor'],
                                     key=file_data['total_commits_by_contributor'].get)
-            # TODO replace placeholders
-            most_active_month = "Not implemented"  # Placeholder implementation
-            most_type_of_commits = "Not implemented"  # Placeholder for type of commits
-            most_where_of_commits = "Not implemented"  # Placeholder for where commits happened
+            top_10_changed_files = file_data['top_10_changed_files']
+            total_monthly_commits = file_data['total_monthly_commits']
+
+            file_with_most_commits = max(top_10_changed_files, key=top_10_changed_files.get)
+            commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
+            month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
+            total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
+            most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
 
             info_text = (
-                f"Total number of commits: {total_commits}\n"
-                f"Most commits from: {most_commits_from}\n"
-                f"Most active month\nlast 12 months: {most_active_month}\n"
-                f"Most commits of type: {most_type_of_commits}\n"
-                f"Most commits in: {most_where_of_commits}"
+                f"Total number of commits: {total_commits}\n\n"
+                f"Most commits from: {most_commits_from}\n\n"
+                f"Most active month last 12\nmonths: {month_with_most_commits}, "
+                f"{total_commits_in_month_with_most_commits} commits\n\n"
+                f"Most commits of type: {most_type_of_commits}\n\n"
+                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
@@ -350,9 +355,7 @@ class MainView:
         total_monthly_commits = file_data['total_monthly_commits']
         top_10_changed_files = file_data['top_10_changed_files']
 
-
-        # TODO: replace with the correct parameters
-        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,
+        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,  # TODO: replace with the correct parameter TYPE
                                                   title="Total Commit Type",
                                                   xlabel="Type", ylabel="Commits")
         fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
