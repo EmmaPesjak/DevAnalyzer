@@ -23,7 +23,7 @@ class CommitTest:
 
     def analyze_commits(self, commit_messages):
         for commit in commit_messages:
-            print("Commit: " + commit)
+            #print("Commit: " + commit)
             self.categorize_commit_message(commit)
         # # Preprocess commit messages
         # preprocessed_commits = self.preprocess_commit(commit_messages)
@@ -43,7 +43,7 @@ class CommitTest:
     def categorize_commit_message(self, commit_message):
         # Preprocess the commit message
         preprocessed_message = self.preprocess_commit(commit_message)  # Ensure this is a list
-        print("Preprocessed: " + str(preprocessed_message))
+        #print("Preprocessed: " + str(preprocessed_message))
         # Vectorize the commit message
         bow_vector = self.dictionary.doc2bow(preprocessed_message)  # Convert to BoW format
 
@@ -51,19 +51,19 @@ class CommitTest:
         #topic_distribution = self.lda_model[bow_vector]
         # Infer the topic(s) for the commit message
         topic_distribution = self.lda_model.get_document_topics(bow_vector)
-        print("Topics: " + str(topic_distribution))
+        #print("Topics: " + str(topic_distribution))
 
         # Find the dominant topic
         dominant_topic = max(topic_distribution, key=lambda x: x[1])[0]
-        print("Dominant topic: " + str(dominant_topic))
+        #print("Dominant topic: " + str(dominant_topic))
 
         # Map the dominant topic to a category
         category = self.topic_category_mapping[dominant_topic]
 
         # Print the result
-        print(f"Commit Message: \"{commit_message}\"")
-        print(f"Predicted Category: {category}")
-        print('-----------------------')
+        #print(f"Commit Message: \"{commit_message}\"")
+        #print(f"Predicted Category: {category}")
+        #print('-----------------------')
 
     def preprocess_commit(self, commit_message):
         nlp = spacy.load("en_core_web_sm")
