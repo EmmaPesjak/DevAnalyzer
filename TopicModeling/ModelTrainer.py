@@ -40,7 +40,7 @@ class ModelTrainer:
             'REVERT': ['revert', 'undo', 'rollback', 'reverse'],
             'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize', 'improve'],
             'DATABASE': ['database', 'db', 'sql', 'table', 'schema', 'entity', 'query', 'join', 'sqlcipher',
-                         'relationship']
+                         'relationship', 'column']
         }
         self.commit_messages = commit_messages
 
