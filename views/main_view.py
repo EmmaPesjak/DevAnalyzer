@@ -1,12 +1,18 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from views.data_visualizer import DataVisualizer
+import matplotlib.font_manager
+
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
+# Configure Matplotlib to use a specific font.
+plt.rcParams['font.family'] = 'Microsoft YaHei'  # Replace with the name of the font you installed
+
 matplotlib.use('TkAgg')
 
 
@@ -99,7 +105,7 @@ class MainView:
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def create_main_area(self, initial=False):
+    def create_main_area(self, file_data=None, initial=False):
         """
         Creates the main content area of the application where the diagrams are placed.
         """
@@ -122,7 +128,7 @@ class MainView:
             if hasattr(self,
                        'placeholder_label') and self.placeholder_label is not None:
                 self.placeholder_label.destroy()
-            self.setup_overwiew_diagrams()
+            self.setup_overwiew_diagrams(file_data)
 
     def open_git_input(self):
         """
@@ -199,12 +205,12 @@ class MainView:
         users = list(total_commits_by_contributor.keys())
 
         # Recreate the 'user_select' widget with potentially updated options.
-        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users, command=self.setup_user_window)
+        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users, command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
         self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
-        self.create_main_area()
+        self.create_main_area(file_data)
         self.create_info_bar(file_data)
 
     def read_file_data(self):
@@ -246,7 +252,7 @@ class MainView:
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
 
-    def setup_user_window(self, choice):
+    def setup_user_window(self, choice, file_data):
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information about {choice}")
         new_window.geometry(self.WINDOW_GEOMETRY)
@@ -267,9 +273,8 @@ class MainView:
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
 
-        file_data = self.read_file_data()
         total_commits_by_contributor = file_data['total_commits_by_contributor']
-        total_monthly_commits = file_data['total_monthly_commits']
+        total_monthly_commits = file_data.get('total_monthly_commits', {})
 
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
                                                   ylabel="Commits")
@@ -340,9 +345,8 @@ class MainView:
         from support.test_data import info_bar_statistics_user #TODO byta detta
         return info_bar_statistics_user['Where']
 
-    def setup_overwiew_diagrams(self):
+    def setup_overwiew_diagrams(self, file_data):
 
-        file_data = self.read_file_data()
         total_commits_by_contributor = file_data['total_commits_by_contributor']
         total_monthly_commits = file_data['total_monthly_commits']
 
