@@ -17,7 +17,7 @@ class MainView:
     MODE_LIGHT = "light"
     DEFAULT_THEME = "green"  # blue green or dark-blue
     WINDOW_TITLE = "DevAnalyzer"
-    WINDOW_GEOMETRY = "1200x600"
+    WINDOW_GEOMETRY = "1275x675"
     TEXT_COLOR = "#3FA27B"
     PADDING = 10
     mode = MODE_DARK  # Light or dark
