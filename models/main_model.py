@@ -144,7 +144,7 @@ class MainModel:
             f"top_10_changed_files = {top_10_changed_files}\n"
             f"top_10_per_user = {top_10_per_user}\n"
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
-            f"total_monthly_commits = {total_monthly_commits}"
+            f"total_monthly_commits = {total_monthly_commits}\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

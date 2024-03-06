@@ -1,4 +1,5 @@
 import pickle
+from collections import Counter, defaultdict
 
 import spacy
 from gensim.models.ldamodel import LdaModel
@@ -20,34 +21,23 @@ class CommitTest:
         with open('TopicModeling/categories.pkl', 'rb') as f:
             self.categories = pickle.load(f)
 
+        self.categories_counts = {}
+
 
     def analyze_commits(self, commit_messages):
         for commit in commit_messages:
             #print("Commit: " + commit)
             self.categorize_commit_message(commit)
-        # # Preprocess commit messages
-        # preprocessed_commits = self.preprocess_commit(commit_messages)
-        #
-        # # Vectorize messages
-        # corpus = [self.dictionary.doc2bow(commit) for commit in preprocessed_commits]
-        #
-        # # Analyze and categorize each commit
-        # commit_categories = []
-        # for commit in corpus:
-        #     topics = self.lda_model[commit]
-        #     category = self.map_topics_to_category(topics)
-        #     commit_categories.append(category)
 
-        #return commit_categories
+        self.summarize_results()
 
     def categorize_commit_message(self, commit_message):
         # Preprocess the commit message
-        preprocessed_message = self.preprocess_commit(commit_message)  # Ensure this is a list
+        preprocessed_message = self.preprocess_commit(commit_message)
         #print("Preprocessed: " + str(preprocessed_message))
         # Vectorize the commit message
         bow_vector = self.dictionary.doc2bow(preprocessed_message)  # Convert to BoW format
 
-        # Infer the topic(s) for the commit message
         #topic_distribution = self.lda_model[bow_vector]
         # Infer the topic(s) for the commit message
         topic_distribution = self.lda_model.get_document_topics(bow_vector)
@@ -57,8 +47,26 @@ class CommitTest:
         dominant_topic = max(topic_distribution, key=lambda x: x[1])[0]
         #print("Dominant topic: " + str(dominant_topic))
 
-        # Map the dominant topic to a category
-        category = self.topic_category_mapping[dominant_topic]
+        # # Map the dominant topic to a category
+        # category = self.topic_category_mapping[dominant_topic]
+        # # Increment the count for the determined category
+        # #self.category_counts[category] += 1
+        #
+        # # After determining the category, update the counts
+        # # Assuming topic_category_mapping is a mapping from topic numbers to categories
+        # category_info = self.topic_category_mapping[dominant_topic]  # This retrieves the category info tuple
+        # category_name = category_info[1]  # Assuming the second element is the category name
+        #
+        # # Aggregate counts by category name
+        # self.category_counts[category_name] += 1
+
+        category_name = self.topic_category_mapping[dominant_topic][1]
+
+        # Update the counts in the dictionary
+        if category_name in self.categories_counts:
+            self.categories_counts[category_name] += 1
+        else:
+            self.categories_counts[category_name] = 1
 
         # Print the result
         #print(f"Commit Message: \"{commit_message}\"")
@@ -94,6 +102,21 @@ class CommitTest:
         ]
 
         return filtered_tokens
+
+    def summarize_results(self):
+        print("Commit Category Counts:")
+        #print(self.categories_counts)
+
+        content = f"type_of_commits = {self.categories_counts}\n"
+
+        # Append the string to the file
+        with open('support/repo_stats.py', 'a', encoding="utf-8") as file:
+            file.write(content)
+
+
+
+        # for category, count in self.category_counts.items():
+        #     print(f"{category}: {count}")
 
     # def map_topics_to_category(self, topics):
     #     # Map topics to categories using self.topic_category_mappings
