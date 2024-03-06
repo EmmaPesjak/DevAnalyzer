@@ -71,25 +71,23 @@ class MainModel:
         return top_10_per_user
 
     def structure_monthly_activity_by_author(self):
-        # Get today's date and the date 12 months ago
         today = datetime.now()
 
+        # Adjust strftime to generate month names without the year.
+        readable_past_12_months = [(today - relativedelta(months=11 - i)).strftime("%b") for i in range(12)]
+
         data = self.db_handler.get_monthly_commits_by_author()
-        # Initialize a dictionary for the past 12 months
-        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): {} for i in range(12, -1, -1)}
 
-        # Fill in the data
+        structured_data = defaultdict(lambda: {month: 0 for month in readable_past_12_months})
+
         for month_year, name, commits_count in data:
-            if month_year in structured_data:
-                structured_data[month_year][name] = commits_count
+            readable_month_year = datetime.strptime(month_year, "%Y-%m").strftime("%b")  # Adjusted to match format.
 
-        # Convert 'month_year' to a more readable format
-        readable_format_data = {}
-        for month_year, authors_commits in structured_data.items():
-            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%B %Y")
-            readable_format_data[month_name] = authors_commits
+            # Ensure we fill the commit counts for each author correctly.
+            if readable_month_year in structured_data[name]:
+                structured_data[name][readable_month_year] = commits_count
 
-        return readable_format_data
+        return dict(structured_data)
 
     def get_timeline(self):
         today = datetime.now()
