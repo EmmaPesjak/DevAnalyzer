@@ -56,19 +56,19 @@ class MainModel:
     def get_commit_data_with_files_for_author(self, author_email):
         return self.db_handler.get_commit_data_with_files_for_author(author_email)
 
-    def get_top_5_files_per_user(self):
+    def get_top_10_files_per_user(self):
         data = self.db_handler.get_top_files_per_user()
-        top_5_per_user = {}
+        top_10_per_user = {}
 
         for name, file_name, changes in data:
-            if name not in top_5_per_user:
-                top_5_per_user[name] = {}
+            if name not in top_10_per_user:
+                top_10_per_user[name] = {}
 
             # Only keep top 5 entries per user
-            if len(top_5_per_user[name]) < 5:
-                top_5_per_user[name][file_name] = changes
+            if len(top_10_per_user[name]) < 10:
+                top_10_per_user[name][file_name] = changes
 
-        return top_5_per_user
+        return top_10_per_user
 
     def structure_monthly_activity_by_author(self):
         # Get today's date and the date 12 months ago
@@ -131,8 +131,8 @@ class MainModel:
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
-        top_5_changed_files = self.db_handler.get_top_5_changed_files()
-        top_5_per_user = self.get_top_5_files_per_user()
+        top_10_changed_files = self.db_handler.get_top_5_changed_files()
+        top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
         info_bar_statistics = self.info_bar_stats()
@@ -143,8 +143,8 @@ class MainModel:
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
-            f"top_5_changed_files = {top_5_changed_files}\n"
-            f"top_5_per_user = {top_5_per_user}\n"
+            f"top_10_changed_files = {top_10_changed_files}\n"
+            f"top_10_per_user = {top_10_per_user}\n"
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}"
         )

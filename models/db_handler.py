@@ -116,18 +116,18 @@ class DBHandler:
         total_commits_by_contributor = {name: total_commits for name, total_commits in results}
         return total_commits_by_contributor
 
-    def get_top_5_changed_files(self):
+    def get_top_10_changed_files(self):
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # SQL query to find the top 5 file names by occurrence
+        # SQL query to find the top 10 file names by occurrence
         cursor.execute('''
                SELECT file_name, COUNT(file_name) AS occurrence
                FROM commit_files
                GROUP BY file_name
                ORDER BY occurrence DESC
-               LIMIT 5
+               LIMIT 10
            ''')
 
         # Fetch the results
