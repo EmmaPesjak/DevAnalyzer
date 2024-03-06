@@ -49,28 +49,28 @@ class CommitAnalyzer:
 
 
     def nlp(self, all_commits):
-
+        pass
         # Preprocess the commits
-        preprocessed_commits = self.preprocess_data(all_commits)
-
-        # Vectorize the preprocessed commits
-        dictionary, bow_corpus = self.vectorize_data(preprocessed_commits)
-
-        # Perform LDA topic modeling and get top keywords for each topic with their weights
-        topic_keywords_with_weights, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
-
-        # Map topics to categories
-        topic_category_mapping = self.map_topics_to_categories(topic_keywords_with_weights)
-
-        # Print the top mappings
-        print("Top Topic-Category Mappings:")
-        for i, (topic_num, best_category, weight) in enumerate(topic_category_mapping, 1):
-            # Access the keywords and their weights for the current topic
-            keywords_with_weights = topic_keywords_with_weights.get(topic_num, [])
-            # Format the keywords and weights for printing
-            keywords_str = " + ".join([f"{weight:.3f}*\"{word}\"" for word, weight in keywords_with_weights])
-            print(
-                f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
+        # preprocessed_commits = self.preprocess_data(all_commits)
+        #
+        # # Vectorize the preprocessed commits
+        # dictionary, bow_corpus = self.vectorize_data(preprocessed_commits)
+        #
+        # # Perform LDA topic modeling and get top keywords for each topic with their weights
+        # topic_keywords_with_weights, lda_model = self.perform_lda_topic_modeling(bow_corpus, dictionary)
+        #
+        # # Map topics to categories
+        # topic_category_mapping = self.map_topics_to_categories(topic_keywords_with_weights)
+        #
+        # # Print the top mappings
+        # print("Top Topic-Category Mappings:")
+        # for i, (topic_num, best_category, weight) in enumerate(topic_category_mapping, 1):
+        #     # Access the keywords and their weights for the current topic
+        #     keywords_with_weights = topic_keywords_with_weights.get(topic_num, [])
+        #     # Format the keywords and weights for printing
+        #     keywords_str = " + ".join([f"{weight:.3f}*\"{word}\"" for word, weight in keywords_with_weights])
+        #     print(
+        #         f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
         # TODO: sen här behöver vi kategorisera varje commit till varje topic, obs det kan finnas dubbletter här
 
     # SpaCy first step - preprocess data - get rid of all information that will not be used for the final output

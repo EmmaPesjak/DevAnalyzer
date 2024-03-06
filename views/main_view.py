@@ -1,17 +1,14 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
-import threading
 from tkinter import messagebox
-import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from support.test_data import commit_types_by_contributor, \
-    monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 from views.data_visualizer import DataVisualizer
-
-from support.repo_stats import total_commits_by_contributor  # TODO detta måste göras varje gång UIt ska uppdateras
+import matplotlib.font_manager
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
+plt.rcParams['font.family'] = 'Microsoft YaHei'  # Ensure non-latin characters also can be read.
+
 matplotlib.use('TkAgg')
 
 
@@ -104,7 +101,7 @@ class MainView:
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def create_main_area(self, initial=False):
+    def create_main_area(self, file_data=None, initial=False):
         """
         Creates the main content area of the application where the diagrams are placed.
         """
@@ -127,23 +124,7 @@ class MainView:
             if hasattr(self,
                        'placeholder_label') and self.placeholder_label is not None:
                 self.placeholder_label.destroy()
-            self.setup_overwiew_diagrams()
-
-    def get_total_commits(self):
-        return info_bar_statistics['Total commits']
-
-    def get_most_commits_from(self):
-        contributor_with_most_commits = max(total_commits_by_contributor, key=total_commits_by_contributor.get)
-        return contributor_with_most_commits
-
-    def get_most_active_month(self):
-        return info_bar_statistics['Most active month']
-
-    def get_most_type_of_commits(self):
-        return info_bar_statistics['Most type']
-
-    def get_most_where_of_commits(self):
-        return info_bar_statistics['Most changes in']
+            self.setup_overwiew_diagrams(file_data)
 
     def open_git_input(self):
         """
@@ -153,7 +134,7 @@ class MainView:
         dialog = ctk.CTkInputDialog(text="Enter you repository link:", title="Repository")
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
-            # Display loading message or indicator
+            # Display loading indicator.
             self.show_loading_indicator()
             self.fetch_repo_data(repo_input)
 
@@ -181,22 +162,22 @@ class MainView:
         """
         Clears the UI and displays a loading indicator in the UI and prepares the interface for data loading.
         """
-        # Clear existing diagrams
+        # Clear existing diagrams.
         for widget in self.diagram_frame.winfo_children():
             widget.destroy()
 
-        # Close all user-specific windows
+        # Close all user-specific windows.
         for window in self.user_windows:
             window.destroy()
         self.user_windows.clear()
 
-        # Clear or reset the info bar
+        # Clear or reset the info bar.
         if hasattr(self, 'info_label') and self.info_label is not None:
             self.info_label.destroy()  # or self.info_label.configure(text="")
 
         self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait...",
                                           text_color=self.TEXT_COLOR)
-        # Place the loading label in a specific row and column, adjust as per your layout needs
+        # Place the loading label in a specific row and column.
         self.loading_label.grid(row=0, column=0, sticky="nsew")
 
     def update_ui_after_fetch(self):
@@ -213,20 +194,33 @@ class MainView:
             self.user_select.destroy()
             self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
 
-        from support.repo_stats import total_commits_by_contributor
+        file_data = self.read_file_data()
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+
         # Create a list of the users.
         users = list(total_commits_by_contributor.keys())
 
         # Recreate the 'user_select' widget with potentially updated options.
-        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users, command=self.setup_user_window)
+        self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users,
+                                             command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
         self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
-        self.create_main_area()
-        self.create_info_bar()
+        self.create_main_area(file_data)
+        self.create_info_bar(file_data)
 
-    def create_info_bar(self, initial=False):
+    def read_file_data(self):
+        """Read data from a file and return it."""
+        filename = "support//repo_stats.py"
+        local_variables = {}
+        with open(filename, 'r', encoding="utf-8") as file:
+            file_content = file.read()
+            # Execute the file content in an empty global namespace and capture the local variables
+            exec(file_content, {}, local_variables)
+            return local_variables
+
+    def create_info_bar(self, file_data=None, initial=False):
         """
         Creates the information bar on to display statistics.
         """
@@ -236,17 +230,26 @@ class MainView:
         if initial:
             pass  # This should be empty when starting the application.
         else:
+            # Extracting data directly from the file_data parameter
+            total_commits = sum(file_data['total_commits_by_contributor'].values())
+            most_commits_from = max(file_data['total_commits_by_contributor'],
+                                    key=file_data['total_commits_by_contributor'].get)
+            # TODO replace placeholders
+            most_active_month = "Not implemented"  # Placeholder implementation
+            most_type_of_commits = "Not implemented"  # Placeholder for type of commits
+            most_where_of_commits = "Not implemented"  # Placeholder for where commits happened
+
             info_text = (
-                f"Total number of commits: {self.get_total_commits()}\n"
-                f"Most commits from: {self.get_most_commits_from()}\n"
-                f"Most active month\nlast 12 months: {self.get_most_active_month()}\n"
-                f"Most commits of type: {self.get_most_type_of_commits()}\n"
-                f"Most commits in: {self.get_most_where_of_commits()}"
+                f"Total number of commits: {total_commits}\n"
+                f"Most commits from: {most_commits_from}\n"
+                f"Most active month\nlast 12 months: {most_active_month}\n"
+                f"Most commits of type: {most_type_of_commits}\n"
+                f"Most commits in: {most_where_of_commits}"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
 
-    def setup_user_window(self, choice):
+    def setup_user_window(self, choice, file_data):
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information about {choice}")
         new_window.geometry(self.WINDOW_GEOMETRY)
@@ -267,6 +270,10 @@ class MainView:
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
 
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+        total_monthly_commits = file_data.get('total_monthly_commits', {})
+
+        #TODO: replace with the correct parameters
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
                                                   ylabel="Commits")
         fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
@@ -312,6 +319,7 @@ class MainView:
         self.user_windows.remove(window)
 
     def create_info_label_text_user(self):
+        # TODO: replace with the correct parameters
         info_text = (
             f"Total Commits: {self.get_total_commit_user()}\n"
             f"Most Active Month: {self.get_most_active_month_user()}\n"
@@ -321,21 +329,29 @@ class MainView:
         return info_text
 
     def get_total_commit_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['Total commits']
 
     def get_most_active_month_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['Most active month']
 
     def get_most_type_of_commits_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['What']
 
     def get_most_where_of_commits_user(self):
+        from support.test_data import info_bar_statistics_user #TODO byta detta
         return info_bar_statistics_user['Where']
 
-    def setup_overwiew_diagrams(self):
+    def setup_overwiew_diagrams(self, file_data):
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+        total_monthly_commits = file_data['total_monthly_commits']
+
+        # TODO: replace with the correct parameters
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,
-                                                  title="Total Commits by Contributor",
-                                                  xlabel="Contributor", ylabel="Commits")
+                                                  title="Total Commit Type",
+                                                  xlabel="Type", ylabel="Commits")
         fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
                                                   title="Total commits by contributor")
         fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total Monthly Commits",
@@ -382,5 +398,7 @@ class MainView:
             self.root.destroy()
 
     def show_error_message(self, message):
-        # TODO fix GUI
+        """
+        Shows error messages in a message box.
+        """
         messagebox.showerror("Error", message)
