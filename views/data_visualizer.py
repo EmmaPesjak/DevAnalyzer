@@ -35,7 +35,7 @@ class DataVisualizer:
         ax.bar(data.keys(), data.values())
         ax.set_title(title)
         ax.set_xticks(range(len(data)))
-        ax.set_xticklabels(data.keys(), rotation=45, ha="right")
+        ax.set_xticklabels(data.keys(), rotation=30, ha="right")
         plt.tight_layout(pad=3.0)
         ax.set_xlabel(xlabel, labelpad=15)
         ax.set_ylabel(ylabel, labelpad=15)
@@ -61,11 +61,12 @@ class DataVisualizer:
             data_filtered['Others'] = other
 
         fig, ax = plt.subplots(figsize=(10, 6), dpi=75)
-        wedges, texts, autotexts = ax.pie(data_filtered.values(), autopct='%1.1f%%', startangle=90, counterclock=False)
-        ax.legend(wedges, data_filtered.keys(), title="Contributors", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+        # autopct generates the percentage labels on the pie pieces.
+        ax.pie(data_filtered.values(), labels=data_filtered.keys(), autopct='%1.1f%%', startangle=90,
+               counterclock=False)
+
         ax.set_title(title)
         plt.tight_layout()
-        plt.subplots_adjust(right=0.7)
         return fig, ax
 
     def _create_line_figure(self, data, title="Line Chart", xlabel="X", ylabel="Y"):
