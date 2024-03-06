@@ -205,7 +205,7 @@ class CommitAnalyzer:
             topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
 
         return topic_category_mappings
-
+ 
     #TODO: Vi behöver refina modellen, tuna alla parametrar, improva preprocessing, definera categorierna mycket mycket bättre
 
     ## kap 11, räkna distance vectors, similarity queries och sånt på LDA och/eller tf-idf känns bra

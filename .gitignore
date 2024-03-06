@@ -55,3 +55,12 @@ Thumbs.db
 repo_data.db
 support/repo_stats.py
 
+TopicModeling/support/
+TopicModeling/categories.pkl
+TopicModeling/dictionary.gensim
+TopicModeling/lda_model.gensim
+TopicModeling/lda_model.gensim.expElogbeta.npy
+TopicModeling/lda_model.gensim.id2word
+TopicModeling/lda_model.gensim.state
+TopicModeling/topic_to_category_mapping.pkl
+
