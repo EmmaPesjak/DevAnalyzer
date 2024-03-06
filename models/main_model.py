@@ -105,13 +105,10 @@ class MainModel:
 
         # Convert 'month_year' to month names without year
         readable_format_data = {}
-        for month_year, commits_count in structured_data.items():
-            # Here is the corrected part
+        for month_year in reversed(list(structured_data.keys())):
             month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
-            readable_format_data[month_name] = commits_count
+            readable_format_data[month_name] = structured_data[month_year]
 
-        # Since dictionaries are ordered in Python 3.7+, sorting may not be necessary if chronological order was maintained.
-        # However, to ensure proper month order (if needed), especially around year changes, additional logic might be required.
         return readable_format_data
 
     # TODO info bar stats
