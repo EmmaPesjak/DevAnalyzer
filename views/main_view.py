@@ -1,14 +1,9 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
-import threading
 from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from support.test_data import commit_types_by_contributor, \
-    monthly_commits_by_contributor, total_monthly_commits, info_bar_statistics, info_bar_statistics_user
 from views.data_visualizer import DataVisualizer
-
-from support.repo_stats import total_commits_by_contributor  # TODO detta måste göras varje gång UIt ska uppdateras
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
@@ -129,22 +124,6 @@ class MainView:
                 self.placeholder_label.destroy()
             self.setup_overwiew_diagrams()
 
-    def get_total_commits(self):
-        return info_bar_statistics['Total commits']
-
-    def get_most_commits_from(self):
-        contributor_with_most_commits = max(total_commits_by_contributor, key=total_commits_by_contributor.get)
-        return contributor_with_most_commits
-
-    def get_most_active_month(self):
-        return info_bar_statistics['Most active month']
-
-    def get_most_type_of_commits(self):
-        return info_bar_statistics['Most type']
-
-    def get_most_where_of_commits(self):
-        return info_bar_statistics['Most changes in']
-
     def open_git_input(self):
         """
         Opens a dialog box for the user to enter a GitHub repository link. Upon receiving input,
@@ -213,7 +192,9 @@ class MainView:
             self.user_select.destroy()
             self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
 
-        from support.repo_stats import total_commits_by_contributor
+        file_data = self.read_file_data()
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+
         # Create a list of the users.
         users = list(total_commits_by_contributor.keys())
 
@@ -224,9 +205,18 @@ class MainView:
 
         # Update the main area and info bar.
         self.create_main_area()
-        self.create_info_bar()
+        self.create_info_bar(file_data)
 
-    def create_info_bar(self, initial=False):
+    def read_file_data(self):
+        """Read data from a file and return it."""
+        filename = "support//repo_stats.py"
+        local_variables = {}
+        with open(filename, 'r', encoding="utf-8") as file:
+            file_content = file.read()
+            exec(file_content, {}, local_variables)  # Execute the file content in an empty global namespace and capture the local variables
+        return local_variables
+
+    def create_info_bar(self, file_data=None, initial=False):
         """
         Creates the information bar on to display statistics.
         """
@@ -236,12 +226,22 @@ class MainView:
         if initial:
             pass  # This should be empty when starting the application.
         else:
+            # Extracting data directly from the file_data parameter
+            total_commits = sum(file_data['total_commits_by_contributor'].values())
+            most_commits_from = max(file_data['total_commits_by_contributor'],
+                                    key=file_data['total_commits_by_contributor'].get)
+            # Assuming the structure of monthly_commits_by_contributor to find the most active month
+            # This is a placeholder for how you might calculate this from file_data
+            most_active_month = "Not implemented"  # Placeholder implementation
+            most_type_of_commits = "Not implemented"  # Placeholder for type of commits
+            most_where_of_commits = "Not implemented"  # Placeholder for where commits happened
+
             info_text = (
-                f"Total number of commits: {self.get_total_commits()}\n"
-                f"Most commits from: {self.get_most_commits_from()}\n"
-                f"Most active month\nlast 12 months: {self.get_most_active_month()}\n"
-                f"Most commits of type: {self.get_most_type_of_commits()}\n"
-                f"Most commits in: {self.get_most_where_of_commits()}"
+                f"Total number of commits: {total_commits}\n"
+                f"Most commits from: {most_commits_from}\n"
+                f"Most active month\nlast 12 months: {most_active_month}\n"
+                f"Most commits of type: {most_type_of_commits}\n"
+                f"Most commits in: {most_where_of_commits}"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
@@ -266,6 +266,10 @@ class MainView:
         main_area_frame.grid_columnconfigure(1, weight=1)
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
+
+        file_data = self.read_file_data()
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+        total_monthly_commits = file_data['total_monthly_commits']
 
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
                                                   ylabel="Commits")
@@ -321,18 +325,27 @@ class MainView:
         return info_text
 
     def get_total_commit_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['Total commits']
 
     def get_most_active_month_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['Most active month']
 
     def get_most_type_of_commits_user(self):
+        from support.test_data import info_bar_statistics_user  # TODO byta detta
         return info_bar_statistics_user['What']
 
     def get_most_where_of_commits_user(self):
+        from support.test_data import info_bar_statistics_user #TODO byta detta
         return info_bar_statistics_user['Where']
 
     def setup_overwiew_diagrams(self):
+
+        file_data = self.read_file_data()
+        total_commits_by_contributor = file_data['total_commits_by_contributor']
+        total_monthly_commits = file_data['total_monthly_commits']
+
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,
                                                   title="Total Commits by Contributor",
                                                   xlabel="Contributor", ylabel="Commits")
@@ -382,5 +395,4 @@ class MainView:
             self.root.destroy()
 
     def show_error_message(self, message):
-        # TODO fix GUI
         messagebox.showerror("Error", message)
