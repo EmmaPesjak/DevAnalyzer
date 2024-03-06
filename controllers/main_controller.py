@@ -1,9 +1,13 @@
+from models.commit_test import CommitTest
+
+
 class MainController:
     def __init__(self, main_model, view, commit_analyzer):
         self.main_model = main_model
         self.view = view
         self.commit_analyzer = commit_analyzer
         self.view.set_on_input_change(self.retrieve_url)
+        self.commit_test = CommitTest()
 
     def retrieve_url(self, new_url):
         self.main_model.cleanup()
@@ -20,9 +24,10 @@ class MainController:
 
                 #TODO: kirra detta i model?
                 all_commits = self.main_model.get_all_commits()
-                self.commit_analyzer.nlp(all_commits)
+                #self.commit_analyzer.nlp(all_commits)
+                self.commit_test.analyze_commits(all_commits)
 
-                self.view.root.after(0, self.view.update_ui_after_fetch)
+                #self.view.root.after(0, self.view.update_ui_after_fetch)
             else:
                 # Handle calculation error
                 pass
