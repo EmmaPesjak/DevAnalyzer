@@ -6,7 +6,22 @@ from views.data_visualizer import DataVisualizer
 import matplotlib.font_manager
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
-    color=["#158274", "#3FA27B", "#74C279", "#B2DF74", "#F9F871"])
+    color=[
+        "#158274",
+        "#3FA27B",
+        "#74C279",
+        "#B2DF74",
+        "#F9F871",
+        "#FFC185",
+        "#FBA2AE",
+        "#DA9BB7",
+        "#B38AAE",
+        "#8C7A9F",
+        "#676A8B",
+        "#2F4858",
+        "#1C6E7D",
+        "#039590"
+    ])
 plt.rcParams['font.family'] = 'Microsoft YaHei'  # Ensure non-latin characters also can be read.
 
 matplotlib.use('TkAgg')
@@ -276,6 +291,7 @@ class MainView:
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
 
+        #TODO: add checks that not null here
         # Extracting data directly from the file_data.
         total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
         top_10_per_user = file_data['top_10_per_user'].get(choice, 0)
