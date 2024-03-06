@@ -137,8 +137,8 @@ class DBHandler:
         conn.close()
 
         # Convert the results into a dictionary
-        top_5_changed_files = {file_name: occurrence for file_name, occurrence in results}
-        return top_5_changed_files
+        top_10_changed_files = {file_name: occurrence for file_name, occurrence in results}
+        return top_10_changed_files
 
     def get_top_files_per_user(self):
         conn = sqlite3.connect(self.db_name)
@@ -186,17 +186,6 @@ class DBHandler:
         conn.close()
         return results
 
-    """Gets the total amount of commits."""
-    def get_total_commits(self):
-        # Connect to DB
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        cursor.execute('SELECT COUNT(*) FROM commits')
-        total_commits = cursor.fetchone()[0]  # Count the rows
-
-        conn.close()
-        return total_commits
 
     def get_all_commits(self):
         # Connect to DB
@@ -210,48 +199,6 @@ class DBHandler:
         conn.close()
         return commits
 
-    """Gets the names of all contributors."""
-    def get_all_contributors(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Select only the name column from the authors table
-        cursor.execute('SELECT name FROM authors')
-
-        # Fetch all results and extract names from tuples
-        contributors = [row[0] for row in cursor.fetchall()]
-
-        conn.close()
-
-        return contributors
-
-    """Gets the most active month."""
-    def get_most_active_month(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Get date 12 months ago
-        twelve_months_ago = datetime.now() - timedelta(days=365)
-        formatted_date = twelve_months_ago.strftime("%Y-%m-%d")
-
-        cursor.execute('''
-                    SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*)
-                    FROM commits
-                    WHERE date >= ?
-                    GROUP BY year, month
-                ''', (formatted_date,))
-        monthly_commit_counts = cursor.fetchall()
-        conn.close()
-
-        if not monthly_commit_counts:
-            return None
-
-        # Convert month number to month name
-        most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
-
-        # Find the month with the highest commit count
-        month_name = calendar.month_name[int(most_active_month[0])]
-        return f"{month_name}"
 
     """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
@@ -279,69 +226,114 @@ class DBHandler:
         results = cursor.fetchall()
         conn.close()
         return results
-        # conn = sqlite3.connect(self.db_name)
-        # cursor = conn.cursor()
-        #
-        # # Prepare the list for the last 12 months
-        # last_12_months = [(datetime.now() - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(11, -1, -1)]
-        #
-        # # Initialize commit counts for each month with 0
-        # commit_counts = dict.fromkeys(last_12_months, 0)
-        #
-        # # Query to get commit counts for available months in the last year
-        # cursor.execute('''
-        #     SELECT strftime("%Y-%m", date) AS month, COUNT(*)
-        #     FROM commits
-        #     WHERE date >= ?
-        #     GROUP BY month
-        # ''', (last_12_months[0],))
-        #
-        # # Fetch the results once and store them
-        # total_commits = cursor.fetchall()
-        #
-        # # Use the stored results
-        # for month, count in total_commits:
-        #     if month in commit_counts:
-        #         commit_counts[month] = count
-        #
-        # conn.close()
-        #
-        # # Return commit counts as a list
-        # return [commit_counts[month] for month in last_12_months]
 
-    """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
-    def get_commit_data_with_files_for_author(self, author_email):
+    def get_author_commit_messages(self, author_email):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # Retrieve commits and file changes for a specific author
+        # Adjust the SQL query as needed to match your schema and requirements
         cursor.execute('''
-            SELECT c.id, c.message, c.date, a.name, a.email, f.file_name, f.file_path 
-            FROM commits c
-            JOIN authors a ON c.author_id = a.id
-            LEFT JOIN commit_files f ON c.id = f.commit_id
-            WHERE a.email = ?
-            ORDER BY c.date
+            SELECT commits.message
+            FROM commits
+            JOIN authors ON commits.author_id = authors.id
+            WHERE authors.email = ?
         ''', (author_email,))
-        rows = cursor.fetchall()
+
+        commit_messages = [row[0] for row in cursor.fetchall()]
 
         conn.close()
+        return commit_messages
 
-        # Process rows. TODO other values to return
-        commit_data = {}
-        for row in rows:
-            commit_id, message, date, author_name, author_email, file_name, file_path = row
-            if commit_id not in commit_data:
-                commit_data[commit_id] = {
-                    "message": message,
-                    "date": date,
-                    "author": {"name": author_name, "email": author_email},
-                    "files": []
-                }
-            if file_name:  # Check if file_name is not None
-                commit_data[commit_id]["files"].append({"file_name": file_name, "file_path": file_path})
+    """Gets the total amount of commits."""
+    # def get_total_commits(self):
+    #     # Connect to DB
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     cursor.execute('SELECT COUNT(*) FROM commits')
+    #     total_commits = cursor.fetchone()[0]  # Count the rows
+    #
+    #     conn.close()
+    #     return total_commits
 
-        return commit_data
+    """Gets the names of all contributors."""
+    # def get_all_contributors(self):
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     # Select only the name column from the authors table
+    #     cursor.execute('SELECT name FROM authors')
+    #
+    #     # Fetch all results and extract names from tuples
+    #     contributors = [row[0] for row in cursor.fetchall()]
+    #
+    #     conn.close()
+    #
+    #     return contributors
+
+
+    """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
+    # def get_commit_data_with_files_for_author(self, author_email):
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     # Retrieve commits and file changes for a specific author
+    #     cursor.execute('''
+    #         SELECT c.id, c.message, c.date, a.name, a.email, f.file_name, f.file_path
+    #         FROM commits c
+    #         JOIN authors a ON c.author_id = a.id
+    #         LEFT JOIN commit_files f ON c.id = f.commit_id
+    #         WHERE a.email = ?
+    #         ORDER BY c.date
+    #     ''', (author_email,))
+    #     rows = cursor.fetchall()
+    #
+    #     conn.close()
+    #
+    #     # Process rows.
+    #     commit_data = {}
+    #     for row in rows:
+    #         commit_id, message, date, author_name, author_email, file_name, file_path = row
+    #         if commit_id not in commit_data:
+    #             commit_data[commit_id] = {
+    #                 "message": message,
+    #                 "date": date,
+    #                 "author": {"name": author_name, "email": author_email},
+    #                 "files": []
+    #             }
+    #         if file_name:  # Check if file_name is not None
+    #             commit_data[commit_id]["files"].append({"file_name": file_name, "file_path": file_path})
+    #
+    #     return commit_data
+
+    """Gets the most active month."""
+
+    # def get_most_active_month(self):
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     # Get date 12 months ago
+    #     twelve_months_ago = datetime.now() - timedelta(days=365)
+    #     formatted_date = twelve_months_ago.strftime("%Y-%m-%d")
+    #
+    #     cursor.execute('''
+    #                 SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*)
+    #                 FROM commits
+    #                 WHERE date >= ?
+    #                 GROUP BY year, month
+    #             ''', (formatted_date,))
+    #     monthly_commit_counts = cursor.fetchall()
+    #     conn.close()
+    #
+    #     if not monthly_commit_counts:
+    #         return None
+    #
+    #     # Convert month number to month name
+    #     most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
+    #
+    #     # Find the month with the highest commit count
+    #     month_name = calendar.month_name[int(most_active_month[0])]
+    #     return f"{month_name}"
 
     def database_has_values(self):
         conn = sqlite3.connect(self.db_name)

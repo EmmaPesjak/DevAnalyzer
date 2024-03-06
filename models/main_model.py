@@ -34,27 +34,27 @@ class MainModel:
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
 
-    def get_authors_with_amount_of_commits(self):
-        return self.db_handler.get_authors_with_amount_of_commits()
+    # def get_authors_with_amount_of_commits(self):
+    #     return self.db_handler.get_authors_with_amount_of_commits()
 
-    def get_total_amount_of_commits(self):
-        return self.db_handler.get_total_commits()
+    # def get_total_amount_of_commits(self):
+    #     return self.db_handler.get_total_commits()
 
     def get_all_commits(self):
         return self.db_handler.get_all_commits()
 
-    def get_all_contributors(self):
-        return self.db_handler.get_all_contributors()
+    # def get_all_contributors(self):
+    #     return self.db_handler.get_all_contributors()
 
-    def get_most_active_month(self):
-        return self.db_handler.get_most_active_month()
+    # def get_most_active_month(self):
+    #     return self.db_handler.get_most_active_month()
 
-    def get_all_months_activity(self):
-        return self.db_handler.get_commit_counts_past_year()
+    # def get_all_months_activity(self):
+    #     return self.db_handler.get_commit_counts_past_year()
 
     # TODO get the commit messages for user to process.
-    def get_commit_data_with_files_for_author(self, author_email):
-        return self.db_handler.get_commit_data_with_files_for_author(author_email)
+    # def get_commit_data_with_files_for_author(self, author_email):
+    #     return self.db_handler.get_commit_data_with_files_for_author(author_email)
 
     def get_top_10_files_per_user(self):
         data = self.db_handler.get_top_files_per_user()
@@ -131,7 +131,7 @@ class MainModel:
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
-        top_10_changed_files = self.db_handler.get_top_5_changed_files()
+        top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
