@@ -276,18 +276,26 @@ class MainView:
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
 
-        total_commits_by_contributor = file_data['total_commits_by_contributor']
-        total_monthly_commits = file_data.get('total_monthly_commits', {})
-        top_10_changed_files = file_data['top_10_changed_files'] #TODO FEL ej user
+        # Extracting data directly from the file_data.
+        total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
+        top_10_per_user = file_data['top_10_per_user'].get(choice, 0)
+        total_monthly_commits = file_data['monthly_commits_by_contributor'].get(choice, 0)
 
-        #TODO: replace with the correct parameters
+        file_with_most_commits = max(top_10_per_user, key=top_10_per_user.get)
+        commits_in_file_with_most_commits = top_10_per_user[file_with_most_commits]
+        month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
+        total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
+        most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
+
+        total_commits_by_contributor = file_data['total_commits_by_contributor']  # TODO: this should be removed later
+
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
-                                                  ylabel="Commits")
-        fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
-                                                  title="Total commits by contributor")
+                                                  ylabel="Commits")  #TODO: replace with the correct parameters
+        fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
+                                                  title="Total commits by contributor")  #TODO: replace with the correct parameters
         fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits",
                                                   xlabel="Month", ylabel="Commits")
-        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
+        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where",
                                                   xlabel="Where", ylabel="Commits")
 
         # Canvas 1
@@ -309,17 +317,6 @@ class MainView:
         canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)  # Make sure to use fig4 here instead of fig1
         canvas4.draw()
         canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
-
-        # Extracting data directly from the file_data.
-        total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
-        top_10_changed_files = file_data['top_10_per_user'].get(choice, 0)
-        total_monthly_commits = file_data['monthly_commits_by_contributor'].get(choice, 0)
-
-        file_with_most_commits = max(top_10_changed_files, key=top_10_changed_files.get)
-        commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
-        month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-        total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-        most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
 
         info_text = (
             f"Info for {choice} \n\n"
