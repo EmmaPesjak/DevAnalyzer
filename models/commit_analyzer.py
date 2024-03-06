@@ -14,7 +14,7 @@ class CommitAnalyzer:
             'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'performance', 'optimize', 'restructure', 'move', 'replace', 'typo', 'change', 'rename'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert'],
             'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
-            'STYLING': ['style', 'format', 'lint', 'styling', 'convention', 'formatting'],
+            'STYLING': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design', 'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical'],
             'DEPLOYMENT/PUBLISH': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch', 'migration', 'dev', 'publish', 'build', 'compile'],
             'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication'],
             'CLEANUP': ['cleanup', 'tidy', 'remove', 'delete', 'prune', 'clean', 'refine'],
