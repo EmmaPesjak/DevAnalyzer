@@ -96,19 +96,22 @@ class MainModel:
         data = self.db_handler.get_commit_counts_past_year()
 
         # Initialize a dictionary for the past 12 months
-        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12, -1, -1)}
+        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12)}
 
-        # Fill in the data
+        # Fill in the data from the list of tuples
         for month_year, commits_count in data:
             if month_year in structured_data:
                 structured_data[month_year] = commits_count
 
-        # Convert 'month_year' to a more readable format if needed
+        # Convert 'month_year' to month names without year
         readable_format_data = {}
-        for month_year in structured_data:
-            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%B %Y")
-            readable_format_data[month_name] = structured_data[month_year]
+        for month_year, commits_count in structured_data.items():
+            # Here is the corrected part
+            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
+            readable_format_data[month_name] = commits_count
 
+        # Since dictionaries are ordered in Python 3.7+, sorting may not be necessary if chronological order was maintained.
+        # However, to ensure proper month order (if needed), especially around year changes, additional logic might be required.
         return readable_format_data
 
     # TODO info bar stats
