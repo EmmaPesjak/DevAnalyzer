@@ -35,7 +35,7 @@ class DataVisualizer:
         ax.bar(data.keys(), data.values())
         ax.set_title(title)
         ax.set_xticks(range(len(data)))
-        ax.set_xticklabels(data.keys(), rotation=45, ha="right")
+        ax.set_xticklabels(data.keys(), rotation=30, ha="right")
         plt.tight_layout(pad=3.0)
         ax.set_xlabel(xlabel, labelpad=15)
         ax.set_ylabel(ylabel, labelpad=15)

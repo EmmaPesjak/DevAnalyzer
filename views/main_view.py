@@ -272,6 +272,7 @@ class MainView:
 
         total_commits_by_contributor = file_data['total_commits_by_contributor']
         total_monthly_commits = file_data.get('total_monthly_commits', {})
+        top_10_changed_files = file_data['top_10_changed_files'] #TODO FEL ej user
 
         #TODO: replace with the correct parameters
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What", xlabel="Type",
@@ -280,7 +281,7 @@ class MainView:
                                                   title="Total commits by contributor")
         fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits",
                                                   xlabel="Month", ylabel="Commits")
-        fig4, ax4 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="Where",
+        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
                                                   xlabel="Where", ylabel="Commits")
 
         # Canvas 1
@@ -347,6 +348,8 @@ class MainView:
     def setup_overwiew_diagrams(self, file_data):
         total_commits_by_contributor = file_data['total_commits_by_contributor']
         total_monthly_commits = file_data['total_monthly_commits']
+        top_10_changed_files = file_data['top_10_changed_files']
+
 
         # TODO: replace with the correct parameters
         fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,
@@ -356,7 +359,7 @@ class MainView:
                                                   title="Total commits by contributor")
         fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total Monthly Commits",
                                                   xlabel="Month", ylabel="Commits")
-        fig4, ax4 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="Where",
+        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
                                                   xlabel="Where", ylabel="Commits")
 
         # Canvas 1
