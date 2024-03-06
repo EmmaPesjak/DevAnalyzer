@@ -230,10 +230,11 @@ class MainView:
         if initial:
             pass  # This should be empty when starting the application.
         else:
-            # Extracting data directly from the file_data parameter
+            # Extracting data directly from the file_data.
             total_commits = sum(file_data['total_commits_by_contributor'].values())
             most_commits_from = max(file_data['total_commits_by_contributor'],
                                     key=file_data['total_commits_by_contributor'].get)
+            commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
             top_10_changed_files = file_data['top_10_changed_files']
             total_monthly_commits = file_data['total_monthly_commits']
 
@@ -245,7 +246,7 @@ class MainView:
 
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
-                f"Most commits from: {most_commits_from}\n\n"
+                f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
                 f"Most commits of type: {most_type_of_commits}\n\n"
@@ -309,9 +310,29 @@ class MainView:
         canvas4.draw()
         canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        # Extracting data directly from the file_data.
+        total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
+        top_10_changed_files = file_data['top_10_per_user'].get(choice, 0)
+        total_monthly_commits = file_data['monthly_commits_by_contributor'].get(choice, 0)
+
+        file_with_most_commits = max(top_10_changed_files, key=top_10_changed_files.get)
+        commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
+        month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
+        total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
+        most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
+
+        info_text = (
+            f"Info for {choice} \n\n"
+            f"Total Commits: {total_commits_for_user}\n\n"
+            f"Most active month last 12\nmonths: {month_with_most_commits}, "
+            f"{total_commits_in_month_with_most_commits} commits\n\n"
+            f"Most commits of type: {most_type_of_commits}\n\n"
+            f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
+        )
+
         # Configure grid layout for sidebar_frame to properly align info_label
         sidebar_frame.grid_rowconfigure(0, weight=1)
-        info_label = ctk.CTkLabel(sidebar_frame, text=f"Info for {choice} \n {self.create_info_label_text_user()}",
+        info_label = ctk.CTkLabel(sidebar_frame, text=info_text,
                                   anchor="w", width=130, text_color=self.TEXT_COLOR)
         info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
 
@@ -323,32 +344,6 @@ class MainView:
         # This method is called when a user window is closed
         window.destroy()
         self.user_windows.remove(window)
-
-    def create_info_label_text_user(self):
-        # TODO: replace with the correct parameters
-        info_text = (
-            f"Total Commits: {self.get_total_commit_user()}\n"
-            f"Most Active Month: {self.get_most_active_month_user()}\n"
-            f"Most Type of Commits: {self.get_most_type_of_commits_user()}\n"
-            f"Most Where of Commits: {self.get_most_where_of_commits_user()}"
-        )
-        return info_text
-
-    def get_total_commit_user(self):
-        from support.test_data import info_bar_statistics_user  # TODO byta detta
-        return info_bar_statistics_user['Total commits']
-
-    def get_most_active_month_user(self):
-        from support.test_data import info_bar_statistics_user  # TODO byta detta
-        return info_bar_statistics_user['Most active month']
-
-    def get_most_type_of_commits_user(self):
-        from support.test_data import info_bar_statistics_user  # TODO byta detta
-        return info_bar_statistics_user['What']
-
-    def get_most_where_of_commits_user(self):
-        from support.test_data import info_bar_statistics_user #TODO byta detta
-        return info_bar_statistics_user['Where']
 
     def setup_overwiew_diagrams(self, file_data):
         total_commits_by_contributor = file_data['total_commits_by_contributor']
