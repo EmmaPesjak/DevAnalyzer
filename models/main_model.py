@@ -41,7 +41,10 @@ class MainModel:
     #     return self.db_handler.get_total_commits()
 
     def get_all_commits(self):
-        return self.db_handler.get_all_commits()
+        return self.db_handler.get_all_commits() #TODO radera denna?
+
+    def get_all_authors_and_their_commits(self):
+        return self.db_handler.get_all_authors_and_their_commits()
 
     # def get_all_contributors(self):
     #     return self.db_handler.get_all_contributors()
@@ -109,22 +112,6 @@ class MainModel:
 
         return readable_format_data
 
-    # TODO info bar stats
-    def info_bar_stats(self):
-        # Total amount of commits
-        # Most active month
-        # Most changes in file?
-        # Most type (from categories)
-        pass
-
-    # TODO info bar user
-    def info_bar_user(self, contributor):
-        # Total amount of commits
-        # Most active month
-        # Most changes in file?
-        # Most type (from categories)
-        pass
-
     def write_to_file(self):
         filename = "support//repo_stats.py"
 
@@ -133,10 +120,6 @@ class MainModel:
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
-        info_bar_statistics = self.info_bar_stats()
-        #info_bar_statistics_user = self.info_bar_user(author)
-
-        #TODO commit_types_by_contributor (topics from commitanalyzer)
 
         # Prepare the content to be written as valid Python code
         content_to_write = (

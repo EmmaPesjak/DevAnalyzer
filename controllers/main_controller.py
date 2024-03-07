@@ -22,9 +22,9 @@ class MainController:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
 
-                #TODO: kirra detta i model?
-                all_commits = self.main_model.get_all_commits()
+                # all_commits = self.main_model.get_all_commits()
                 #self.commit_analyzer.nlp(all_commits)
+                all_commits = self.main_model.get_all_authors_and_their_commits()
                 self.commit_test.analyze_commits(all_commits)
 
                 self.view.root.after(0, self.view.update_ui_after_fetch)
