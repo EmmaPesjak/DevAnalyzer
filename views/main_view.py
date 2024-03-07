@@ -245,26 +245,48 @@ class MainView:
         if initial:
             pass  # This should be empty when starting the application.
         else:
-            # Extracting data directly from the file_data.
-            total_commits = sum(file_data['total_commits_by_contributor'].values())
-            most_commits_from = max(file_data['total_commits_by_contributor'],
-                                    key=file_data['total_commits_by_contributor'].get)
-            commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
-            top_10_changed_files = file_data['top_10_changed_files']
-            total_monthly_commits = file_data['total_monthly_commits']
+            # Verify data presence and non-emptiness for required keys.
+            if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
+                total_commits = sum(file_data['total_commits_by_contributor'].values())
+                most_commits_from = max(file_data['total_commits_by_contributor'],
+                                        key=file_data['total_commits_by_contributor'].get)
+                commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
+            else:
+                total_commits = 0
+                most_commits_from = "N/A"
+                commits_from_highest_user = 0
 
-            file_with_most_commits = max(top_10_changed_files, key=top_10_changed_files.get)
-            commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
-            month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-            total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
+            if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
+                file_with_most_commits = max(file_data['top_10_changed_files'],
+                                             key=file_data['top_10_changed_files'].get)
+                commits_in_file_with_most_commits = file_data['top_10_changed_files'][file_with_most_commits]
+            else:
+                file_with_most_commits = "N/A"
+                commits_in_file_with_most_commits = 0
 
+            if 'total_monthly_commits' in file_data and any(
+                    value > 0 for value in file_data['total_monthly_commits'].values()):
+                month_with_most_commits = max(file_data['total_monthly_commits'],
+                                              key=file_data['total_monthly_commits'].get)
+                total_commits_in_month_with_most_commits = file_data['total_monthly_commits'][month_with_most_commits]
+            else:
+                month_with_most_commits = "N/A"
+                total_commits_in_month_with_most_commits = 0
+
+            if 'type_of_commits' in file_data and file_data['type_of_commits']:
+                most_type_of_commits = max(file_data['type_of_commits'], key=file_data['type_of_commits'].get)
+                commits_in_type_with_most_commits = file_data['type_of_commits'][most_type_of_commits]
+            else:
+                most_type_of_commits = "N/A"
+                commits_in_type_with_most_commits = 0
+
+            # Construct info_text with possibly modified values.
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
                 f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type: {most_type_of_commits}\n\n"
+                f"Most commits of type:\n{most_type_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
@@ -291,76 +313,87 @@ class MainView:
         main_area_frame.grid_rowconfigure(0, weight=1)
         main_area_frame.grid_rowconfigure(1, weight=1)
 
-        #  Checks for the presence of data for the user.
-        if choice in file_data.get('total_commits_by_contributor', {}) and \
-           choice in file_data.get('top_10_per_user', {}) and \
-           choice in file_data.get('monthly_commits_by_contributor', {}):
+        # Initialize info_text with basic information.
+        info_text_parts = [f"Info for {choice}"]
 
-            # Extracting data directly from the file_data.
-            total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
-            top_10_per_user = file_data['top_10_per_user'].get(choice, 0)
-            total_monthly_commits = file_data['monthly_commits_by_contributor'].get(choice, 0)
+        # Track if any data was found.
+        data_found = False
 
-            file_with_most_commits = max(top_10_per_user, key=top_10_per_user.get)
-            commits_in_file_with_most_commits = top_10_per_user[file_with_most_commits]
-            month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-            total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
+        # Check and create total commits by contributor.
+        if choice in file_data.get('total_commits_by_contributor', {}):
+            data_found = True
+            total_commits_for_user = file_data['total_commits_by_contributor'][choice]
+            info_text_parts.append(f"Total Commits: {total_commits_for_user}")
 
-            total_commits_by_contributor = file_data[
-                'total_commits_by_contributor']  # TODO: this should be removed later
+        # Check and create a diagram for types per user.
+        if choice in file_data.get('types_per_user', {}):
+            data_found = True
+            types_per_user = file_data['types_per_user'][choice]
+            most_type_of_commits = max(types_per_user, key=types_per_user.get)
+            commits_in_type_with_most_commits = types_per_user[most_type_of_commits]
+            info_text_parts.append(
+                f"Most commits of type:\n{most_type_of_commits}, {commits_in_type_with_most_commits} commits")
 
-            fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What",
-                                                      xlabel="Type",
-                                                      ylabel="Commits")  # TODO: replace with the correct parameters
-            fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Total commits by contributor")  # TODO: replace with the correct parameters
-            fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits",
-                                                      xlabel="Month", ylabel="Commits")
-            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where",
-                                                      xlabel="Where", ylabel="Commits")
-
+            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Type",
+                                                      ylabel="Commits")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
             canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        # Check and create a diagram for top 10 changed files per user.
+        if choice in file_data.get('top_10_per_user', {}):
+            data_found = True
+            top_10_per_user = file_data['top_10_per_user'][choice]
+            file_with_most_commits = max(top_10_per_user, key=top_10_per_user.get)
+            commits_in_file_with_most_commits = top_10_per_user[file_with_most_commits]
+            info_text_parts.append(
+                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits")
+            fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
+                                                      title="Where")  # TODO: replace with the correct parameters, vad ska vi ha här??
             # Canvas 2
             canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            # Canvas 3
-            canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
-            canvas3.draw()
-            canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
-
+            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where again but in bar",
+                                                      xlabel="Where", ylabel="Commits")
             # Canvas 4
-            canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)  # Make sure to use fig4 here instead of fig1
+            canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            info_text = (
-                f"Info for {choice} \n\n"
-                f"Total Commits: {total_commits_for_user}\n\n"
-                f"Most active month last 12\nmonths: {month_with_most_commits}, "
-                f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type: {most_type_of_commits}\n\n"
-                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
-            )
-        else:
-            # Display message when no data exists for 'choice'
+        # Check and create a diagram for monthly commits by contributor.
+        if choice in file_data.get('monthly_commits_by_contributor', {}):
+            total_monthly_commits = file_data['monthly_commits_by_contributor'][choice]
+            if any(value > 0 for value in total_monthly_commits.values()):
+                data_found = True
+                month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
+                total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
+                info_text_parts.append(
+                    f"Most active month last 12\nmonths: {month_with_most_commits}, "
+                    f"{total_commits_in_month_with_most_commits} commits")
+
+                fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
+                                                          title="Total monthly commits last 12 months",
+                                                          xlabel="Month", ylabel="Commits")
+                # Canvas 3
+                canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
+                canvas3.draw()
+                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
+        if not data_found:
+            # If no data was found for any category.
             info_text = f"The user {choice} has not committed enough the last 12 months to analyze."
-            #TODO this is displayed in the left corner, not the prettiest. Might be possible to still display a timeline/type/where here, depends on what data is missing.
+        else:
+            info_text = "\n\n".join(info_text_parts)
 
         # Configure grid layout for sidebar_frame to properly align info_label
         sidebar_frame.grid_rowconfigure(0, weight=1)
         info_label = ctk.CTkLabel(sidebar_frame, text=info_text,
                                   anchor="w", width=130, text_color=self.TEXT_COLOR)
         info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
-
         self.user_windows.append(new_window)
-
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
 
     def on_user_window_closing(self, window):
@@ -369,39 +402,58 @@ class MainView:
         self.user_windows.remove(window)
 
     def setup_overwiew_diagrams(self, file_data):
-        total_commits_by_contributor = file_data['total_commits_by_contributor']
-        total_monthly_commits = file_data['total_monthly_commits']
-        top_10_changed_files = file_data['top_10_changed_files']
+        # Initialize a flag to keep track of whether any diagrams were created.
+        diagrams_created = False
 
-        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,  # TODO: replace with the correct parameter TYPE
-                                                  title="Total Commit Type",
-                                                  xlabel="Type", ylabel="Commits")
-        fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
-                                                  title="Total commits by contributor")
-        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total Monthly Commits",
-                                                  xlabel="Month", ylabel="Commits")
-        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
-                                                  xlabel="Where", ylabel="Commits")
+        # Check for 'type_of_commits' data and create a diagram if it's not empty.
+        if 'type_of_commits' in file_data and file_data['type_of_commits']:
+            diagrams_created = True
+            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['type_of_commits'],
+                                                      title="Total Commit Type",
+                                                      xlabel="Type", ylabel="Commits")
+            canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
+            canvas1.draw()
+            canvas1.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 1
-        canvas = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
-        canvas.draw()
-        canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'total_commits_by_contributor' data and create a diagram if it's not empty.
+        if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
+            diagrams_created = True
+            fig2, ax2 = self.visualizer.create_figure('pie', data=file_data['total_commits_by_contributor'],
+                                                      title="Total commits by contributor")
+            canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
+            canvas2.draw()
+            canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 2
-        canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
-        canvas2.draw()
-        canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'total_monthly_commits' data and create a diagram if it's not empty.
+        if 'total_monthly_commits' in file_data and file_data['total_monthly_commits']:
+            # Check if there's at least one month with commits greater than 0.
+            if any(value > 0 for value in file_data['total_monthly_commits'].values()):
+                diagrams_created = True
+                fig3, ax3 = self.visualizer.create_figure('line', data=file_data['total_monthly_commits'],
+                                                          title="Total Monthly Commits last 12 months",
+                                                          xlabel="Month", ylabel="Commits")
+                canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
+                canvas3.draw()
+                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 3
-        canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
-        canvas3.draw()
-        canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'top_10_changed_files' data and create a diagram if it's not empty
+        if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
+            diagrams_created = True
+            fig4, ax4 = self.visualizer.create_figure('bar', data=file_data['top_10_changed_files'],
+                                                      title="Top 10 Changed Files",
+                                                      xlabel="File", ylabel="Commits")
+            canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
+            canvas4.draw()
+            canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 4
-        canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
-        canvas4.draw()
-        canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # If no diagrams were created due to empty datasets, you can show a message or handle it as needed
+        if not diagrams_created:
+            # Handle the case where no data was available to create any diagrams
+            # For example, you could display a message in the diagram_frame indicating no data is available
+            no_data_label = ctk.CTkLabel(self.diagram_frame,
+                                         text="No data available for analysis, please select another repository.",
+                                         text_color=self.TEXT_COLOR)
+            no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
     def set_appearance_mode(self):
         """
