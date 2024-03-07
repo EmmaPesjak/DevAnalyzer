@@ -1,4 +1,5 @@
 import threading
+import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -113,6 +114,7 @@ class MainModel:
         return readable_format_data
 
     def write_to_file(self):
+        start_time = time.time()
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
@@ -133,6 +135,8 @@ class MainModel:
         with open(filename, "w", encoding="utf-8") as file:
             file.write(content_to_write)
             print("Saved")
+            end_time = time.time()
+            print(f"Writing to file took {end_time - start_time:.2f} seconds.")
             return True
 
 

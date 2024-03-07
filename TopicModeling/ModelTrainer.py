@@ -52,13 +52,6 @@ class ModelTrainer:
             # Lowercase the commit message.
             commit = commit.lower()
 
-            # Check if the commit contains "Merge pull request".
-            if "merge pull request" in commit:
-                continue  # Skip this commit- skip och sortera automatiskt som merge commit???
-
-            if "merge branch" in commit:
-                continue  # Skip this commit
-
             # Tokenize the commit
             doc = nlp(commit)
 
@@ -68,7 +61,6 @@ class ModelTrainer:
             # TODO ta bort alla version grejer + alla som är 0.0.1 etc
             stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
                           "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
-
 
             for stop_word in stop_words:
                 lexeme = nlp.vocab[stop_word]

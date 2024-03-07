@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 from dateutil.relativedelta import relativedelta
 from pydriller import Repository
@@ -45,7 +46,6 @@ class DBHandler:
                     id INTEGER PRIMARY KEY,
                     commit_id INTEGER,
                     file_name TEXT,
-                    file_path TEXT,
                     FOREIGN KEY (commit_id) REFERENCES commits (id)
                 );
             ''')
@@ -55,6 +55,8 @@ class DBHandler:
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
+        # Start timer
+        start_time = time.time()
         # TODO ta bort github users + lower case undvik duplicates, måste vara unik
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
@@ -80,13 +82,16 @@ class DBHandler:
 
                 # For each modified file in the commit, add the modified files and their filepaths.
                 for mod in commit.modified_files:
-                    cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
-                                   (commit_id, mod.filename, mod.new_path))
+                    cursor.execute('INSERT INTO commit_files (commit_id, file_name) VALUES (?, ?)',
+                                   (commit_id, mod.filename))
 
                 conn.commit()
         except Exception as e:
             error_message = "Please try again with an existing repository."
         else:
+            # End timer and print the elapsed time
+            end_time = time.time()
+            print(f"Database insertion took {end_time - start_time:.2f} seconds.")
             return "Success"
         finally:
             if 'conn' in locals():
