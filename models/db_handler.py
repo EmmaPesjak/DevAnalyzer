@@ -93,6 +93,40 @@ class DBHandler:
                 conn.close()
         return error_message
 
+    def get_all_authors_and_their_commits(self):
+        """
+        Retrieves all authors along with their commits from the database.
+        """
+        # Connect to the database
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        # Execute SQL query to retrieve author details and their commits
+        # This time, we exclude the email and date from the selection.
+        cursor.execute('''
+                SELECT a.name, c.message
+                FROM authors a
+                JOIN commits c ON a.id = c.author_id
+                ORDER BY a.name;
+            ''')
+
+        # Fetch the results
+        results = cursor.fetchall()
+
+        # Close the database connection
+        conn.close()
+
+        # Organize the results into a structured format
+        # Here we create a dictionary where each key is an author's name,
+        # and the value is a list of commit messages.
+        authors_commits = {}
+        for name, message in results:
+            if name not in authors_commits:
+                authors_commits[name] = []
+            authors_commits[name].append(message)
+
+        return authors_commits
+
     def get_authors_with_amount_of_commits(self):
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
