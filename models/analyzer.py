@@ -8,7 +8,7 @@ from gensim.corpora.dictionary import Dictionary
 # TODO: vad händer med alla merge kommits?
 
 # TODO: namnet på denna låter som att vi testar något, borde inte denna heta commitAnalyzer?
-class CommitTest:
+class Analyzer:
     def __init__(self):
         # Load the trained LDA model
         self.lda_model = LdaModel.load('TopicModeling/lda_model.gensim')
@@ -57,7 +57,6 @@ class CommitTest:
         print(f"Commit analysis took {end_time - start_time:.2f} seconds.")
 
         self.summarize_results()
-        
 
     def categorize_commit_message(self, commit_message):
         # Preprocess the commit message

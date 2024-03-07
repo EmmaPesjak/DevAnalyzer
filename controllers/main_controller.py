@@ -1,4 +1,5 @@
-from models.commit_test import CommitTest
+from models.analyzer import Analyzer
+from models.batch_analyzer import BatchAnalyzer
 
 
 class MainController:
@@ -7,7 +8,8 @@ class MainController:
         self.view = view
         self.commit_analyzer = commit_analyzer
         self.view.set_on_input_change(self.retrieve_url)
-        self.commit_test = CommitTest()
+        #self.commit_test = Analyzer()
+        self.analyzer = BatchAnalyzer()
 
     def retrieve_url(self, new_url):
         self.main_model.cleanup()
@@ -25,7 +27,8 @@ class MainController:
                 # all_commits = self.main_model.get_all_commits()
                 #self.commit_analyzer.nlp(all_commits)
                 all_commits = self.main_model.get_all_authors_and_their_commits()
-                self.commit_test.analyze_commits(all_commits)
+                #self.commit_test.analyze_commits(all_commits)
+                self.analyzer.analyze_commits(all_commits)
 
                 self.view.root.after(0, self.view.update_ui_after_fetch)
             else:
