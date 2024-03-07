@@ -4,8 +4,10 @@ import spacy
 from gensim.models.ldamodel import LdaModel
 from gensim.corpora.dictionary import Dictionary
 
+# TODO: vad händer med alla merge kommits?
 
-class CommitTest:  # TODO: namnet på denna låter som att vi testar något, borde inte denna heta commitAnalyzer?
+# TODO: namnet på denna låter som att vi testar något, borde inte denna heta commitAnalyzer?
+class CommitTest:
     def __init__(self):
         # Load the trained LDA model
         self.lda_model = LdaModel.load('TopicModeling/lda_model.gensim')
