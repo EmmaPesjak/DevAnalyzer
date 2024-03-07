@@ -273,11 +273,11 @@ class MainView:
                 month_with_most_commits = "N/A"
                 total_commits_in_month_with_most_commits = 0
 
-            if 'type_of_commits' in file_data and file_data['type_of_commits']:
-                most_type_of_commits = max(file_data['type_of_commits'], key=file_data['type_of_commits'].get)
-                commits_in_type_with_most_commits = file_data['type_of_commits'][most_type_of_commits]
+            if 'types_of_commits' in file_data and file_data['types_of_commits']:
+                most_types_of_commits = max(file_data['types_of_commits'], key=file_data['types_of_commits'].get)
+                commits_in_type_with_most_commits = file_data['types_of_commits'][most_types_of_commits]
             else:
-                most_type_of_commits = "N/A"
+                most_types_of_commits = "N/A"
                 commits_in_type_with_most_commits = 0
 
             # Construct info_text with possibly modified values.
@@ -286,7 +286,7 @@ class MainView:
                 f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type:\n{most_type_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
+                f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
@@ -329,10 +329,10 @@ class MainView:
         if choice in file_data.get('types_per_user', {}):
             data_found = True
             types_per_user = file_data['types_per_user'][choice]
-            most_type_of_commits = max(types_per_user, key=types_per_user.get)
-            commits_in_type_with_most_commits = types_per_user[most_type_of_commits]
+            most_types_of_commits = max(types_per_user, key=types_per_user.get)
+            commits_in_type_with_most_commits = types_per_user[most_types_of_commits]
             info_text_parts.append(
-                f"Most commits of type:\n{most_type_of_commits}, {commits_in_type_with_most_commits} commits")
+                f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits")
 
             fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Type",
                                                       ylabel="Commits")
@@ -405,10 +405,10 @@ class MainView:
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
 
-        # Check for 'type_of_commits' data and create a diagram if it's not empty.
-        if 'type_of_commits' in file_data and file_data['type_of_commits']:
+        # Check for 'types_of_commits' data and create a diagram if it's not empty.
+        if 'types_of_commits' in file_data and file_data['types_of_commits']:
             diagrams_created = True
-            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['type_of_commits'],
+            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['types_of_commits'],
                                                       title="Total Commit Type",
                                                       xlabel="Type", ylabel="Commits")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)

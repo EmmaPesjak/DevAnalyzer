@@ -25,10 +25,29 @@ class CommitTest:
 
         self.categories_counts = {}
 
-    def analyze_commits(self, commit_messages):
-        for commit in commit_messages:
-            #print("Commit: " + commit)
-            self.categorize_commit_message(commit)
+        self.types_per_user = {}
+        self.types_of_commits = {}
+
+    # def analyze_commits(self, commit_messages):
+    #     for commit in commit_messages:
+    #         #print("Commit: " + commit)
+    #         self.categorize_commit_message(commit)
+    #
+    #     self.summarize_results()
+
+    def analyze_commits(self, authors_commits):
+        for author, commits in authors_commits.items():
+            if author not in self.types_per_user:
+                self.types_per_user[author] = {}
+
+            for commit in commits:
+                category_name = self.categorize_commit_message(commit)
+
+                # Update per user
+                self.types_per_user[author][category_name] = self.types_per_user[author].get(category_name, 0) + 1
+
+                # Update global
+                self.types_of_commits[category_name] = self.types_of_commits.get(category_name, 0) + 1
 
         self.summarize_results()
 
@@ -69,6 +88,8 @@ class CommitTest:
         else:
             self.categories_counts[category_name] = 1
 
+        return category_name
+
         # Print the result
         #print(f"Commit Message: \"{commit_message}\"")
         #print(f"Predicted Category: {category}")
@@ -105,17 +126,29 @@ class CommitTest:
         return filtered_tokens
 
     def summarize_results(self):
-        print("Commit Category Counts:")
-        #print(self.categories_counts)
+        # Format the content string with global commit types and types per user
+        content = (f"types_of_commits = {self.types_of_commits}\n"
+                   f"types_per_user = {self.types_per_user}\n")
 
-        types_per_user = {'Emma Pesjak': {'REFACTORING': 27, 'FEATURE_ADDITIONS': 7, 'UPDATE': 7, 'DATABASE': 6, 'SETUP': 6}, 'EmmaPesjak': {'REFACTORING': 1}, 'ebbanimer': {'REFACTORING': 22, 'FEATURE_ADDITIONS': 21, 'UPDATE': 10, 'DATABASE': 10, 'SETUP': 9}}
+        # Specify the file path where you want to append the results
+        file_path = 'support/repo_stats.py'
 
-        content = (f"type_of_commits = {self.categories_counts}\n"
-                   f"types_per_user = {types_per_user}\n")
-
-        # Append the string to the file
-        with open('support/repo_stats.py', 'a', encoding="utf-8") as file:
+        # Open the file and append the content
+        with open(file_path, 'a', encoding="utf-8") as file:
             file.write(content)
+
+        # types_per_user = {'Emma Pesjak': {'REFACTORING': 27, 'FEATURE_ADDITIONS': 7, 'UPDATE': 7, 'DATABASE': 6, 'SETUP': 6}, 'EmmaPesjak': {'REFACTORING': 1}, 'ebbanimer': {'REFACTORING': 22, 'FEATURE_ADDITIONS': 21, 'UPDATE': 10, 'DATABASE': 10, 'SETUP': 9}}
+        #
+        # content = (f"type_of_commits = {self.categories_counts}\n"
+        #            f"types_per_user = {types_per_user}\n")
+        #
+        # # Append the string to the file
+        # with open('support/repo_stats.py', 'a', encoding="utf-8") as file:
+        #     file.write(content)
+        # print(f"Global Commit Types: {self.types_of_commits}")
+        # print("Commit Types Per User:")
+        # for user, categories in self.types_per_user.items():
+        #     print(f"{user}: {categories}")
 
 
         # for category, count in self.category_counts.items():
