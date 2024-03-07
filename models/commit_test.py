@@ -1,11 +1,11 @@
 import pickle
-from collections import Counter, defaultdict
 
 import spacy
 from gensim.models.ldamodel import LdaModel
 from gensim.corpora.dictionary import Dictionary
 
-class CommitTest:
+
+class CommitTest:  # TODO: namnet på denna låter som att vi testar något, borde inte denna heta commitAnalyzer?
     def __init__(self):
         # Load the trained LDA model
         self.lda_model = LdaModel.load('TopicModeling/lda_model.gensim')
@@ -22,7 +22,6 @@ class CommitTest:
             self.categories = pickle.load(f)
 
         self.categories_counts = {}
-
 
     def analyze_commits(self, commit_messages):
         for commit in commit_messages:
@@ -107,12 +106,14 @@ class CommitTest:
         print("Commit Category Counts:")
         #print(self.categories_counts)
 
-        content = f"type_of_commits = {self.categories_counts}\n"
+        types_per_user = {'Emma Pesjak': {'REFACTORING': 27, 'FEATURE_ADDITIONS': 7, 'UPDATE': 7, 'DATABASE': 6, 'SETUP': 6}, 'EmmaPesjak': {'REFACTORING': 1}, 'ebbanimer': {'REFACTORING': 22, 'FEATURE_ADDITIONS': 21, 'UPDATE': 10, 'DATABASE': 10, 'SETUP': 9}}
+
+        content = (f"type_of_commits = {self.categories_counts}\n"
+                   f"types_per_user = {types_per_user}\n")
 
         # Append the string to the file
         with open('support/repo_stats.py', 'a', encoding="utf-8") as file:
             file.write(content)
-
 
 
         # for category, count in self.category_counts.items():

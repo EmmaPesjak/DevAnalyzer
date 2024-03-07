@@ -257,14 +257,16 @@ class MainView:
             commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
             month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
             total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
+            types_of_commits = file_data['type_of_commits']
+            most_type_of_commits = max(types_of_commits, key=types_of_commits.get)
+            commits_in_type_with_most_commits = types_of_commits[most_type_of_commits]
 
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
                 f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type: {most_type_of_commits}\n\n"
+                f"Most commits of type:\n{most_type_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
@@ -293,8 +295,9 @@ class MainView:
 
         #  Checks for the presence of data for the user.
         if choice in file_data.get('total_commits_by_contributor', {}) and \
-           choice in file_data.get('top_10_per_user', {}) and \
-           choice in file_data.get('monthly_commits_by_contributor', {}):
+                choice in file_data.get('top_10_per_user', {}) and \
+                choice in file_data.get('types_per_user', {}) and \
+                choice in file_data.get('monthly_commits_by_contributor', {}):
 
             # Extracting data directly from the file_data.
             total_commits_for_user = file_data['total_commits_by_contributor'].get(choice, 0)
@@ -305,20 +308,19 @@ class MainView:
             commits_in_file_with_most_commits = top_10_per_user[file_with_most_commits]
             month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
             total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            most_type_of_commits = "\nNot implemented"  # TODO replace placeholder
 
-            total_commits_by_contributor = file_data[
-                'total_commits_by_contributor']  # TODO: this should be removed later
+            types_per_user = file_data['types_per_user'].get(choice, 0)
+            most_type_of_commits = max(types_per_user, key=types_per_user.get)
+            commits_in_type_with_most_commits = types_per_user[most_type_of_commits]
 
-            fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor, title="What",
-                                                      xlabel="Type",
-                                                      ylabel="Commits")  # TODO: replace with the correct parameters
+            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Type",
+                                                      ylabel="Commits")
             fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Total commits by contributor")  # TODO: replace with the correct parameters
-            fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits",
+                                                      title="Where")  # TODO: replace with the correct parameters, vad ska vi ha här??
+            fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total monthly commits last 12 months",
                                                       xlabel="Month", ylabel="Commits")
             fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where",
-                                                      xlabel="Where", ylabel="Commits")
+                                                      xlabel="Where again but in bar", ylabel="Commits")
 
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
@@ -345,13 +347,13 @@ class MainView:
                 f"Total Commits: {total_commits_for_user}\n\n"
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type: {most_type_of_commits}\n\n"
+                f"Most commits of type: {most_type_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
             )
         else:
             # Display message when no data exists for 'choice'
             info_text = f"The user {choice} has not committed enough the last 12 months to analyze."
-            #TODO this is displayed in the left corner, not the prettiest. Might be possible to still display a timeline/type/where here, depends on what data is missing.
+            # TODO this is displayed in the left corner, not the prettiest. Might be possible to still display a timeline/type/where here, depends on what data is missing.
 
         # Configure grid layout for sidebar_frame to properly align info_label
         sidebar_frame.grid_rowconfigure(0, weight=1)
@@ -372,13 +374,15 @@ class MainView:
         total_commits_by_contributor = file_data['total_commits_by_contributor']
         total_monthly_commits = file_data['total_monthly_commits']
         top_10_changed_files = file_data['top_10_changed_files']
+        types_of_commits = file_data['type_of_commits']
 
-        fig1, ax1 = self.visualizer.create_figure('bar', data=total_commits_by_contributor,  # TODO: replace with the correct parameter TYPE
+        fig1, ax1 = self.visualizer.create_figure('bar', data=types_of_commits,
                                                   title="Total Commit Type",
                                                   xlabel="Type", ylabel="Commits")
         fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
                                                   title="Total commits by contributor")
-        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits, title="Total Monthly Commits",
+        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
+                                                  title="Total Monthly Commits last 12 months",
                                                   xlabel="Month", ylabel="Commits")
         fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
                                                   xlabel="Where", ylabel="Commits")
