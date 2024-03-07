@@ -245,22 +245,42 @@ class MainView:
         if initial:
             pass  # This should be empty when starting the application.
         else:
-            # Extracting data directly from the file_data.
-            total_commits = sum(file_data['total_commits_by_contributor'].values())
-            most_commits_from = max(file_data['total_commits_by_contributor'],
-                                    key=file_data['total_commits_by_contributor'].get)
-            commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
-            top_10_changed_files = file_data['top_10_changed_files']
-            total_monthly_commits = file_data['total_monthly_commits']
+            # Verify data presence and non-emptiness for required keys.
+            if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
+                total_commits = sum(file_data['total_commits_by_contributor'].values())
+                most_commits_from = max(file_data['total_commits_by_contributor'],
+                                        key=file_data['total_commits_by_contributor'].get)
+                commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
+            else:
+                total_commits = 0
+                most_commits_from = "N/A"
+                commits_from_highest_user = 0
 
-            file_with_most_commits = max(top_10_changed_files, key=top_10_changed_files.get)
-            commits_in_file_with_most_commits = top_10_changed_files[file_with_most_commits]
-            month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-            total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            types_of_commits = file_data['type_of_commits']
-            most_type_of_commits = max(types_of_commits, key=types_of_commits.get)
-            commits_in_type_with_most_commits = types_of_commits[most_type_of_commits]
+            if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
+                file_with_most_commits = max(file_data['top_10_changed_files'],
+                                             key=file_data['top_10_changed_files'].get)
+                commits_in_file_with_most_commits = file_data['top_10_changed_files'][file_with_most_commits]
+            else:
+                file_with_most_commits = "N/A"
+                commits_in_file_with_most_commits = 0
 
+            if 'total_monthly_commits' in file_data and any(
+                    value > 0 for value in file_data['total_monthly_commits'].values()):
+                month_with_most_commits = max(file_data['total_monthly_commits'],
+                                              key=file_data['total_monthly_commits'].get)
+                total_commits_in_month_with_most_commits = file_data['total_monthly_commits'][month_with_most_commits]
+            else:
+                month_with_most_commits = "N/A"
+                total_commits_in_month_with_most_commits = 0
+
+            if 'type_of_commits' in file_data and file_data['type_of_commits']:
+                most_type_of_commits = max(file_data['type_of_commits'], key=file_data['type_of_commits'].get)
+                commits_in_type_with_most_commits = file_data['type_of_commits'][most_type_of_commits]
+            else:
+                most_type_of_commits = "N/A"
+                commits_in_type_with_most_commits = 0
+
+            # Construct info_text with possibly modified values.
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
                 f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
