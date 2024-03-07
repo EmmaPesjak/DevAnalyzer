@@ -32,15 +32,9 @@ class BatchAnalyzer:
             end_time_preprocessing = time.time()
             print(f"Preprocess took {end_time_preprocessing - start_time_preprocessing:.2f} seconds for {author}")
 
-            start_time_vector = time.time()
             bow_corpus = [self.dictionary.doc2bow(commit) for commit in preprocessed_commits]
-            end_time_vector = time.time()
-            print(f"Vector took {end_time_vector - start_time_vector:.2f} seconds for {author}")
 
-            start_time_topic = time.time()
             topic_distributions = [self.lda_model.get_document_topics(bow) for bow in bow_corpus]
-            end_time_topic = time.time()
-            print(f"Topic took {end_time_topic - start_time_topic:.2f} seconds for {author}.")
 
             start_time_dist = time.time()
             for distribution in topic_distributions:
@@ -49,7 +43,6 @@ class BatchAnalyzer:
                 start_time_cat = time.time()
                 category = self.topic_category_mapping[dominant_topic][1]
                 end_cat = time.time()
-                print(f"Category took {end_cat - start_time_cat:.2f} seconds.")
 
                 # Update counts for each author
                 if author not in self.types_per_user:
@@ -58,9 +51,6 @@ class BatchAnalyzer:
 
                 # Update global counts
                 self.types_of_commits[category] = self.types_of_commits.get(category, 0) + 1
-            end_time_dist = time.time()
-            print(f"Dist took {end_time_dist - start_time_dist:.2f} seconds for {author}.")
-
 
         # End timer and print the elapsed time
         end_time = time.time()
