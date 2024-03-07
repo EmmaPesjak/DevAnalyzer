@@ -299,7 +299,7 @@ class MainView:
         # Track if any data was found.
         data_found = False
 
-        # Check and create total commits by contributor
+        # Check and create total commits by contributor.
         if choice in file_data.get('total_commits_by_contributor', {}):
             data_found = True
             total_commits_for_user = file_data['total_commits_by_contributor'][choice]
@@ -343,26 +343,27 @@ class MainView:
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Check and create a diagram for monthly commits by contributor
+        # Check and create a diagram for monthly commits by contributor.
         if choice in file_data.get('monthly_commits_by_contributor', {}):
-            data_found = True
             total_monthly_commits = file_data['monthly_commits_by_contributor'][choice]
-            month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-            total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-            info_text_parts.append(
-                f"Most active month last 12\nmonths: {month_with_most_commits}, "
-                f"{total_commits_in_month_with_most_commits} commits")
+            if any(value > 0 for value in total_monthly_commits.values()):
+                data_found = True
+                month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
+                total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
+                info_text_parts.append(
+                    f"Most active month last 12\nmonths: {month_with_most_commits}, "
+                    f"{total_commits_in_month_with_most_commits} commits")
 
-            fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
-                                                      title="Total monthly commits last 12 months",
-                                                      xlabel="Month", ylabel="Commits")
-            # Canvas 3
-            canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
-            canvas3.draw()
-            canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+                fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
+                                                          title="Total monthly commits last 12 months",
+                                                          xlabel="Month", ylabel="Commits")
+                # Canvas 3
+                canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
+                canvas3.draw()
+                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         if not data_found:
-            # If no data was found for any category
+            # If no data was found for any category.
             info_text = f"The user {choice} has not committed enough the last 12 months to analyze."
         else:
             info_text = "\n\n".join(info_text_parts)
@@ -381,41 +382,58 @@ class MainView:
         self.user_windows.remove(window)
 
     def setup_overwiew_diagrams(self, file_data):
-        total_commits_by_contributor = file_data['total_commits_by_contributor']
-        total_monthly_commits = file_data['total_monthly_commits']
-        top_10_changed_files = file_data['top_10_changed_files']
-        types_of_commits = file_data['type_of_commits']
+        # Initialize a flag to keep track of whether any diagrams were created.
+        diagrams_created = False
 
-        fig1, ax1 = self.visualizer.create_figure('bar', data=types_of_commits,
-                                                  title="Total Commit Type",
-                                                  xlabel="Type", ylabel="Commits")
-        fig2, ax2 = self.visualizer.create_figure('pie', data=total_commits_by_contributor,
-                                                  title="Total commits by contributor")
-        fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
-                                                  title="Total Monthly Commits last 12 months",
-                                                  xlabel="Month", ylabel="Commits")
-        fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_changed_files, title="Where",
-                                                  xlabel="Where", ylabel="Commits")
+        # Check for 'type_of_commits' data and create a diagram if it's not empty.
+        if 'type_of_commits' in file_data and file_data['type_of_commits']:
+            diagrams_created = True
+            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['type_of_commits'],
+                                                      title="Total Commit Type",
+                                                      xlabel="Type", ylabel="Commits")
+            canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
+            canvas1.draw()
+            canvas1.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 1
-        canvas = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
-        canvas.draw()
-        canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'total_commits_by_contributor' data and create a diagram if it's not empty.
+        if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
+            diagrams_created = True
+            fig2, ax2 = self.visualizer.create_figure('pie', data=file_data['total_commits_by_contributor'],
+                                                      title="Total commits by contributor")
+            canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
+            canvas2.draw()
+            canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 2
-        canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
-        canvas2.draw()
-        canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'total_monthly_commits' data and create a diagram if it's not empty.
+        if 'total_monthly_commits' in file_data and file_data['total_monthly_commits']:
+            # Check if there's at least one month with commits greater than 0.
+            if any(value > 0 for value in file_data['total_monthly_commits'].values()):
+                diagrams_created = True
+                fig3, ax3 = self.visualizer.create_figure('line', data=file_data['total_monthly_commits'],
+                                                          title="Total Monthly Commits last 12 months",
+                                                          xlabel="Month", ylabel="Commits")
+                canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
+                canvas3.draw()
+                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 3
-        canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
-        canvas3.draw()
-        canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # Check for 'top_10_changed_files' data and create a diagram if it's not empty
+        if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
+            diagrams_created = True
+            fig4, ax4 = self.visualizer.create_figure('bar', data=file_data['top_10_changed_files'],
+                                                      title="Top 10 Changed Files",
+                                                      xlabel="File", ylabel="Commits")
+            canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
+            canvas4.draw()
+            canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Canvas 4
-        canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
-        canvas4.draw()
-        canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        # If no diagrams were created due to empty datasets, you can show a message or handle it as needed
+        if not diagrams_created:
+            # Handle the case where no data was available to create any diagrams
+            # For example, you could display a message in the diagram_frame indicating no data is available
+            no_data_label = ctk.CTkLabel(self.diagram_frame,
+                                         text="No data available for analysis, please select another repository.",
+                                         text_color=self.TEXT_COLOR)
+            no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
     def set_appearance_mode(self):
         """
