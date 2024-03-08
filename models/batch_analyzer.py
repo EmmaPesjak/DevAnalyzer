@@ -27,6 +27,7 @@ class BatchAnalyzer:
     def analyze_commits(self, authors_commits):
         start_time = time.time()
         for author, commits in authors_commits.items():
+
             start_time_preprocessing = time.time()
             preprocessed_commits = self.preprocess_commits(commits)
             end_time_preprocessing = time.time()
@@ -60,27 +61,61 @@ class BatchAnalyzer:
     def preprocess_commits(self, commit_messages):
         nlp = spacy.load("en_core_web_sm")
 
-        # Add custom stop words
+        # Define custom stopwords
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
                              "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
-
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
-        # Lowercase and filter commit messages before processing
-        texts = [commit_message.lower() for commit_message in commit_messages]
-
-        # Use spaCy's pipe method for efficient batch processing
         preprocessed_commits = []
-        for doc in nlp.pipe(texts, batch_size=20):  # Adjust batch_size based on your system's capabilities
-            # Filtering out stopwords, punctuation, numbers, and urls. Also lemmatizing.
-            tokens = [
-                token.lemma_ for token in doc
-                if not token.is_stop and not token.is_punct and not token.like_num and not token.like_url
-            ]
+        # Process each commit message individually within the batch
+        for commit_message in commit_messages:
+            # Skip merge commits or handle as desired
+            if "merge pull request" in commit_message.lower() or "merge branch" in commit_message.lower():
+                preprocessed_commits.append(["merge_commit"])
+                continue
+
+            # Tokenize and preprocess each commit message
+            doc = nlp(commit_message.lower())
+            tokens = [token.lemma_ for token in doc if
+                      not token.is_stop and not token.is_punct and not token.like_num and not token.like_url]
             preprocessed_commits.append(tokens)
 
         return preprocessed_commits
+
+    # def preprocess_commits(self, commit_messages):
+    #
+    #     # for commit in commit_messages:
+    #     #     if "merge pull request" in commit or "merge branch" in commit:
+    #     #         # Option 1: Ignore merge commits by returning an empty list.
+    #     #         return []
+    #     #
+    #     #         # Option 2: Mark merge commits distinctly.
+    #     #         #return ["merge_commit"]
+    #
+    #     nlp = spacy.load("en_core_web_sm")
+    #
+    #     # Add custom stop words
+    #     custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
+    #                          "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+    #
+    #     for stop_word in custom_stop_words:
+    #         nlp.vocab[stop_word].is_stop = True
+    #
+    #     # Lowercase and filter commit messages before processing
+    #     texts = [commit_message.lower() for commit_message in commit_messages]
+    #
+    #     # Use spaCy's pipe method for efficient batch processing
+    #     preprocessed_commits = []
+    #     for doc in nlp.pipe(texts, batch_size=20):  # Adjust batch_size based on your system's capabilities
+    #         # Filtering out stopwords, punctuation, numbers, and urls. Also lemmatizing.
+    #         tokens = [
+    #             token.lemma_ for token in doc
+    #             if not token.is_stop and not token.is_punct and not token.like_num and not token.like_url
+    #         ]
+    #         preprocessed_commits.append(tokens)
+    #
+    #     return preprocessed_commits
 
 
         # # Tokenize the commit

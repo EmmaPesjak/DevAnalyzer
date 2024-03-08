@@ -16,33 +16,44 @@ if not os.path.exists('support'):
 
 
 class ModelTrainer:
-    def __init__(self, commit_messages):
+    def __init__(self, commits):
         self.categories = {
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug',
-                                   'exception'],
+                                   'exception', 'fault', 'glitch', 'incorrect', 'crash', 'failure', 'incomplete', 'diagnose',
+                                   'troubleshoot', 'nullpointer', 'regression', 'deprecation'],
             'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'implementation', 'new', 'introduce', 'create',
-                                  'generate', 'method'],
-            'DOCUMENTATION': ['doc', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',
-                              'javadocs', 'readme.md'],
-            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'performance', 'optimize',
-                            'restructure', 'move', 'replace', 'typo', 'change', 'rename'],
-            'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert'],
+                                  'generate', 'method', 'functionality'],
+            'DOCUMENTATION': ['doc','docs', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',
+                              'javadocs', 'readme.md', 'guide', 'manual', 'faq', 'help', 'specification', 'specs',
+                              'commentary', 'instruction', 'file'],
+            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
+                            'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused'],
+            'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
             'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
-            'STYLING': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
-                        'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical'],
+            'STYLING/FRONT_END': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
+                        'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical', 'stylesheet', 'theme', 'color',
+                        'font', 'icon', 'animation', 'transition', 'responsive', 'prototype', 'palette', 'grid', 'alignment',
+                        'interactive', 'darkmode', 'lightmode', 'display', 'diagram', 'chart', 'input', 'event-listener',
+                                  'menu', 'dark', 'light', 'window'],
             'DEPLOYMENT/PUBLISH': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch', 'migration',
                                    'dev', 'publish', 'build', 'compile'],
-            'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication'],
+            'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication', 'auth',
+                         'authorization', 'encryption', 'crypt', 'ssl', 'hack', 'breach', 'password', 'firewall', '2fa',
+                         'csrf', 'xss', 'sqlinject', 'malware', 'ransomware', 'phishing', 'ddos'],
             'CLEANUP': ['cleanup', 'tidy', 'remove', 'delete', 'prune', 'clean', 'refine'],
-            'SETUP': ['initial', 'init', 'introduce', 'setup', 'first', 'installation', 'config', 'tool', 'dependency',
-                      'api', 'apis', 'import', 'template', 'library', 'lib', 'libs', 'plugin'],
-            'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version', 'change'],
-            'REVERT': ['revert', 'undo', 'rollback', 'reverse'],
-            'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize', 'improve'],
-            'DATABASE': ['database', 'db', 'sql', 'table', 'schema', 'entity', 'query', 'join', 'sqlcipher',
-                         'relationship', 'column']
+            'SETUP': ['initial', 'init', 'introduce', 'setup', 'first', 'installation', 'config', 'configure', 'tool', 'dependency',
+                      'api', 'apis', 'import', 'template', 'library', 'lib', 'libs', 'plugin', 'mvc', 'structure', 'backbone',
+                      'skeleton', 'boilerplate', 'build', 'package', 'gradle', 'integration', 'start', 'release'],
+            'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version', 'change', 'revise', 'deprecation'],
+            'REVERT': ['revert', 'undo', 'rollback', 'reverse', 'discard'],
+            'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize', 'optimization', 'improve', 'latency',
+                            'load', 'time', 'concurrency', 'thread', 'multithread', 'parallel', 'bottleneck', 'async',
+                            'asynchronous', 'throttle', 'debounce', 'response', 'accelerate'],
+            'DATABASE': ['database', 'db', 'sql','sqlite', 'table', 'schema', 'entity', 'query', 'join', 'sqlcipher',
+                         'relationship', 'column', 'data', 'datastore', 'mongodb', 'mysql', 'postgresql', 'postgresqlp',
+                         'postgres', 'modeling', 'transaction', 'key', 'alter', 'drop', 'partition', 'migrate']
         }
-        self.commit_messages = commit_messages
+        self.commit_messages = commits
 
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
