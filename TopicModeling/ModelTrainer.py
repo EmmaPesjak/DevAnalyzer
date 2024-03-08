@@ -57,33 +57,45 @@ class ModelTrainer:
 
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
-        preprocessed_commits = []  # To store preprocessed tokens of each commit
+
+        # Define custom stopwords
+        custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
+                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+        for stop_word in custom_stop_words:
+            nlp.vocab[stop_word].is_stop = True
+
+        preprocessed_commits = []
 
         for commit in self.commit_messages:
+            # Tokenize and preprocess each commit message
+            doc = nlp(commit.lower())
+            tokens = [token.lemma_ for token in doc if
+                      not token.is_stop and not token.is_punct and not token.like_num and not token.like_url]
+            preprocessed_commits.append(tokens)
+
             # Lowercase the commit message.
-            commit = commit.lower()
-
-            # Tokenize the commit
-            doc = nlp(commit)
-
-            # Adding custom stopwords.
-            nlp.Defaults.stop_words.add("\n\n")
-
-            # TODO ta bort alla version grejer + alla som är 0.0.1 etc
-            stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-                          "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
-
-            for stop_word in stop_words:
-                lexeme = nlp.vocab[stop_word]
-                lexeme.is_stop = True
-
-            # Lemmatizes and filters out stopwords, punctuation, numbers, and  (duplicates can occur when the
-            # commit messages contains both a title and a message with the same words).
-            filtered_tokens = set(
-                [token.lemma_ for token in doc if not token.is_stop and not token.is_punct and not token.like_num and
-                 not token.like_url and not token.like_url])
-
-            preprocessed_commits.append(filtered_tokens)
+            # commit = commit.lower()
+            #
+            # # Tokenize the commit
+            # doc = nlp(commit)
+            #
+            # # Adding custom stopwords.
+            # nlp.Defaults.stop_words.add("\n\n")
+            #
+            # stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
+            #               "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+            #
+            # for stop_word in stop_words:
+            #     lexeme = nlp.vocab[stop_word]
+            #     lexeme.is_stop = True
+            #
+            # # Lemmatizes and filters out stopwords, punctuation, numbers, and  (duplicates can occur when the
+            # # commit messages contains both a title and a message with the same words).
+            # filtered_tokens = set(
+            #     [token.lemma_ for token in doc if not token.is_stop and not token.is_punct and not token.like_num and
+            #      not token.like_url and not token.like_url])
+            #
+            # preprocessed_commits.append(filtered_tokens)
 
         return preprocessed_commits
 
@@ -153,7 +165,6 @@ class ModelTrainer:
                     if any(sub_keyword in keyword for sub_keyword in cat_keywords):
                         # Accumulate the weight for that category.
                         category_weights[category] += weight
-                #TODO Should none matched be handled differently
 
             # Determine the category with the highest cumulative weight for this topic
             best_category = max(category_weights, key=category_weights.get)

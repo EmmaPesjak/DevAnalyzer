@@ -21,10 +21,9 @@ class BatchAnalyzer:
         with open('TopicModeling/categories.pkl', 'rb') as f:
             self.categories = pickle.load(f)
 
-        self.types_per_user = {}
-        self.types_of_commits = {}
-
     def analyze_commits(self, authors_commits):
+        types_per_user = {}
+        types_of_commits = {}
         start_time = time.time()
         for author, commits in authors_commits.items():
 
@@ -46,17 +45,17 @@ class BatchAnalyzer:
                 end_cat = time.time()
 
                 # Update counts for each author
-                if author not in self.types_per_user:
-                    self.types_per_user[author] = {}
-                self.types_per_user[author][category] = self.types_per_user[author].get(category, 0) + 1
+                if author not in types_per_user:
+                    types_per_user[author] = {}
+                types_per_user[author][category] = types_per_user[author].get(category, 0) + 1
 
                 # Update global counts
-                self.types_of_commits[category] = self.types_of_commits.get(category, 0) + 1
+                types_of_commits[category] = types_of_commits.get(category, 0) + 1
 
         # End timer and print the elapsed time
         end_time = time.time()
         print(f"Commit analysis took {end_time - start_time:.2f} seconds.")
-        self.summarize_results()
+        self.summarize_results(types_per_user, types_of_commits)
 
     def preprocess_commits(self, commit_messages):
         nlp = spacy.load("en_core_web_sm")
@@ -71,9 +70,9 @@ class BatchAnalyzer:
         # Process each commit message individually within the batch
         for commit_message in commit_messages:
             # Skip merge commits or handle as desired
-            if "merge pull request" in commit_message.lower() or "merge branch" in commit_message.lower():
-                preprocessed_commits.append(["merge_commit"])
-                continue
+            # if "merge pull request" in commit_message.lower() or "merge branch" in commit_message.lower():
+            #     preprocessed_commits.append(["merge_commit"])
+            #     continue
 
             # Tokenize and preprocess each commit message
             doc = nlp(commit_message.lower())
@@ -137,10 +136,10 @@ class BatchAnalyzer:
         # return filtered_tokens
 
 
-    def summarize_results(self):
+    def summarize_results(self, types_per_user, types_of_commits):
         # Format the content string with global commit types and types per user
-        content = (f"types_of_commits = {self.types_of_commits}\n"
-                   f"types_per_user = {self.types_per_user}\n")
+        content = (f"types_of_commits = {types_of_commits}\n"
+                   f"types_per_user = {types_per_user}\n")
 
         # Specify the file path where you want to append the results
         file_path = 'support/repo_stats.py'

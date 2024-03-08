@@ -71,7 +71,7 @@ class DBHandler:
 
                 # Format the date and insert commit
                 # formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
-                formatted_date = commit.committer_date.strftime("%Y-%m-%d %H:%M:%S")
+                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
                                (author_id, commit.msg, formatted_date))

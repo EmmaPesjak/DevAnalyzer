@@ -10,15 +10,20 @@ from collections import defaultdict
 from models.db_handler import DBHandler
 import atexit
 
+from models.git_traversal import GitTraversal
+
+
 class MainModel:
 
     def __init__(self):
         self.db_handler = DBHandler('repo_data.db')
         atexit.register(self.cleanup)
+        self.git_traversal = GitTraversal()
 
 
     """Inserts the repository into DB."""
     def set_repo(self, repo_url, callback=None):
+        self.git_traversal.set_repo(repo_url)
         def background_task():
             try:
                 # Assuming this function returns some result or raises an exception upon failure
@@ -117,7 +122,8 @@ class MainModel:
         start_time = time.time()
         filename = "support//repo_stats.py"
 
-        total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        #total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
