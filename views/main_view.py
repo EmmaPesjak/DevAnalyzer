@@ -480,14 +480,8 @@ class MainView:
         """
         Handles the closing event of the application.
         """
-        #TODO: diagrams causing errors tested destroying all windows but did not help
-        # if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
-        #     # Close all user-specific windows.
-        #     for window in self.user_windows:
-        #         window.destroy()
-        #     self.user_windows.clear()
-
-        self.root.destroy()
+        if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
+            self.root.quit()
 
     def show_error_message(self, message):
         """
