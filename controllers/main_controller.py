@@ -1,4 +1,3 @@
-from models.analyzer import Analyzer
 from models.batch_analyzer import BatchAnalyzer
 
 
@@ -8,7 +7,6 @@ class MainController:
         self.view = view
         self.commit_analyzer = commit_analyzer
         self.view.set_on_input_change(self.retrieve_url)
-        #self.commit_test = Analyzer()
         self.analyzer = BatchAnalyzer()
 
     def retrieve_url(self, new_url):
@@ -22,15 +20,11 @@ class MainController:
             self.view.remove_loading_indicator()
             self.view.remove_user_select()
             self.view.show_init_label()
-            self.view.show_error_message("The repository URL was not valid, please try again with a valid one.")
+            self.view.show_error_message(str(error))
+            # self.view.show_error_message("The repository URL was not valid, please try again with a valid one.")
         else:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
-
-                # all_commits = self.main_model.get_all_commits()
-                #self.commit_analyzer.nlp(all_commits)
                 all_commits = self.main_model.get_all_authors_and_their_commits()
-                #self.commit_test.analyze_commits(all_commits)
                 self.analyzer.analyze_commits(all_commits)
-
                 self.view.root.after(0, self.view.update_ui_after_fetch)

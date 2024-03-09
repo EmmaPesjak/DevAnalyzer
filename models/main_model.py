@@ -1,16 +1,12 @@
 import threading
 import time
 from datetime import datetime
-
 from dateutil.relativedelta import relativedelta
-from pydriller import Repository
-import json
 from collections import defaultdict
-
 from models.db_handler import DBHandler
 import atexit
-
 from models.git_traversal import GitTraversal
+from collections import OrderedDict
 
 
 class MainModel:
@@ -20,10 +16,10 @@ class MainModel:
         atexit.register(self.cleanup)
         self.git_traversal = GitTraversal()
 
-
-    """Inserts the repository into DB."""
     def set_repo(self, repo_url, callback=None):
+        """Inserts the repository into DB."""
         self.git_traversal.set_repo(repo_url)
+
         def background_task():
             try:
                 # Assuming this function returns some result or raises an exception upon failure
@@ -40,30 +36,8 @@ class MainModel:
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
 
-    # def get_authors_with_amount_of_commits(self):
-    #     return self.db_handler.get_authors_with_amount_of_commits()
-
-    # def get_total_amount_of_commits(self):
-    #     return self.db_handler.get_total_commits()
-
-    def get_all_commits(self):
-        return self.db_handler.get_all_commits() #TODO radera denna?
-
     def get_all_authors_and_their_commits(self):
-        return self.db_handler.get_all_authors_and_their_commits()
-
-    # def get_all_contributors(self):
-    #     return self.db_handler.get_all_contributors()
-
-    # def get_most_active_month(self):
-    #     return self.db_handler.get_most_active_month()
-
-    # def get_all_months_activity(self):
-    #     return self.db_handler.get_commit_counts_past_year()
-
-    # TODO get the commit messages for user to process.
-    # def get_commit_data_with_files_for_author(self, author_email):
-    #     return self.db_handler.get_commit_data_with_files_for_author(author_email)
+        return self.git_traversal.get_all_authors_and_their_commits()
 
     def get_top_10_files_per_user(self):
         data = self.db_handler.get_top_files_per_user()
@@ -100,29 +74,38 @@ class MainModel:
 
     def get_timeline(self):
         today = datetime.now()
-        data = self.db_handler.get_commit_counts_past_year()
+        data = self.git_traversal.get_commit_counts_past_year()
+        # Ensure month names are in descending order (most recent first)
+        # Sort data keys to ensure month names are in ascending order (oldest first)
+        data_keys_sorted = sorted(data.keys(), reverse=False)
 
-        # Initialize a dictionary for the past 12 months
-        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12)}
-
-        # Fill in the data from the list of tuples
-        for month_year, commits_count in data:
-            if month_year in structured_data:
-                structured_data[month_year] = commits_count
-
-        # Convert 'month_year' to month names without year
         readable_format_data = {}
-        for month_year in reversed(list(structured_data.keys())):
+        for month_year in data_keys_sorted:
             month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
-            readable_format_data[month_name] = structured_data[month_year]
+            readable_format_data[month_name] = data[month_year]
 
         return readable_format_data
+
+        # # Initialize a dictionary for the past 12 months
+        # structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12)}
+        #
+        # # Fill in the data from the list of tuples
+        # for month_year, commits_count in data:
+        #     if month_year in structured_data:
+        #         structured_data[month_year] = commits_count
+        #
+        # # Convert 'month_year' to month names without year
+        # readable_format_data = {}
+        # for month_year in reversed(list(structured_data.keys())):
+        #     month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
+        #     readable_format_data[month_name] = structured_data[month_year]
+        #
+        # return readable_format_data
 
     def write_to_file(self):
         start_time = time.time()
         filename = "support//repo_stats.py"
 
-        #total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()

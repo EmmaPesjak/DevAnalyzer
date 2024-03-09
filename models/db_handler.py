@@ -95,63 +95,63 @@ class DBHandler:
                 conn.close()
         return error_message
 
-    def get_all_authors_and_their_commits(self):
-        """
-        Retrieves all authors along with their commits from the database.
-        """
-        # Connect to the database
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
+    # def get_all_authors_and_their_commits(self):
+    #     """
+    #     Retrieves all authors along with their commits from the database.
+    #     """
+    #     # Connect to the database
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     # Execute SQL query to retrieve author details and their commits
+    #     # This time, we exclude the email and date from the selection.
+    #     cursor.execute('''
+    #             SELECT a.name, c.message
+    #             FROM authors a
+    #             JOIN commits c ON a.id = c.author_id
+    #             ORDER BY a.name;
+    #         ''')
+    #
+    #     # Fetch the results
+    #     results = cursor.fetchall()
+    #
+    #     # Close the database connection
+    #     conn.close()
+    #
+    #     # Organize the results into a structured format
+    #     # Here we create a dictionary where each key is an author's name,
+    #     # and the value is a list of commit messages.
+    #     authors_commits = {}
+    #     for name, message in results:
+    #         if name not in authors_commits:
+    #             authors_commits[name] = []
+    #         authors_commits[name].append(message)
+    #
+    #     return authors_commits
 
-        # Execute SQL query to retrieve author details and their commits
-        # This time, we exclude the email and date from the selection.
-        cursor.execute('''
-                SELECT a.name, c.message
-                FROM authors a
-                JOIN commits c ON a.id = c.author_id
-                ORDER BY a.name;
-            ''')
-
-        # Fetch the results
-        results = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Organize the results into a structured format
-        # Here we create a dictionary where each key is an author's name,
-        # and the value is a list of commit messages.
-        authors_commits = {}
-        for name, message in results:
-            if name not in authors_commits:
-                authors_commits[name] = []
-            authors_commits[name].append(message)
-
-        return authors_commits
-
-
-    def get_authors_with_amount_of_commits(self):
-        # Connect to the database
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # SQL query to count commits per author
-        cursor.execute('''
-                SELECT a.name, COUNT(c.id) AS total_commits
-                FROM authors a
-                JOIN commits c ON a.id = c.author_id
-                GROUP BY a.id
-            ''')
-
-        # Fetch the results
-        results = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Convert the results into a dictionary
-        total_commits_by_contributor = {name: total_commits for name, total_commits in results}
-        return total_commits_by_contributor
+    #
+    # def get_authors_with_amount_of_commits(self):
+    #     # Connect to the database
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     # SQL query to count commits per author
+    #     cursor.execute('''
+    #             SELECT a.name, COUNT(c.id) AS total_commits
+    #             FROM authors a
+    #             JOIN commits c ON a.id = c.author_id
+    #             GROUP BY a.id
+    #         ''')
+    #
+    #     # Fetch the results
+    #     results = cursor.fetchall()
+    #
+    #     # Close the database connection
+    #     conn.close()
+    #
+    #     # Convert the results into a dictionary
+    #     total_commits_by_contributor = {name: total_commits for name, total_commits in results}
+    #     return total_commits_by_contributor
 
     def get_top_10_changed_files(self):
         # Connect to the database
@@ -223,17 +223,17 @@ class DBHandler:
         conn.close()
         return results
 
-    def get_all_commits(self):
-        # Connect to DB
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        cursor.execute('SELECT message FROM commits')
-        # Fetch all results and transform each tuple to its first element
-        commits = [commit[0] for commit in cursor.fetchall()]
-
-        conn.close()
-        return commits
+    # def get_all_commits(self):
+    #     # Connect to DB
+    #     conn = sqlite3.connect(self.db_name)
+    #     cursor = conn.cursor()
+    #
+    #     cursor.execute('SELECT message FROM commits')
+    #     # Fetch all results and transform each tuple to its first element
+    #     commits = [commit[0] for commit in cursor.fetchall()]
+    #
+    #     conn.close()
+    #     return commits
 
     """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
