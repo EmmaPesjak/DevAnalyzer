@@ -113,5 +113,22 @@ class GitTraversal:
 
         return results
 
+    def get_top_10_changed_files(self):
+        file_changes_count = defaultdict(int)
+
+        # Traverse all commits in the repository
+        for commit in self.repo.traverse_commits():
+            for modified_file in commit.modified_files:
+                file_name = modified_file.filename
+                file_changes_count[file_name] += 1
+
+        # Sort the files by change count in descending order and select the top 10
+        top_10_files = sorted(file_changes_count.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        # Convert the top 10 list of tuples into a dictionary
+        top_10_changed_files = {file_name: occurrence for file_name, occurrence in top_10_files}
+
+        return top_10_changed_files
+
 
 

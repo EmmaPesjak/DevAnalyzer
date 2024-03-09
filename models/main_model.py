@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
-from models.db_handler import DBHandler
+# from models.db_handler import DBHandler
 import atexit
 from models.git_traversal import GitTraversal
 from collections import OrderedDict
@@ -12,7 +12,7 @@ from collections import OrderedDict
 class MainModel:
 
     def __init__(self):
-        self.db_handler = DBHandler('repo_data.db')
+        # self.db_handler = DBHandler('repo_data.db')
         atexit.register(self.cleanup)
         self.git_traversal = GitTraversal()
 
@@ -23,7 +23,7 @@ class MainModel:
         def background_task():
             try:
                 # Assuming this function returns some result or raises an exception upon failure
-                result = self.db_handler.insert_data_into_db(repo_url)
+                result = "Success"#self.db_handler.insert_data_into_db(repo_url)
                 if callback:
                     # Use callback to send success data back
                     callback(result, None)
@@ -106,7 +106,7 @@ class MainModel:
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
-        top_10_changed_files = self.db_handler.get_top_10_changed_files()
+        top_10_changed_files = self.git_traversal.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
@@ -135,6 +135,6 @@ class MainModel:
         filename = "support//repo_stats.py"
         with open(filename, "w", encoding="utf-8") as file:
             file.write("")
-        if self.db_handler.database_has_values():
-            self.db_handler.clear_database()
+        # if self.db_handler.database_has_values():
+        #     self.db_handler.clear_database()
         print("Database cleared.")
