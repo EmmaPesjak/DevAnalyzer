@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import spacy
 from gensim.models.ldamodel import LdaModel
@@ -7,7 +8,7 @@ from gensim.corpora.dictionary import Dictionary
 # TODO: vad händer med alla merge kommits?
 
 # TODO: namnet på denna låter som att vi testar något, borde inte denna heta commitAnalyzer?
-class CommitTest:
+class Analyzer:
     def __init__(self):
         # Load the trained LDA model
         self.lda_model = LdaModel.load('TopicModeling/lda_model.gensim')
@@ -36,6 +37,9 @@ class CommitTest:
     #     self.summarize_results()
 
     def analyze_commits(self, authors_commits):
+        # Start timer
+        start_time = time.time()
+
         for author, commits in authors_commits.items():
             if author not in self.types_per_user:
                 self.types_per_user[author] = {}
@@ -48,6 +52,9 @@ class CommitTest:
 
                 # Update global
                 self.types_of_commits[category_name] = self.types_of_commits.get(category_name, 0) + 1
+        # End timer and print the elapsed time
+        end_time = time.time()
+        print(f"Commit analysis took {end_time - start_time:.2f} seconds.")
 
         self.summarize_results()
 
@@ -100,20 +107,13 @@ class CommitTest:
         # Lowercase the commit message.
         commit_message = commit_message.lower()
 
-        # Check for merge commits and handle them as desired.
-        if "merge pull request" in commit_message or "merge branch" in commit_message:
-            # Option 1: Ignore merge commits by returning an empty list.
-            #return []
-
-            # Option 2: Mark merge commits distinctly.
-            return ["merge_commit"]
-
         # Tokenize the commit
         doc = nlp(commit_message)
 
         # Define custom stopwords.
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
                              "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+
         for stop_word in custom_stop_words:
             nlp.Defaults.stop_words.add(stop_word)
 

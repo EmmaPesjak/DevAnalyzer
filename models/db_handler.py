@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 from dateutil.relativedelta import relativedelta
 from pydriller import Repository
@@ -6,9 +7,6 @@ import calendar
 from datetime import datetime, timedelta
 
 class DBHandler:
-    # TODO fixa så att det skrivs i filer engligt dummy fil
-    # TODO fixa 5 top filer med antal commits
-    # TODO fixa varje authors top 5 med antal commits
 
     def __init__(self, db_name):
         self.db_name = db_name
@@ -21,40 +19,42 @@ class DBHandler:
 
         # Create a table for the contributors, containing an ID, name, and email.
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS authors (
-                id INTEGER PRIMARY KEY,
-                name TEXT,
-                email TEXT UNIQUE
-            );
-        ''')
+                    CREATE TABLE IF NOT EXISTS authors (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT,
+                        email TEXT UNIQUE
+                    );
+                ''')
 
         # Create a table for the commits, containing an ID, contributor ID, and the message.
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS commits (
-                id INTEGER PRIMARY KEY,
-                author_id INTEGER,
-                message TEXT,
-                date DATE,
-                FOREIGN KEY (author_id) REFERENCES authors (id)
-            );
-        ''')
+                    CREATE TABLE IF NOT EXISTS commits (
+                        id INTEGER PRIMARY KEY,
+                        author_id INTEGER,
+                        message TEXT,
+                        date DATE,
+                        FOREIGN KEY (author_id) REFERENCES authors (id)
+                    );
+                ''')
 
         # Create a table for the files and filepaths that were modified.
         cursor.execute('''
-                CREATE TABLE IF NOT EXISTS commit_files (
-                    id INTEGER PRIMARY KEY,
-                    commit_id INTEGER,
-                    file_name TEXT,
-                    file_path TEXT,
-                    FOREIGN KEY (commit_id) REFERENCES commits (id)
-                );
-            ''')
+                       CREATE TABLE IF NOT EXISTS commit_files (
+                           id INTEGER PRIMARY KEY,
+                           commit_id INTEGER,
+                           file_name TEXT,
+                           file_path TEXT,
+                           FOREIGN KEY (commit_id) REFERENCES commits (id)
+                       );
+                   ''')
 
         conn.commit()
         conn.close()
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
+        # Start timer
+        start_time = time.time()
         # TODO ta bort github users + lower case undvik duplicates, måste vara unik
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
@@ -69,10 +69,9 @@ class DBHandler:
                 cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
                 author_id = cursor.fetchone()[0]
 
-
                 # Format the date and insert commit
-                #formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
-                formatted_date = commit.committer_date.strftime("%Y-%m-%d %H:%M:%S")
+                # formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
+                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
                                (author_id, commit.msg, formatted_date))
@@ -87,6 +86,9 @@ class DBHandler:
         except Exception as e:
             error_message = "Please try again with an existing repository."
         else:
+            # End timer and print the elapsed time
+            end_time = time.time()
+            print(f"Database insertion took {end_time - start_time:.2f} seconds.")
             return "Success"
         finally:
             if 'conn' in locals():
@@ -126,6 +128,7 @@ class DBHandler:
             authors_commits[name].append(message)
 
         return authors_commits
+
 
     def get_authors_with_amount_of_commits(self):
         # Connect to the database
@@ -220,7 +223,6 @@ class DBHandler:
         conn.close()
         return results
 
-
     def get_all_commits(self):
         # Connect to DB
         conn = sqlite3.connect(self.db_name)
@@ -232,7 +234,6 @@ class DBHandler:
 
         conn.close()
         return commits
-
 
     """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
@@ -261,113 +262,6 @@ class DBHandler:
         conn.close()
         return results
 
-    def get_author_commit_messages(self, author_email):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Adjust the SQL query as needed to match your schema and requirements
-        cursor.execute('''
-            SELECT commits.message
-            FROM commits
-            JOIN authors ON commits.author_id = authors.id
-            WHERE authors.email = ?
-        ''', (author_email,))
-
-        commit_messages = [row[0] for row in cursor.fetchall()]
-
-        conn.close()
-        return commit_messages
-
-    """Gets the total amount of commits."""
-    # def get_total_commits(self):
-    #     # Connect to DB
-    #     conn = sqlite3.connect(self.db_name)
-    #     cursor = conn.cursor()
-    #
-    #     cursor.execute('SELECT COUNT(*) FROM commits')
-    #     total_commits = cursor.fetchone()[0]  # Count the rows
-    #
-    #     conn.close()
-    #     return total_commits
-
-    """Gets the names of all contributors."""
-    # def get_all_contributors(self):
-    #     conn = sqlite3.connect(self.db_name)
-    #     cursor = conn.cursor()
-    #
-    #     # Select only the name column from the authors table
-    #     cursor.execute('SELECT name FROM authors')
-    #
-    #     # Fetch all results and extract names from tuples
-    #     contributors = [row[0] for row in cursor.fetchall()]
-    #
-    #     conn.close()
-    #
-    #     return contributors
-
-
-    """Gets all commit info (message, date, author email, filenames and filepath for a contributor."""
-    # def get_commit_data_with_files_for_author(self, author_email):
-    #     conn = sqlite3.connect(self.db_name)
-    #     cursor = conn.cursor()
-    #
-    #     # Retrieve commits and file changes for a specific author
-    #     cursor.execute('''
-    #         SELECT c.id, c.message, c.date, a.name, a.email, f.file_name, f.file_path
-    #         FROM commits c
-    #         JOIN authors a ON c.author_id = a.id
-    #         LEFT JOIN commit_files f ON c.id = f.commit_id
-    #         WHERE a.email = ?
-    #         ORDER BY c.date
-    #     ''', (author_email,))
-    #     rows = cursor.fetchall()
-    #
-    #     conn.close()
-    #
-    #     # Process rows.
-    #     commit_data = {}
-    #     for row in rows:
-    #         commit_id, message, date, author_name, author_email, file_name, file_path = row
-    #         if commit_id not in commit_data:
-    #             commit_data[commit_id] = {
-    #                 "message": message,
-    #                 "date": date,
-    #                 "author": {"name": author_name, "email": author_email},
-    #                 "files": []
-    #             }
-    #         if file_name:  # Check if file_name is not None
-    #             commit_data[commit_id]["files"].append({"file_name": file_name, "file_path": file_path})
-    #
-    #     return commit_data
-
-    """Gets the most active month."""
-
-    # def get_most_active_month(self):
-    #     conn = sqlite3.connect(self.db_name)
-    #     cursor = conn.cursor()
-    #
-    #     # Get date 12 months ago
-    #     twelve_months_ago = datetime.now() - timedelta(days=365)
-    #     formatted_date = twelve_months_ago.strftime("%Y-%m-%d")
-    #
-    #     cursor.execute('''
-    #                 SELECT strftime("%m", date) as month, strftime("%Y", date) as year, COUNT(*)
-    #                 FROM commits
-    #                 WHERE date >= ?
-    #                 GROUP BY year, month
-    #             ''', (formatted_date,))
-    #     monthly_commit_counts = cursor.fetchall()
-    #     conn.close()
-    #
-    #     if not monthly_commit_counts:
-    #         return None
-    #
-    #     # Convert month number to month name
-    #     most_active_month = max(monthly_commit_counts, key=lambda x: x[2])
-    #
-    #     # Find the month with the highest commit count
-    #     month_name = calendar.month_name[int(most_active_month[0])]
-    #     return f"{month_name}"
 
     def database_has_values(self):
         conn = sqlite3.connect(self.db_name)
