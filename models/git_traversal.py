@@ -9,6 +9,8 @@ from dateutil.relativedelta import relativedelta
 
 class GitTraversal:
 
+    #TODO: ska vi radera detta? DB_handler är snabbare än allt!!!
+
     def __init__(self):
         self.repo = None
 
