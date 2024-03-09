@@ -40,14 +40,14 @@ class MainModel:
         return self.git_traversal.get_all_authors_and_their_commits()
 
     def get_top_10_files_per_user(self):
-        data = self.db_handler.get_top_files_per_user()
+        data = self.git_traversal.get_top_files_per_user()
         top_10_per_user = {}
 
         for name, file_name, changes in data:
             if name not in top_10_per_user:
                 top_10_per_user[name] = {}
 
-            # Only keep top 5 entries per user
+            # Only keep top 10 entries per user
             if len(top_10_per_user[name]) < 10:
                 top_10_per_user[name][file_name] = changes
 
@@ -59,7 +59,7 @@ class MainModel:
         # Adjust strftime to generate month names without the year.
         readable_past_12_months = [(today - relativedelta(months=11 - i)).strftime("%b") for i in range(12)]
 
-        data = self.db_handler.get_monthly_commits_by_author()
+        data = self.git_traversal.get_monthly_commits_by_author()
 
         structured_data = defaultdict(lambda: {month: 0 for month in readable_past_12_months})
 
@@ -73,7 +73,6 @@ class MainModel:
         return dict(structured_data)
 
     def get_timeline(self):
-        today = datetime.now()
         data = self.git_traversal.get_commit_counts_past_year()
         # Ensure month names are in descending order (most recent first)
         # Sort data keys to ensure month names are in ascending order (oldest first)
