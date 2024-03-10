@@ -129,17 +129,20 @@ class MainView:
 
         if initial:
             # Display a placeholder message
-            self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
-                                                  text="No repository is selected, please select one with the "
-                                                       "'Select repository' button.",
-                                                  text_color=self.TEXT_COLOR)
-            self.placeholder_label.grid(row=0, column=0, sticky="nsew")
+            self.show_init_label()
         else:
             # Clear the placeholder message and setup diagrams
             if hasattr(self,
                        'placeholder_label') and self.placeholder_label is not None:
                 self.placeholder_label.destroy()
             self.setup_overwiew_diagrams(file_data)
+
+    def show_init_label(self):
+        self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
+                                              text="No repository is selected, please select one with the "
+                                                   "'Select repository' button.",
+                                              text_color=self.TEXT_COLOR)
+        self.placeholder_label.grid(row=0, column=0, sticky="nsew")
 
     def open_git_input(self):
         """
@@ -173,6 +176,17 @@ class MainView:
         """
         pass
 
+    def remove_loading_indicator(self):
+        # Destroy the loading indicator
+        if hasattr(self, 'loading_label') and self.loading_label is not None:
+            self.loading_label.destroy()
+            self.loading_label = None  # Reset to None to avoid future AttributeError.
+
+    def remove_user_select(self):
+        if hasattr(self, 'user_select') and self.user_select is not None:
+            self.user_select.destroy()
+            self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
+
     def show_loading_indicator(self):
         """
         Clears the UI and displays a loading indicator in the UI and prepares the interface for data loading.
@@ -200,14 +214,10 @@ class MainView:
         Updates the UI elements after data fetching is complete.
         """
         # Destroy the loading indicator
-        if hasattr(self, 'loading_label') and self.loading_label is not None:
-            self.loading_label.destroy()
-            self.loading_label = None  # Reset to None to avoid future AttributeError.
+        self.remove_loading_indicator()
 
         # Remove the existing 'user_select' widget if it exists and is not None.
-        if hasattr(self, 'user_select') and self.user_select is not None:
-            self.user_select.destroy()
-            self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
+        self.remove_user_select()
 
         file_data = self.read_file_data()
         total_commits_by_contributor = file_data['total_commits_by_contributor']
@@ -471,7 +481,7 @@ class MainView:
         Handles the closing event of the application.
         """
         if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
-            self.root.destroy()
+            self.root.quit()
 
     def show_error_message(self, message):
         """

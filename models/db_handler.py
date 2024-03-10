@@ -129,7 +129,7 @@ class DBHandler:
 
         return authors_commits
 
-
+    # TODO: bugged, not correct amount
     def get_authors_with_amount_of_commits(self):
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
@@ -204,18 +204,18 @@ class DBHandler:
         twelve_months_ago = today - relativedelta(months=12)
 
         cursor.execute('''
-                SELECT 
-                    strftime('%Y-%m', date) AS month_year, 
-                    a.name, 
+                SELECT
+                    strftime('%Y-%m', date) AS month_year,
+                    a.name,
                     COUNT(*) AS commits_count
-                FROM 
+                FROM
                     commits c
                     JOIN authors a ON c.author_id = a.id
-                WHERE 
+                WHERE
                     c.date >= ?
-                GROUP BY 
+                GROUP BY
                     month_year, a.name
-                ORDER BY 
+                ORDER BY
                     month_year ASC
             ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
 
@@ -245,16 +245,16 @@ class DBHandler:
         twelve_months_ago = today - relativedelta(months=12)
 
         cursor.execute('''
-                SELECT 
-                    strftime('%Y-%m', date) AS month_year, 
+                SELECT
+                    strftime('%Y-%m', date) AS month_year,
                     COUNT(*) AS commits_count
-                FROM 
-                    commits 
-                WHERE 
+                FROM
+                    commits
+                WHERE
                     date >= ?
-                GROUP BY 
+                GROUP BY
                     month_year
-                ORDER BY 
+                ORDER BY
                     month_year ASC
             ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
 
