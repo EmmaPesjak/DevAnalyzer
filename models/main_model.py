@@ -18,7 +18,7 @@ class MainModel:
 
     def set_repo(self, repo_url, callback=None):
         """Inserts the repository into DB."""
-        #self.git_traversal.set_repo(repo_url)
+        self.git_traversal.set_repo(repo_url)
 
         def background_task():
             try:
@@ -109,8 +109,8 @@ class MainModel:
         start_time = time.time()
         filename = "support//repo_stats.py"
 
-        #total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
-        total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
+        #total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
