@@ -47,9 +47,6 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-*.mm
-*.mm.index
-*.dict
 
 *.html
 repo_data.db

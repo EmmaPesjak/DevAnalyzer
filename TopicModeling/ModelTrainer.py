@@ -1,3 +1,4 @@
+import shutil
 import sys
 
 import spacy
@@ -27,7 +28,7 @@ class ModelTrainer:
             'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
                             'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
-            'MERGE_OPERATIONS': ['merge', 'branch', 'pull'],
+            'GIT_OPERATIONS': ['merge', 'branch', 'pull', 'git', 'gitignore'],
             'STYLING/FRONT_END': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
                         'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical', 'stylesheet', 'theme', 'color',
                         'font', 'icon', 'animation', 'transition', 'responsive', 'prototype', 'palette', 'grid', 'alignment',
@@ -201,6 +202,19 @@ class ModelTrainer:
         with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
             pickle.dump(topic_category_mappings, f)
 
+    @staticmethod
+    def reset_model():
+        try:
+            if os.path.exists('support'):
+                # Remove everything in the support directory
+                shutil.rmtree('support')
+                print("Removed the entire 'support' directory.")
+                # Recreate the 'support' directory
+                os.makedirs('support')
+                print("Recreated the 'support' directory.")
+        except Exception as e:
+            print(f"Failed to reset model: {e}")
+
 
 def fetch_commit_messages(path):
     commits = []
@@ -210,6 +224,10 @@ def fetch_commit_messages(path):
 
 
 if __name__ == "__main__":
+    reset = input("Do you want to reset the model before training? (yes/no): ").lower() == 'yes'
+
+    if reset:
+        ModelTrainer.reset_model()
     repo_path = input("Enter the repository path or URL: ")
     try:
         commit_messages = fetch_commit_messages(repo_path)
