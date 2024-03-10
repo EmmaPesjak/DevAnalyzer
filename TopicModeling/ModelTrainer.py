@@ -28,7 +28,7 @@ class ModelTrainer:
             'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
                             'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
-            'MERGE_OPERATIONS': ['merge', 'branch', 'pull'],
+            'GIT_OPERATIONS': ['merge', 'branch', 'pull', 'git', 'gitignore'],
             'STYLING/FRONT_END': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
                         'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical', 'stylesheet', 'theme', 'color',
                         'font', 'icon', 'animation', 'transition', 'responsive', 'prototype', 'palette', 'grid', 'alignment',
