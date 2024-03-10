@@ -38,6 +38,9 @@ class MainModel:
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
 
+    def get_all_authors_and_their_commits(self):
+        return self.db_handler.get_all_authors_and_their_commits()
+
     def get_top_10_files_per_user(self):
         data = self.db_handler.get_top_files_per_user()
         top_10_per_user = {}
