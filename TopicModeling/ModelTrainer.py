@@ -9,6 +9,8 @@ import pickle
 from pydriller import Repository
 import os
 
+import pyLDAvis.gensim
+
 # Check if the support directory exists, if not, create it
 if not os.path.exists('support'):
     os.makedirs('support')
@@ -19,14 +21,15 @@ class ModelTrainer:
         self.categories = {
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug',
                                    'exception', 'fault', 'glitch', 'incorrect', 'crash', 'failure', 'incomplete', 'diagnose',
-                                   'troubleshoot', 'nullpointer', 'regression', 'deprecation'],
+                                   'troubleshoot', 'nullpointer', 'regression', 'deprecation', "warning"],
             'FEATURE_ADDITIONS': ['add', 'feature', 'implement', 'implementation', 'new', 'introduce', 'create',
                                   'generate', 'method', 'functionality'],
             'DOCUMENTATION': ['doc','docs', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',
                               'javadocs', 'readme.md', 'guide', 'manual', 'faq', 'help', 'specification', 'specs',
                               'commentary', 'instruction', 'file'],
             'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
-                            'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused'],
+                            'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused', 'revert', 'undo',
+                            'rollback', 'reverse', 'discard'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
             'GIT_OPERATIONS': ['merge', 'branch', 'pull', 'git', 'gitignore'],
             'STYLING/FRONT_END': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
@@ -42,15 +45,16 @@ class ModelTrainer:
             'CLEANUP': ['cleanup', 'tidy', 'remove', 'delete', 'prune', 'clean', 'refine'],
             'SETUP': ['initial', 'init', 'introduce', 'setup', 'first', 'installation', 'config', 'configure', 'tool', 'dependency',
                       'api', 'apis', 'import', 'template', 'library', 'lib', 'libs', 'plugin', 'mvc', 'structure', 'backbone',
-                      'skeleton', 'boilerplate', 'build', 'package', 'gradle', 'integration', 'start', 'release'],
+                      'skeleton', 'boilerplate', 'build', 'package', 'gradle', 'integration', 'start', 'release', 'jdk', 'extension', 'import'],
             'UPDATE': ['update', 'upgrade', 'refresh', 'renew', 'version', 'change', 'revise', 'deprecation'],
-            'REVERT': ['revert', 'undo', 'rollback', 'reverse', 'discard'],
             'PERFORMANCE': ['performance', 'speed', 'efficiency', 'optimize', 'optimization', 'improve', 'latency',
                             'load', 'time', 'concurrency', 'thread', 'multithread', 'parallel', 'bottleneck', 'async',
-                            'asynchronous', 'throttle', 'debounce', 'response', 'accelerate'],
+                            'asynchronous', 'throttle', 'debounce', 'response', 'accelerate', 'memory', 'stable', 'sync'],
             'DATABASE': ['database', 'db', 'sql','sqlite', 'table', 'schema', 'entity', 'query', 'join', 'sqlcipher',
                          'relationship', 'column', 'data', 'datastore', 'mongodb', 'mysql', 'postgresql', 'postgresqlp',
-                         'postgres', 'modeling', 'transaction', 'key', 'alter', 'drop', 'partition', 'migrate']
+                         'postgres', 'modeling', 'transaction', 'key', 'alter', 'drop', 'partition', 'migrate',
+                         'querybuilder', 'request', 'querycondition'],
+            'OTHER': []
         }
         self.commit_messages = commits
         self.identifier = identifier
@@ -60,7 +64,9 @@ class ModelTrainer:
 
         # Define custom stopwords
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
+                             "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
+                             "object", "fix", "type", "follow", "expect", "flag"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
@@ -70,7 +76,12 @@ class ModelTrainer:
             # Tokenize and preprocess each commit message
             doc = nlp(commit.lower())
             tokens = [token.lemma_ for token in doc if
-                      not token.is_stop and not token.is_punct and not token.like_num and not token.like_url]
+                      not token.is_stop and
+                      not token.is_punct and
+                      not token.like_num and
+                      not token.like_url
+                      and token.is_alpha  # Ensure token is fully alphabetic
+                      ]
             preprocessed_commits.append(tokens)
 
             # Lowercase the commit message.
@@ -127,8 +138,8 @@ class ModelTrainer:
         dictionary, corpus = self.vectorize_data(preprocessed_commits)
 
         # Train LDA model
-        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=10, random_state=100,
-                             update_every=1, chunksize=100, passes=15, alpha='auto', per_word_topics=True)
+        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=8, random_state=100,
+                             update_every=1, chunksize=100, passes=20, alpha='auto', per_word_topics=True)
 
         print("\nTopics found by the LDA model:")
         for idx, topic in lda_model.print_topics(-1, num_words=10):
@@ -151,7 +162,7 @@ class ModelTrainer:
             print(
                 f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
 
-        self.save_model(lda_model, dictionary, topic_category_mappings)
+        self.save_model(lda_model, dictionary, topic_category_mappings, corpus)
 
     def map_topics_to_categories(self, topic_keywords_with_weights):
 
@@ -171,14 +182,27 @@ class ModelTrainer:
                         # Accumulate the weight for that category.
                         category_weights[category] += weight
 
-            # Determine the category with the highest cumulative weight for this topic
+                # Determine the category with the highest cumulative weight for this topic
             best_category = max(category_weights, key=category_weights.get)
-            topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
+            highest_weight = category_weights[best_category]
+
+            # Check if there are no matching keywords, and assign to 'OTHER' if so
+            if highest_weight == 0:
+                best_category = 'OTHER'
+                # You might also want to set a default weight for 'OTHER', or just keep it at 0
+                topic_category_mappings.append((topic_num, best_category, highest_weight))
+            else:
+                topic_category_mappings.append((topic_num, best_category, highest_weight))
 
         return topic_category_mappings
+        #     # Determine the category with the highest cumulative weight for this topic
+        #     best_category = max(category_weights, key=category_weights.get)
+        #     topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
+        #
+        # return topic_category_mappings
 
 
-    def save_model(self, lda_model, dictionary, topic_category_mappings):
+    def save_model(self, lda_model, dictionary, topic_category_mappings, corpus):
         # # Save the LDA model
         # lda_model.save('lda_model.gensim')
         #
@@ -201,6 +225,10 @@ class ModelTrainer:
 
         with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
             pickle.dump(topic_category_mappings, f)
+
+        visualization = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
+        # To run, write "start lda_visualization.html" in terminal
+        pyLDAvis.save_html(visualization, "lda_visualization.html")
 
     @staticmethod
     def reset_model():

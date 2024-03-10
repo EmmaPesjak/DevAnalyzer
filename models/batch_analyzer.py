@@ -37,12 +37,15 @@ class BatchAnalyzer:
             topic_distributions = [self.lda_model.get_document_topics(bow) for bow in bow_corpus]
 
             start_time_dist = time.time()
-            for distribution in topic_distributions:
+            for commit_message, distribution in  zip(commits, topic_distributions):
                 dominant_topic = max(distribution, key=lambda x: x[1])[0]
 
                 start_time_cat = time.time()
                 category = self.topic_category_mapping[dominant_topic][1]
                 end_cat = time.time()
+
+                # Print commit message and its category
+                print(f"Commit: \"{commit_message}\" Classified into: \"{category}\"")
 
                 # Update counts for each author
                 if author not in types_per_user:
@@ -62,7 +65,9 @@ class BatchAnalyzer:
 
         # Define custom stopwords
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
+                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
+                             "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
+                             "object", "fix", "type", "follow", "expect", "flag"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
@@ -77,7 +82,12 @@ class BatchAnalyzer:
             # Tokenize and preprocess each commit message
             doc = nlp(commit_message.lower())
             tokens = [token.lemma_ for token in doc if
-                      not token.is_stop and not token.is_punct and not token.like_num and not token.like_url]
+                      not token.is_stop and
+                      not token.is_punct and
+                      not token.like_num and
+                      not token.like_url
+                      and token.is_alpha  # Ensure token is fully alphabetic
+                      ]
             preprocessed_commits.append(tokens)
 
         return preprocessed_commits
