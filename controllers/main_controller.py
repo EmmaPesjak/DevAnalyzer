@@ -20,9 +20,9 @@ class MainController:
             self.view.remove_loading_indicator()
             self.view.remove_user_select()
             self.view.show_init_label()
-            self.view.show_error_message("Was not able to get the repository, please try again,"
-                                         " make sure to enter a valid Git repository URL.")
-            # self.view.show_error_message(str(error))
+            # self.view.show_error_message("Was not able to get the repository, please try again,"
+            #                              " make sure to enter a valid Git repository URL.")
+            self.view.show_error_message(str(error))
         else:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():

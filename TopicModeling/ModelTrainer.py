@@ -5,9 +5,7 @@ from gensim import corpora
 from gensim.models.ldamodel import LdaModel
 from gensim.corpora.dictionary import Dictionary
 import pickle
-
 from pydriller import Repository
-
 import os
 
 # Check if the support directory exists, if not, create it
@@ -16,7 +14,7 @@ if not os.path.exists('support'):
 
 
 class ModelTrainer:
-    def __init__(self, commits):
+    def __init__(self, commits, identifier):
         self.categories = {
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug',
                                    'exception', 'fault', 'glitch', 'incorrect', 'crash', 'failure', 'incomplete', 'diagnose',
@@ -29,7 +27,7 @@ class ModelTrainer:
             'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
                             'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
-            'MERGE_OPERATIONS': ['merge', 'branch', 'pull', 'request', 'integrate', 'conflict'],
+            'MERGE_OPERATIONS': ['merge', 'branch', 'pull'],
             'STYLING/FRONT_END': ['style', 'format', 'styling', 'convention', 'formatting', 'layout', 'view', 'ux', 'design',
                         'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical', 'stylesheet', 'theme', 'color',
                         'font', 'icon', 'animation', 'transition', 'responsive', 'prototype', 'palette', 'grid', 'alignment',
@@ -54,6 +52,7 @@ class ModelTrainer:
                          'postgres', 'modeling', 'transaction', 'key', 'alter', 'drop', 'partition', 'migrate']
         }
         self.commit_messages = commits
+        self.identifier = identifier
 
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
@@ -109,11 +108,16 @@ class ModelTrainer:
         # Create a bag of words (a way to count the number of words in each doc)
         bow_corpus = [dictionary.doc2bow(commit) for commit in preprocessed_commits]
 
-        # Serialize the dictionary and BoW corpus to disk, saving memory
-        dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
-        corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
+        # # Serialize the dictionary and BoW corpus to disk, saving memory
+        # dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
+        # corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
+        #
+        # print("-------")
+        # return dictionary, bow_corpus
+        # Append the identifier to filenames
+        dictionary.save(os.path.join('support', f'commit_dictionary_{self.identifier}.dict'))
+        corpora.MmCorpus.serialize(os.path.join('support', f'commit_bow_corpus_{self.identifier}.mm'), bow_corpus)
 
-        print("-------")
         return dictionary, bow_corpus
 
     def train_model(self):
@@ -174,18 +178,27 @@ class ModelTrainer:
 
 
     def save_model(self, lda_model, dictionary, topic_category_mappings):
-        # Save the LDA model
-        lda_model.save('lda_model.gensim')
+        # # Save the LDA model
+        # lda_model.save('lda_model.gensim')
+        #
+        # # Save the dictionary
+        # dictionary.save('dictionary.gensim')
+        #
+        # # Save the categories.
+        # with open('categories.pkl', 'wb') as f:
+        #     pickle.dump(self.categories, f)
+        #
+        # # Save the topic-to-category mapping
+        # with open('topic_to_category_mapping.pkl', 'wb') as f:
+        #     pickle.dump(topic_category_mappings, f)
+        # Append the identifier to filenames
+        lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
+        dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
 
-        # Save the dictionary
-        dictionary.save('dictionary.gensim')
-
-        # Save the categories.
-        with open('categories.pkl', 'wb') as f:
+        with open(os.path.join('support', f'categories_{self.identifier}.pkl'), 'wb') as f:
             pickle.dump(self.categories, f)
 
-        # Save the topic-to-category mapping
-        with open('topic_to_category_mapping.pkl', 'wb') as f:
+        with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
             pickle.dump(topic_category_mappings, f)
 
 
@@ -195,13 +208,32 @@ def fetch_commit_messages(path):
         commits.append(commit.msg)
     return commits
 
+
 if __name__ == "__main__":
     repo_path = input("Enter the repository path or URL: ")
     try:
         commit_messages = fetch_commit_messages(repo_path)
         print(f"Retrieved {len(commit_messages)} commit messages.")
-        trainer = ModelTrainer(commit_messages)
+
+        # Extract a simple identifier from the repository path or URL
+        identifier = os.path.basename(
+            repo_path.rstrip('/'))  # Remove trailing slash if present and use basename as identifier
+
+        # You might want to replace or remove characters from the identifier that are not suitable for filenames
+        identifier = identifier.replace('/', '_').replace(':', '_').replace(' ', '_')
+
+        trainer = ModelTrainer(commit_messages, identifier)
         trainer.train_model()
     except Exception as e:
         print(f"Error fetching commit messages: {e}", file=sys.stderr)
+
+# if __name__ == "__main__":
+#     repo_path = input("Enter the repository path or URL: ")
+#     try:
+#         commit_messages = fetch_commit_messages(repo_path)
+#         print(f"Retrieved {len(commit_messages)} commit messages.")
+#         trainer = ModelTrainer(commit_messages)
+#         trainer.train_model()
+#     except Exception as e:
+#         print(f"Error fetching commit messages: {e}", file=sys.stderr)
 
