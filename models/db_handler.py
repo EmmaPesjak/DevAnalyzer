@@ -43,7 +43,6 @@ class DBHandler:
                            id INTEGER PRIMARY KEY,
                            commit_id INTEGER,
                            file_name TEXT,
-                           file_path TEXT,
                            FOREIGN KEY (commit_id) REFERENCES commits (id)
                        );
                    ''')
@@ -55,7 +54,7 @@ class DBHandler:
     def insert_data_into_db(self, repo_url):
         # Start timer
         start_time = time.time()
-        # TODO ta bort github users + lower case undvik duplicates, måste vara unik
+        # TODO do it more efficient
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -70,7 +69,6 @@ class DBHandler:
                 author_id = cursor.fetchone()[0]
 
                 # Format the date and insert commit
-                # formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
                 formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
@@ -79,8 +77,8 @@ class DBHandler:
 
                 # For each modified file in the commit, add the modified files and their filepaths.
                 for mod in commit.modified_files:
-                    cursor.execute('INSERT INTO commit_files (commit_id, file_name, file_path) VALUES (?, ?, ?)',
-                                   (commit_id, mod.filename, mod.new_path))
+                    cursor.execute('INSERT INTO commit_files (commit_id, file_name) VALUES (?, ?)',
+                                   (commit_id, mod.filename))
 
                 conn.commit()
         except Exception as e:

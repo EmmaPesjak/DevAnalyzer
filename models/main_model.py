@@ -110,6 +110,7 @@ class MainModel:
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
+        #total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
