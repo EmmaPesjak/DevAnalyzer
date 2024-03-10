@@ -14,11 +14,11 @@ class MainModel:
     def __init__(self):
         self.db_handler = DBHandler('repo_data.db')
         atexit.register(self.cleanup)
-        # self.git_traversal = GitTraversal()
+        self.git_traversal = GitTraversal()
 
     def set_repo(self, repo_url, callback=None):
         """Inserts the repository into DB."""
-        # self.git_traversal.set_repo(repo_url)
+        self.git_traversal.set_repo(repo_url)
 
         def background_task():
             try:
@@ -26,7 +26,7 @@ class MainModel:
                 result = self.db_handler.insert_data_into_db(repo_url)
                 if result != "Success":
                     callback(None, "Error!")
-                if callback:
+                elif callback:
                     # Use callback to send success data back
                     callback(result, None)
             except Exception as e:
@@ -37,9 +37,6 @@ class MainModel:
         # Start the background task
         thread = threading.Thread(target=background_task, daemon=True)
         thread.start()
-
-    def get_all_authors_and_their_commits(self):
-        return self.db_handler.get_all_authors_and_their_commits()
 
     def get_top_10_files_per_user(self):
         data = self.db_handler.get_top_files_per_user()
@@ -109,7 +106,7 @@ class MainModel:
         start_time = time.time()
         filename = "support//repo_stats.py"
 
-        total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
+        total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()

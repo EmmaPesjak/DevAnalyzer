@@ -129,7 +129,7 @@ class DBHandler:
 
         return authors_commits
 
-    #
+    # TODO: bugged, not correct amount
     def get_authors_with_amount_of_commits(self):
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
