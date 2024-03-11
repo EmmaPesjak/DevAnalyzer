@@ -48,6 +48,7 @@ class MainView:
         self.on_input_change = None
         self.menu_frame = None
         self.diagram_frame = None
+        self.help_button = None
         self.git_button = None
         self.user_select = None
         self.mode_button = None
@@ -104,14 +105,17 @@ class MainView:
         self.menu_frame = ctk.CTkFrame(self.root, corner_radius=1)
         self.menu_frame.grid(row=0, column=0, sticky="nswe")  # Expand North, South, West, East
 
+        self.help_button = ctk.CTkButton(self.menu_frame, text="Help", command=self.open_help)
+        self.help_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+
         self.git_button = ctk.CTkButton(self.menu_frame, text="Select repository", command=self.open_git_input)
-        self.git_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.git_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.mode_button = ctk.CTkButton(self.menu_frame, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.mode_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.exit_button = ctk.CTkButton(self.menu_frame, text="Exit", command=self.on_closing)
-        self.exit_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.exit_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -143,6 +147,26 @@ class MainView:
                                                    "'Select repository' button.",
                                               text_color=self.TEXT_COLOR)
         self.placeholder_label.grid(row=0, column=0, sticky="nsew")
+
+    def open_help(self):
+        help_text = """
+        Welcome to DevAnalyzer!
+
+        This tool allows you to analyze the development activities
+            within a Git repository.
+
+        Instructions:
+        1. Click on 'Select repository' to input the repository URL.
+        2. The analysis will begin automatically and display 
+            various statistics and visualizations about
+            the repository's commit history. Keep in mind 
+            that large repositories may take a while 
+            to load.
+        4. Use the dropdown menu to select specific users and 
+            view detailed analysis.
+
+            """
+        messagebox.showinfo("Help - DevAnalyzer", help_text)
 
     def open_git_input(self):
         """
@@ -229,7 +253,7 @@ class MainView:
         self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users,
                                              command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
-        self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.user_select.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
         self.create_main_area(file_data)

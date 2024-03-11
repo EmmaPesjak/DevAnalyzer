@@ -25,7 +25,8 @@ class MainModel:
                 # Assuming this function returns some result or raises an exception upon failure
                 result = self.db_handler.insert_data_into_db(repo_url)
                 if result != "Success":
-                    callback(None, "Error!")
+                    callback(None, "Was not able to get the repository, please try again, "
+                                   "make sure to enter a valid Git repository URL.")
                 elif callback:
                     # Use callback to send success data back
                     callback(result, None)
