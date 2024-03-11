@@ -48,6 +48,7 @@ class MainView:
         self.on_input_change = None
         self.menu_frame = None
         self.diagram_frame = None
+        self.help_button = None
         self.git_button = None
         self.user_select = None
         self.mode_button = None
@@ -104,14 +105,17 @@ class MainView:
         self.menu_frame = ctk.CTkFrame(self.root, corner_radius=1)
         self.menu_frame.grid(row=0, column=0, sticky="nswe")  # Expand North, South, West, East
 
+        self.help_button = ctk.CTkButton(self.menu_frame, text="Help", command=self.open_help)
+        self.help_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+
         self.git_button = ctk.CTkButton(self.menu_frame, text="Select repository", command=self.open_git_input)
-        self.git_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.git_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.mode_button = ctk.CTkButton(self.menu_frame, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.mode_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.exit_button = ctk.CTkButton(self.menu_frame, text="Exit", command=self.on_closing)
-        self.exit_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.exit_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -143,6 +147,26 @@ class MainView:
                                                    "'Select repository' button.",
                                               text_color=self.TEXT_COLOR)
         self.placeholder_label.grid(row=0, column=0, sticky="nsew")
+
+    def open_help(self):
+        help_text = """
+        Welcome to DevAnalyzer!
+
+        This tool allows you to analyze the development activities
+            within a Git repository.
+
+        Instructions:
+        1. Click on 'Select repository' to input the repository URL.
+        2. The analysis will begin automatically and display 
+            various statistics and visualizations about
+            the repository's commit history. Keep in mind 
+            that large repositories may take a while 
+            to load.
+        4. Use the dropdown menu to select specific users and 
+            view detailed analysis.
+
+            """
+        messagebox.showinfo("Help - DevAnalyzer", help_text)
 
     def open_git_input(self):
         """
@@ -229,7 +253,7 @@ class MainView:
         self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users,
                                              command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
-        self.user_select.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.user_select.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
         self.create_main_area(file_data)
@@ -344,7 +368,7 @@ class MainView:
             info_text_parts.append(
                 f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits")
 
-            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Type",
+            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="Type of commit", xlabel="Type",
                                                       ylabel="Commits")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
@@ -360,14 +384,14 @@ class MainView:
             info_text_parts.append(
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits")
             fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Where")  # TODO: replace with the correct parameters, vad ska vi ha här??
+                                                      title="Changed components")
             # Canvas 2
             canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where again but in bar",
-                                                      xlabel="Where", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Top 10 Changed Files",
+                                                      xlabel="File", ylabel="Commits")
             # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
@@ -385,7 +409,7 @@ class MainView:
                     f"{total_commits_in_month_with_most_commits} commits")
 
                 fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
-                                                          title="Total monthly commits last 12 months",
+                                                          title="Monthly commits last 12 months",
                                                           xlabel="Month", ylabel="Commits")
                 # Canvas 3
                 canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
@@ -419,7 +443,7 @@ class MainView:
         if 'types_of_commits' in file_data and file_data['types_of_commits']:
             diagrams_created = True
             fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['types_of_commits'],
-                                                      title="Total Commit Type",
+                                                      title="Type of commit",
                                                       xlabel="Type", ylabel="Commits")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
