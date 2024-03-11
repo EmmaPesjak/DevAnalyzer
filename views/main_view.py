@@ -344,7 +344,7 @@ class MainView:
             info_text_parts.append(
                 f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits")
 
-            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Type",
+            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="Type of commit", xlabel="Type",
                                                       ylabel="Commits")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
@@ -360,14 +360,14 @@ class MainView:
             info_text_parts.append(
                 f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits")
             fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Where")  # TODO: replace with the correct parameters, vad ska vi ha här??
+                                                      title="Changed components")
             # Canvas 2
             canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Where again but in bar",
-                                                      xlabel="Where", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Top 10 Changed Files",
+                                                      xlabel="File", ylabel="Commits")
             # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
@@ -385,7 +385,7 @@ class MainView:
                     f"{total_commits_in_month_with_most_commits} commits")
 
                 fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
-                                                          title="Total monthly commits last 12 months",
+                                                          title="Monthly commits last 12 months",
                                                           xlabel="Month", ylabel="Commits")
                 # Canvas 3
                 canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
@@ -419,7 +419,7 @@ class MainView:
         if 'types_of_commits' in file_data and file_data['types_of_commits']:
             diagrams_created = True
             fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['types_of_commits'],
-                                                      title="Total Commit Type",
+                                                      title="Type of commit",
                                                       xlabel="Type", ylabel="Commits")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
