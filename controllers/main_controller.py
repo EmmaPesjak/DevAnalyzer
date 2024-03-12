@@ -3,6 +3,7 @@ import time
 
 class MainController:
     def __init__(self, main_model, view, commit_analyzer):
+        self.repo = None
         self.main_model = main_model
         self.view = view
         self.commit_analyzer = commit_analyzer
@@ -10,6 +11,7 @@ class MainController:
         self.analyzer = BatchAnalyzer()
 
     def retrieve_url(self, new_url):
+        self.repo = new_url
         self.start_time = time.time()  # Start timing, ta bort detta sen
         self.main_model.cleanup()
         self.main_model.set_repo(new_url, self.handle_set_repo_result)
@@ -34,7 +36,7 @@ class MainController:
                 self.view.show_error_message("Something went wrong, please try again")
 
     def end_timing(self): #bort med hela denna metod sen, den bajsar lite med programmet
-        self.view.update_ui_after_fetch()  # Call the original update function
+        self.view.update_ui_after_fetch(self.repo)  # Call the original update function
         end_time = time.time()  # Stop timing
         duration = end_time - self.start_time  # Calculate duration
         print(f"Total time taken: {duration} seconds")

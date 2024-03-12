@@ -233,12 +233,15 @@ class MainView:
         # Place the loading label in a specific row and column.
         self.loading_label.grid(row=0, column=0, sticky="nsew")
 
-    def update_ui_after_fetch(self):
+    def update_ui_after_fetch(self, repo):
         """
         Updates the UI elements after data fetching is complete.
         """
         # Destroy the loading indicator
         self.remove_loading_indicator()
+
+        self.repo = repo
+
 
         # Remove the existing 'user_select' widget if it exists and is not None.
         self.remove_user_select()
@@ -258,6 +261,7 @@ class MainView:
         # Update the main area and info bar.
         self.create_main_area(file_data)
         self.create_info_bar(file_data)
+
 
     def read_file_data(self):
         """Read data from a file and return it."""
@@ -436,8 +440,13 @@ class MainView:
         self.user_windows.remove(window)
 
     def setup_overwiew_diagrams(self, file_data):
+
+        repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=self.TEXT_COLOR)
+        repo_label.grid(row=0, column=0, columnspan=2, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
+        diagram_row = 1  # Start placing diagrams after the repository label row
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'types_of_commits' in file_data and file_data['types_of_commits']:
@@ -447,7 +456,7 @@ class MainView:
                                                       xlabel="Type", ylabel="Commits")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
-            canvas1.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas1.get_tk_widget().grid(row=diagram_row, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check for 'total_commits_by_contributor' data and create a diagram if it's not empty.
         if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
@@ -456,7 +465,7 @@ class MainView:
                                                       title="Total commits by contributor")
             canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
             canvas2.draw()
-            canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas2.get_tk_widget().grid(row=diagram_row, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check for 'total_monthly_commits' data and create a diagram if it's not empty.
         if 'total_monthly_commits' in file_data and file_data['total_monthly_commits']:
@@ -468,7 +477,7 @@ class MainView:
                                                           xlabel="Month", ylabel="Commits")
                 canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
                 canvas3.draw()
-                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+                canvas3.get_tk_widget().grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check for 'top_10_changed_files' data and create a diagram if it's not empty
         if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
@@ -478,7 +487,7 @@ class MainView:
                                                       xlabel="File", ylabel="Commits")
             canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
             canvas4.draw()
-            canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas4.get_tk_widget().grid(row=diagram_row+1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # If no diagrams were created due to empty datasets, you can show a message or handle it as needed
         if not diagrams_created:
