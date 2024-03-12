@@ -1,12 +1,12 @@
 from models.batch_analyzer import BatchAnalyzer
 import time
 
+
 class MainController:
-    def __init__(self, main_model, view, commit_analyzer):
+    def __init__(self, main_model, view):
         self.repo = None
         self.main_model = main_model
         self.view = view
-        self.commit_analyzer = commit_analyzer
         self.view.set_on_input_change(self.retrieve_url)
         self.analyzer = BatchAnalyzer()
 
@@ -30,7 +30,7 @@ class MainController:
             if self.main_model.write_to_file():
                 all_commits = self.main_model.get_all_authors_and_their_commits()
                 self.analyzer.analyze_commits(all_commits)
-                # Om man vill ha bort timern kan man ersätta end_timing här med update_ui_after_fetch
+                # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
             else:
                 self.view.show_error_message("Something went wrong, please try again")

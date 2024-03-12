@@ -130,6 +130,7 @@ class MainView:
         self.diagram_frame.grid_columnconfigure(1, weight=1)
         self.diagram_frame.grid_rowconfigure(0, weight=1)
         self.diagram_frame.grid_rowconfigure(1, weight=1)
+        self.diagram_frame.grid_rowconfigure(2, weight=1)
 
         if initial:
             # Display a placeholder message
@@ -242,7 +243,6 @@ class MainView:
 
         self.repo = repo
 
-
         # Remove the existing 'user_select' widget if it exists and is not None.
         self.remove_user_select()
 
@@ -261,7 +261,6 @@ class MainView:
         # Update the main area and info bar.
         self.create_main_area(file_data)
         self.create_info_bar(file_data)
-
 
     def read_file_data(self):
         """Read data from a file and return it."""

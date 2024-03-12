@@ -1,16 +1,12 @@
 import shutil
 import sys
-
 import spacy
 from gensim import corpora
 from gensim.models.ldamodel import LdaModel
-from gensim.corpora.dictionary import Dictionary
 import pickle
 from pydriller import Repository
 import os
 from gensim.models.coherencemodel import CoherenceModel
-from nltk.corpus import stopwords
-
 import pyLDAvis.gensim
 
 # Check if the support directory exists, if not, create it
@@ -63,16 +59,12 @@ class ModelTrainer:
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
 
+        # Define custom stopwords
         custom_stop_words = ['a', 'the', 'and', 'etc', 'zip', 'use', 'instead', 'easy', ' ', 'non', 'no', 'ensure'
                            'minor', 'example', 'null', 'call', 'method', 'prepare', 'support', 'set', 'snapshot',
                            'class', 'close', 'code', 'extract', 'available', 'object', 'fix', 'type', 'follow',
                            'expect', 'flag', 'src', 'main', 'master']
 
-        # # Define custom stopwords
-        # custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-        #                      "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
-        #                      "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
-        #                      "object", "fix", "type", "follow", "expect", "flag", "src", "main", "master", "sdk"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
@@ -88,30 +80,6 @@ class ModelTrainer:
             preprocessed_commits.append(tokens)
             print(f'{commit}: {tokens}')
 
-            # Lowercase the commit message.
-            # commit = commit.lower()
-            #
-            # # Tokenize the commit
-            # doc = nlp(commit)
-            #
-            # # Adding custom stopwords.
-            # nlp.Defaults.stop_words.add("\n\n")
-            #
-            # stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-            #               "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example"]
-            #
-            # for stop_word in stop_words:
-            #     lexeme = nlp.vocab[stop_word]
-            #     lexeme.is_stop = True
-            #
-            # # Lemmatizes and filters out stopwords, punctuation, numbers, and  (duplicates can occur when the
-            # # commit messages contains both a title and a message with the same words).
-            # filtered_tokens = set(
-            #     [token.lemma_ for token in doc if not token.is_stop and not token.is_punct and not token.like_num and
-            #      not token.like_url and not token.like_url])
-            #
-            # preprocessed_commits.append(filtered_tokens)
-
         return preprocessed_commits
 
     def vectorize_data(self, preprocessed_commits):
@@ -124,15 +92,9 @@ class ModelTrainer:
         # Create a bag of words (a way to count the number of words in each doc)
         bow_corpus = [dictionary.doc2bow(commit) for commit in preprocessed_commits]
 
-        # # Serialize the dictionary and BoW corpus to disk, saving memory
+        # Serialize the dictionary and BoW corpus to disk, saving memory
         dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
         corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
-        #
-        # print("-------")
-        # return dictionary, bow_corpus
-        # Append the identifier to filenames
-        # dictionary.save(os.path.join('support', f'commit_dictionary_{self.identifier}.dict'))
-        # corpora.MmCorpus.serialize(os.path.join('support', f'commit_bow_corpus_{self.identifier}.mm'), bow_corpus)
 
         return dictionary, bow_corpus
 
@@ -199,30 +161,6 @@ class ModelTrainer:
                 topic_category_mappings.append((topic_num, best_category, highest_weight))
 
         return topic_category_mappings
-        #     # Determine the category with the highest cumulative weight for this topic
-        #     best_category = max(category_weights, key=category_weights.get)
-        #     topic_category_mappings.append((topic_num, best_category, category_weights[best_category]))
-        #
-        # return topic_category_mappings
-
-
-    #def save_model(self, lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits):
-        # # Save the LDA model
-        # lda_model.save('lda_model.gensim')
-        #
-        # # Save the dictionary
-        # dictionary.save('dictionary.gensim')
-        #
-        # # Save the categories.
-        # with open('categories.pkl', 'wb') as f:
-        #     pickle.dump(self.categories, f)
-        #
-        # # Save the topic-to-category mapping
-        # with open('topic_to_category_mapping.pkl', 'wb') as f:
-        #     pickle.dump(topic_category_mappings, f)
-        # Append the identifier to filenames
-        #lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
-       # dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
     
     def save_model(self, lda_model, dictionary, topic_category_mappings, corpus,  preprocessed_commits):
         # Save the LDA model
@@ -238,15 +176,6 @@ class ModelTrainer:
         # Save the topic-to-category mapping
         with open('topic_to_category_mapping.pkl', 'wb') as f:
             pickle.dump(topic_category_mappings, f)
-        # Append the identifier to filenames
-        # lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
-        # dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
-        #
-        # with open(os.path.join('support', f'categories_{self.identifier}.pkl'), 'wb') as f:
-        #     pickle.dump(self.categories, f)
-        #
-        # with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
-        #     pickle.dump(topic_category_mappings, f)
 
         visualization = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
         # To run, write "start lda_visualization.html" in terminal
@@ -281,28 +210,6 @@ def fetch_commit_messages(path):
     return commits
 
 
-# if __name__ == "__main__":
-#     reset = input("Do you want to reset the model before training? (yes/no): ").lower() == 'yes'
-#
-#     if reset:
-#         ModelTrainer.reset_model()
-#     repo_path = input("Enter the repository path or URL: ")
-#     try:
-#         commit_messages = fetch_commit_messages(repo_path)
-#         print(f"Retrieved {len(commit_messages)} commit messages.")
-#
-#         # Extract a simple identifier from the repository path or URL
-#         identifier = os.path.basename(
-#             repo_path.rstrip('/'))  # Remove trailing slash if present and use basename as identifier
-#
-#         # You might want to replace or remove characters from the identifier that are not suitable for filenames
-#         identifier = identifier.replace('/', '_').replace(':', '_').replace(' ', '_')
-#
-#         trainer = ModelTrainer(commit_messages, identifier)
-#         trainer.train_model()
-#     except Exception as e:
-#         print(f"Error fetching commit messages: {e}", file=sys.stderr)
-
 if __name__ == "__main__":
     # Initialize an empty list to hold all commit messages from all repositories
     all_commit_messages = []
@@ -330,13 +237,3 @@ if __name__ == "__main__":
         trainer.train_model()
     else:
         print("No commit messages were collected. Exiting.")
-
-    # repo_path = input("Enter the repository path or URL: ")
-    # try:
-    #     commit_messages = fetch_commit_messages(repo_path)
-    #     print(f"Retrieved {len(commit_messages)} commit messages.")
-    #     trainer = ModelTrainer(commit_messages)
-    #     trainer.train_model()
-    # except Exception as e:
-    #     print(f"Error fetching commit messages: {e}", file=sys.stderr)
-
