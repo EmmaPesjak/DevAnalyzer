@@ -8,6 +8,7 @@ from gensim.corpora.dictionary import Dictionary
 import pickle
 from pydriller import Repository
 import os
+from gensim.models.coherencemodel import CoherenceModel
 
 import pyLDAvis.gensim
 
@@ -162,7 +163,7 @@ class ModelTrainer:
             print(
                 f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
 
-        self.save_model(lda_model, dictionary, topic_category_mappings, corpus)
+        self.save_model(lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits)
 
     def map_topics_to_categories(self, topic_keywords_with_weights):
 
@@ -202,7 +203,7 @@ class ModelTrainer:
         # return topic_category_mappings
 
 
-    def save_model(self, lda_model, dictionary, topic_category_mappings, corpus):
+    def save_model(self, lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits):
         # # Save the LDA model
         # lda_model.save('lda_model.gensim')
         #
@@ -229,6 +230,14 @@ class ModelTrainer:
         visualization = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
         # To run, write "start lda_visualization.html" in terminal
         pyLDAvis.save_html(visualization, "lda_visualization.html")
+
+        print('\nPerplexity: ', lda_model.log_perplexity(corpus,
+                                                         total_docs=10000))  # a measure of how good the model is. lower the better.
+
+        coherence_model_lda = CoherenceModel(model=lda_model, texts=preprocessed_commits, dictionary=dictionary,
+                                             coherence='c_v')
+        coherence_lda = coherence_model_lda.get_coherence()
+        print('\nCoherence Score: ', coherence_lda)  # higher is better
 
     @staticmethod
     def reset_model():
