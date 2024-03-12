@@ -9,6 +9,7 @@ import pickle
 from pydriller import Repository
 import os
 from gensim.models.coherencemodel import CoherenceModel
+from nltk.corpus import stopwords
 
 import pyLDAvis.gensim
 
@@ -28,7 +29,7 @@ class ModelTrainer:
             'DOCUMENTATION': ['doc','docs', 'readme', 'comment', 'tutorial', 'documentation', 'wiki', 'javadoc', 'description',
                               'javadocs', 'readme.md', 'guide', 'manual', 'faq', 'help', 'specification', 'specs',
                               'commentary', 'instruction', 'file'],
-            'REFACTORING': ['refactor', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
+            'REFACTORING': ['refactor', 'refactore', 'redundant', 'refactoring', 'clean', 'improve', 'restructure', 'move', 'replace',
                             'typo', 'change', 'rename', 'refine', 'simplify', 'streamline', 'unused', 'revert', 'undo',
                             'rollback', 'reverse', 'discard'],
             'TESTING': ['test', 'unittest', 'integrationtest', 'testing', 'tdd', 'assert', 'testcase', 'testscript'],
@@ -58,16 +59,20 @@ class ModelTrainer:
             'OTHER': []
         }
         self.commit_messages = commits
-        # self.identifier = identifier
 
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
 
-        # Define custom stopwords
-        custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
-                             "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
-                             "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
-                             "object", "fix", "type", "follow", "expect", "flag", "src", "main", "master", "sdk"]
+        custom_stop_words = ['a', 'the', 'and', 'etc', 'zip', 'use', 'instead', 'easy', ' ', 'non', 'no', 'ensure'
+                           'minor', 'example', 'null', 'call', 'method', 'prepare', 'support', 'set', 'snapshot',
+                           'class', 'close', 'code', 'extract', 'available', 'object', 'fix', 'type', 'follow',
+                           'expect', 'flag', 'src', 'main', 'master']
+
+        # # Define custom stopwords
+        # custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
+        #                      "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
+        #                      "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
+        #                      "object", "fix", "type", "follow", "expect", "flag", "src", "main", "master", "sdk"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
@@ -76,14 +81,12 @@ class ModelTrainer:
         for commit in self.commit_messages:
             # Tokenize and preprocess each commit message
             doc = nlp(commit.lower())
-            tokens = [token.lemma_ for token in doc if
-                      not token.is_stop and
-                      not token.is_punct and
-                      not token.like_num and
-                      not token.like_url
+            tokens = [token.lemma_ for token in doc
+                      if not token.is_stop
                       and token.is_alpha  # Ensure token is fully alphabetic
                       ]
             preprocessed_commits.append(tokens)
+            print(f'{commit}: {tokens}')
 
             # Lowercase the commit message.
             # commit = commit.lower()
@@ -139,7 +142,7 @@ class ModelTrainer:
         dictionary, corpus = self.vectorize_data(preprocessed_commits)
 
         # Train LDA model
-        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=10, random_state=100,
+        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=12, random_state=100,
                              update_every=1, chunksize=100, passes=10, alpha='auto', per_word_topics=True)
 
         print("\nTopics found by the LDA model:")

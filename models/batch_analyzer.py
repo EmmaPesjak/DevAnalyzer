@@ -67,9 +67,14 @@ class BatchAnalyzer:
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
                              "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
                              "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
-                             "object", "fix", "type", "follow", "expect", "flag"]
+                             "object", "fix", "type", "follow", "expect", "flag", "src", "main", "master", "sdk"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
+
+        if nlp.vocab['class'].is_stop:
+            print("True")
+        else:
+            print("False")
 
         preprocessed_commits = []
         # Process each commit message individually within the batch
