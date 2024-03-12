@@ -1,10 +1,9 @@
 import sqlite3
-import time
 
 from dateutil.relativedelta import relativedelta
 from pydriller import Repository
-import calendar
-from datetime import datetime, timedelta
+from datetime import datetime
+
 
 class DBHandler:
 
@@ -52,9 +51,6 @@ class DBHandler:
 
     """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
-        # Start timer
-        start_time = time.time()
-        # TODO do it more efficient
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -84,9 +80,6 @@ class DBHandler:
         except Exception as e:
             error_message = "Please try again with an existing repository."
         else:
-            # End timer and print the elapsed time
-            end_time = time.time()
-            print(f"Database insertion took {end_time - start_time:.2f} seconds.")
             return "Success"
         finally:
             if 'conn' in locals():
@@ -102,7 +95,6 @@ class DBHandler:
         cursor = conn.cursor()
 
         # Execute SQL query to retrieve author details and their commits
-        # This time, we exclude the email and date from the selection.
         cursor.execute('''
                 SELECT a.name, c.message
                 FROM authors a
@@ -126,30 +118,6 @@ class DBHandler:
             authors_commits[name].append(message)
 
         return authors_commits
-
-    # TODO: bugged, not correct amount
-    def get_authors_with_amount_of_commits(self):
-        # Connect to the database
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # SQL query to count commits per author
-        cursor.execute('''
-                SELECT a.name, COUNT(c.id) AS total_commits
-                FROM authors a
-                JOIN commits c ON a.id = c.author_id
-                GROUP BY a.id
-            ''')
-
-        # Fetch the results
-        results = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Convert the results into a dictionary
-        total_commits_by_contributor = {name: total_commits for name, total_commits in results}
-        return total_commits_by_contributor
 
     def get_top_10_changed_files(self):
         # Connect to the database
@@ -221,18 +189,6 @@ class DBHandler:
         conn.close()
         return results
 
-    def get_all_commits(self):
-        # Connect to DB
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        cursor.execute('SELECT message FROM commits')
-        # Fetch all results and transform each tuple to its first element
-        commits = [commit[0] for commit in cursor.fetchall()]
-
-        conn.close()
-        return commits
-
     """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
         conn = sqlite3.connect(self.db_name)
@@ -259,7 +215,6 @@ class DBHandler:
         results = cursor.fetchall()
         conn.close()
         return results
-
 
     def database_has_values(self):
         conn = sqlite3.connect(self.db_name)
@@ -291,4 +246,3 @@ class DBHandler:
             print("Database successfully cleared.")
         except Exception as e:
             print(f"Error clearing database: {e}")
-

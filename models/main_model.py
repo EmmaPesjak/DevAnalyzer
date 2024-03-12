@@ -1,12 +1,10 @@
 import threading
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from models.db_handler import DBHandler
 import atexit
 from models.git_traversal import GitTraversal
-from collections import OrderedDict
 
 
 class MainModel:
@@ -77,18 +75,7 @@ class MainModel:
 
     def get_timeline(self):
         data = self.db_handler.get_commit_counts_past_year()
-        #TODO: OBS radera inte koden som är bortkommenterad här under, den är till för om man vill köra git_traversal
 
-        # Ensure month names are in descending order (most recent first)
-        # # Sort data keys to ensure month names are in ascending order (oldest first)
-        # data_keys_sorted = sorted(data.keys(), reverse=False)
-        #
-        # readable_format_data = {}
-        # for month_year in data_keys_sorted:
-        #     month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
-        #     readable_format_data[month_name] = data[month_year]
-        #
-        # return readable_format_data
         today = datetime.now()
         # Initialize a dictionary for the past 12 months
         structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12)}
@@ -107,11 +94,9 @@ class MainModel:
         return readable_format_data
 
     def write_to_file(self):
-        start_time = time.time()
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
-        #total_commits_by_contributor = self.db_handler.get_authors_with_amount_of_commits()
         top_10_changed_files = self.db_handler.get_top_10_changed_files()
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
@@ -128,13 +113,8 @@ class MainModel:
 
         with open(filename, "w", encoding="utf-8") as file:
             file.write(content_to_write)
-            print("Saved")
-            end_time = time.time()
-            print(f"Writing to file took {end_time - start_time:.2f} seconds.")
             return True
 
-
-    # TODO BUG; DB doesn't always clear up after exit.
     """ Empties the database on exit."""
     def cleanup(self):
 
@@ -143,4 +123,3 @@ class MainModel:
             file.write("")
         if self.db_handler.database_has_values():
             self.db_handler.clear_database()
-        print("Database cleared.")
