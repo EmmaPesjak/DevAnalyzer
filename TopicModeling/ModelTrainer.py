@@ -18,7 +18,7 @@ if not os.path.exists('support'):
 
 
 class ModelTrainer:
-    def __init__(self, commits, identifier):
+    def __init__(self, commits):
         self.categories = {
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug',
                                    'exception', 'fault', 'glitch', 'incorrect', 'crash', 'failure', 'incomplete', 'diagnose',
@@ -58,7 +58,7 @@ class ModelTrainer:
             'OTHER': []
         }
         self.commit_messages = commits
-        self.identifier = identifier
+        # self.identifier = identifier
 
     def preprocess_data(self):
         nlp = spacy.load("en_core_web_sm")
@@ -122,14 +122,14 @@ class ModelTrainer:
         bow_corpus = [dictionary.doc2bow(commit) for commit in preprocessed_commits]
 
         # # Serialize the dictionary and BoW corpus to disk, saving memory
-        # dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
-        # corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
+        dictionary.save('support/commit_dictionary.dict')  # Save the dictionary for future use
+        corpora.MmCorpus.serialize('support/commit_bow_corpus.mm', bow_corpus)  # Save the BoW corpus
         #
         # print("-------")
         # return dictionary, bow_corpus
         # Append the identifier to filenames
-        dictionary.save(os.path.join('support', f'commit_dictionary_{self.identifier}.dict'))
-        corpora.MmCorpus.serialize(os.path.join('support', f'commit_bow_corpus_{self.identifier}.mm'), bow_corpus)
+        # dictionary.save(os.path.join('support', f'commit_dictionary_{self.identifier}.dict'))
+        # corpora.MmCorpus.serialize(os.path.join('support', f'commit_bow_corpus_{self.identifier}.mm'), bow_corpus)
 
         return dictionary, bow_corpus
 
@@ -139,8 +139,8 @@ class ModelTrainer:
         dictionary, corpus = self.vectorize_data(preprocessed_commits)
 
         # Train LDA model
-        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=8, random_state=100,
-                             update_every=1, chunksize=100, passes=20, alpha='auto', per_word_topics=True)
+        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=8, random_state=100, iterations=100,
+                             update_every=1, chunksize=1000, passes=50, alpha='auto', per_word_topics=True)
 
         print("\nTopics found by the LDA model:")
         for idx, topic in lda_model.print_topics(-1, num_words=10):
@@ -203,7 +203,7 @@ class ModelTrainer:
         # return topic_category_mappings
 
 
-    def save_model(self, lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits):
+    #def save_model(self, lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits):
         # # Save the LDA model
         # lda_model.save('lda_model.gensim')
         #
@@ -218,14 +218,32 @@ class ModelTrainer:
         # with open('topic_to_category_mapping.pkl', 'wb') as f:
         #     pickle.dump(topic_category_mappings, f)
         # Append the identifier to filenames
-        lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
-        dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
+        #lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
+       # dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
+    
+    def save_model(self, lda_model, dictionary, topic_category_mappings, corpus,  preprocessed_commits):
+        # Save the LDA model
+        lda_model.save('lda_model.gensim')
 
-        with open(os.path.join('support', f'categories_{self.identifier}.pkl'), 'wb') as f:
+        # Save the dictionary
+        dictionary.save('dictionary.gensim')
+
+        # Save the categories.
+        with open('categories.pkl', 'wb') as f:
             pickle.dump(self.categories, f)
 
-        with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
+        # Save the topic-to-category mapping
+        with open('topic_to_category_mapping.pkl', 'wb') as f:
             pickle.dump(topic_category_mappings, f)
+        # Append the identifier to filenames
+        # lda_model.save(os.path.join('support', f'lda_model_{self.identifier}.gensim'))
+        # dictionary.save(os.path.join('support', f'dictionary_{self.identifier}.gensim'))
+        #
+        # with open(os.path.join('support', f'categories_{self.identifier}.pkl'), 'wb') as f:
+        #     pickle.dump(self.categories, f)
+        #
+        # with open(os.path.join('support', f'topic_to_category_mapping_{self.identifier}.pkl'), 'wb') as f:
+        #     pickle.dump(topic_category_mappings, f)
 
         visualization = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
         # To run, write "start lda_visualization.html" in terminal
@@ -260,35 +278,35 @@ def fetch_commit_messages(path):
     return commits
 
 
-if __name__ == "__main__":
-    reset = input("Do you want to reset the model before training? (yes/no): ").lower() == 'yes'
-
-    if reset:
-        ModelTrainer.reset_model()
-    repo_path = input("Enter the repository path or URL: ")
-    try:
-        commit_messages = fetch_commit_messages(repo_path)
-        print(f"Retrieved {len(commit_messages)} commit messages.")
-
-        # Extract a simple identifier from the repository path or URL
-        identifier = os.path.basename(
-            repo_path.rstrip('/'))  # Remove trailing slash if present and use basename as identifier
-
-        # You might want to replace or remove characters from the identifier that are not suitable for filenames
-        identifier = identifier.replace('/', '_').replace(':', '_').replace(' ', '_')
-
-        trainer = ModelTrainer(commit_messages, identifier)
-        trainer.train_model()
-    except Exception as e:
-        print(f"Error fetching commit messages: {e}", file=sys.stderr)
-
 # if __name__ == "__main__":
+#     reset = input("Do you want to reset the model before training? (yes/no): ").lower() == 'yes'
+#
+#     if reset:
+#         ModelTrainer.reset_model()
 #     repo_path = input("Enter the repository path or URL: ")
 #     try:
 #         commit_messages = fetch_commit_messages(repo_path)
 #         print(f"Retrieved {len(commit_messages)} commit messages.")
-#         trainer = ModelTrainer(commit_messages)
+#
+#         # Extract a simple identifier from the repository path or URL
+#         identifier = os.path.basename(
+#             repo_path.rstrip('/'))  # Remove trailing slash if present and use basename as identifier
+#
+#         # You might want to replace or remove characters from the identifier that are not suitable for filenames
+#         identifier = identifier.replace('/', '_').replace(':', '_').replace(' ', '_')
+#
+#         trainer = ModelTrainer(commit_messages, identifier)
 #         trainer.train_model()
 #     except Exception as e:
 #         print(f"Error fetching commit messages: {e}", file=sys.stderr)
+
+if __name__ == "__main__":
+    repo_path = input("Enter the repository path or URL: ")
+    try:
+        commit_messages = fetch_commit_messages(repo_path)
+        print(f"Retrieved {len(commit_messages)} commit messages.")
+        trainer = ModelTrainer(commit_messages)
+        trainer.train_model()
+    except Exception as e:
+        print(f"Error fetching commit messages: {e}", file=sys.stderr)
 
