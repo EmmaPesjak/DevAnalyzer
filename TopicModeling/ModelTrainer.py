@@ -37,7 +37,7 @@ class ModelTrainer:
                         'css', 'html', 'ui', 'gui', 'interface', 'graphic', 'graphical', 'stylesheet', 'theme', 'color',
                         'font', 'icon', 'animation', 'transition', 'responsive', 'prototype', 'palette', 'grid', 'alignment',
                         'interactive', 'darkmode', 'lightmode', 'display', 'diagram', 'chart', 'input', 'event-listener',
-                                  'menu', 'dark', 'light', 'window'],
+                                  'menu', 'dark', 'light', 'window', "image", "img"],
             'DEPLOYMENT/PUBLISH': ['deploy', 'release', 'production', 'deployment', 'rollout', 'launch', 'migration',
                                    'dev', 'publish', 'build', 'compile'],
             'SECURITY': ['security', 'vulnerability', 'secure', 'cve', 'encrypt', 'safety', 'authentication', 'auth',
@@ -67,7 +67,7 @@ class ModelTrainer:
         custom_stop_words = ["\n\n", "a", "the", "and", "etc", "<", ">", "\n", "=", "zip", "use", "instead", "easy",
                              "\r\n\r\n", " ", "\t", "non", "no", "ensure", "minor", "example", "null", "call", "method",
                              "prepare", "support", "set", "snapshot", "class", "close", "code", "extract", "available",
-                             "object", "fix", "type", "follow", "expect", "flag"]
+                             "object", "fix", "type", "follow", "expect", "flag", "src", "main", "master", "sdk"]
         for stop_word in custom_stop_words:
             nlp.vocab[stop_word].is_stop = True
 
@@ -139,8 +139,8 @@ class ModelTrainer:
         dictionary, corpus = self.vectorize_data(preprocessed_commits)
 
         # Train LDA model
-        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=8, random_state=100, iterations=100,
-                             update_every=1, chunksize=1000, passes=50, alpha='auto', per_word_topics=True)
+        lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=10, random_state=100,
+                             update_every=1, chunksize=100, passes=10, alpha='auto', per_word_topics=True)
 
         print("\nTopics found by the LDA model:")
         for idx, topic in lda_model.print_topics(-1, num_words=10):
@@ -301,12 +301,39 @@ def fetch_commit_messages(path):
 #         print(f"Error fetching commit messages: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
-    repo_path = input("Enter the repository path or URL: ")
-    try:
-        commit_messages = fetch_commit_messages(repo_path)
-        print(f"Retrieved {len(commit_messages)} commit messages.")
-        trainer = ModelTrainer(commit_messages)
+    # Initialize an empty list to hold all commit messages from all repositories
+    all_commit_messages = []
+
+    # Ask the user to enter the number of repositories
+    num_repos = int(input("Enter the number of repositories: "))
+
+    # Loop to handle multiple repositories
+    for i in range(num_repos):
+        repo_path = input(f"Enter the repository path or URL #{i + 1}: ")
+        try:
+            # Fetch commit messages for each repository
+            commit_messages = fetch_commit_messages(repo_path)
+            print(f"Retrieved {len(commit_messages)} commit messages from repository #{i + 1}.")
+
+            # Append these messages to the overall list
+            all_commit_messages.extend(commit_messages)
+        except Exception as e:
+            print(f"Error fetching commit messages from repository #{i + 1}: {e}", file=sys.stderr)
+
+    # After collecting commits from all repositories, proceed with training
+    if all_commit_messages:
+        print(f"Total commit messages collected: {len(all_commit_messages)}")
+        trainer = ModelTrainer(all_commit_messages)
         trainer.train_model()
-    except Exception as e:
-        print(f"Error fetching commit messages: {e}", file=sys.stderr)
+    else:
+        print("No commit messages were collected. Exiting.")
+
+    # repo_path = input("Enter the repository path or URL: ")
+    # try:
+    #     commit_messages = fetch_commit_messages(repo_path)
+    #     print(f"Retrieved {len(commit_messages)} commit messages.")
+    #     trainer = ModelTrainer(commit_messages)
+    #     trainer.train_model()
+    # except Exception as e:
+    #     print(f"Error fetching commit messages: {e}", file=sys.stderr)
 
