@@ -3,7 +3,16 @@ import time
 
 
 class MainController:
+    """
+    The main controller of the application.
+    """
+
     def __init__(self, main_model, view):
+        """
+        Initialization of the controller.
+        :param main_model: The model to calculate/analyze data.
+        :param view: The view to present data.
+        """
         self.repo = None
         self.main_model = main_model
         self.view = view
@@ -11,12 +20,21 @@ class MainController:
         self.analyzer = BatchAnalyzer()
 
     def retrieve_url(self, new_url):
+        """
+        Sets a new repository URL and initiates its cleanup and setup.
+        :param new_url: URL to set as the new repository.
+        """
         self.repo = new_url
-        self.start_time = time.time()  # Start timing, ta bort detta sen
+        self.start_time = time.time()  # Start timing, remove this later.
         self.main_model.cleanup()
         self.main_model.set_repo(new_url, self.handle_set_repo_result)
 
     def handle_set_repo_result(self, result, error):
+        """
+        Handles the outcome of setting a new repository URL.
+        :param result: The result of the repository setup attempt.
+        :param error: Any error that occurred during repository setup.
+        """
         if error:
             # Handle error, possibly in the main thread
             self.view.remove_loading_indicator()
@@ -35,7 +53,10 @@ class MainController:
             else:
                 self.view.show_error_message("Something went wrong, please try again")
 
-    def end_timing(self): #bort med hela denna metod sen, den bajsar lite med programmet
+    def end_timing(self):
+        """
+        Helper method to see how long time it takes to execute.
+        """
         self.view.update_ui_after_fetch(self.repo)  # Call the original update function
         end_time = time.time()  # Stop timing
         duration = end_time - self.start_time  # Calculate duration

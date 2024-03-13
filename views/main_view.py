@@ -28,6 +28,9 @@ matplotlib.use('TkAgg')
 
 
 class MainView:
+    """
+    Class responsible for creating the view GUI.
+    """
     MODE_DARK = "dark"
     MODE_LIGHT = "light"
     DEFAULT_THEME = "green"  # blue green or dark-blue
@@ -43,7 +46,7 @@ class MainView:
         Initializes an instance of the MainView class. This constructor method sets up the main
         application window and its UI components.
         """
-        self.visualizer = DataVisualizer(padding=self.PADDING)
+        self.visualizer = DataVisualizer()
         self.root = ctk.CTk()
         self.on_input_change = None
         self.menu_frame = None
@@ -123,6 +126,8 @@ class MainView:
     def create_main_area(self, file_data=None, initial=False):
         """
         Creates the main content area of the application where the diagrams are placed.
+        :param file_data: Data to generate the diagrams.
+        :param initial: Flag indicating if the placeholder label should be displayed.
         """
         self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
@@ -143,13 +148,20 @@ class MainView:
             self.setup_overwiew_diagrams(file_data)
 
     def show_init_label(self):
+        """
+        Displays a loading label in the diagram frame.
+        """
         self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
                                               text="No repository is selected, please select one with the "
                                                    "'Select repository' button.",
                                               text_color=self.TEXT_COLOR)
         self.placeholder_label.grid(row=0, column=0, sticky="nsew")
 
-    def open_help(self):
+    @staticmethod
+    def open_help():
+        """
+        Displays a help text.
+        """
         help_text = """
         Welcome to DevAnalyzer!
 
@@ -202,12 +214,17 @@ class MainView:
         pass
 
     def remove_loading_indicator(self):
-        # Destroy the loading indicator
+        """
+        Destroy the loading indicator.
+        """
         if hasattr(self, 'loading_label') and self.loading_label is not None:
             self.loading_label.destroy()
             self.loading_label = None  # Reset to None to avoid future AttributeError.
 
     def remove_user_select(self):
+        """
+        Destroy the user select.
+        """
         if hasattr(self, 'user_select') and self.user_select is not None:
             self.user_select.destroy()
             self.user_select = None  # Reset to None to ensure it's recognized as destroyed.
@@ -262,8 +279,11 @@ class MainView:
         self.create_main_area(file_data)
         self.create_info_bar(file_data)
 
-    def read_file_data(self):
-        """Read data from a file and return it."""
+    @staticmethod
+    def read_file_data():
+        """
+        Read data from a file and return it.
+        """
         filename = "support//repo_stats.py"
         local_variables = {}
         with open(filename, 'r', encoding="utf-8") as file:
@@ -275,6 +295,8 @@ class MainView:
     def create_info_bar(self, file_data=None, initial=False):
         """
         Creates the information bar on to display statistics.
+        :param file_data: Data to generate text.
+        :param initial: Flag indicating if the bar should be empty.
         """
         info_frame = ctk.CTkFrame(self.root, corner_radius=1)
         info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically.
@@ -330,6 +352,11 @@ class MainView:
             self.info_label.pack(pady=10, padx=5, fill='x')
 
     def setup_user_window(self, choice, file_data):
+        """
+        Sets ut the user window with diagrams and info text.
+        :param choice: The name of the user choice.
+        :param file_data: Data to generate text.
+        """
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information about {choice}")
         new_window.geometry(self.WINDOW_GEOMETRY)
@@ -434,12 +461,18 @@ class MainView:
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
 
     def on_user_window_closing(self, window):
-        # This method is called when a user window is closed
+        """
+        This method is called when a user window is closed.
+        :param window: The current window to destroy.
+        """
         window.destroy()
         self.user_windows.remove(window)
 
     def setup_overwiew_diagrams(self, file_data):
-
+        """
+        Sets up the overview diagrams.
+        :param file_data: Data to generate the diagrams.
+        """
         repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=self.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
@@ -488,10 +521,9 @@ class MainView:
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=diagram_row+1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # If no diagrams were created due to empty datasets, you can show a message or handle it as needed
+        # If no diagrams were created due to empty datasets
         if not diagrams_created:
             # Handle the case where no data was available to create any diagrams
-            # For example, you could display a message in the diagram_frame indicating no data is available
             no_data_label = ctk.CTkLabel(self.diagram_frame,
                                          text="No data available for analysis, please select another repository.",
                                          text_color=self.TEXT_COLOR)
@@ -515,7 +547,8 @@ class MainView:
         if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
             self.root.quit()
 
-    def show_error_message(self, message):
+    @staticmethod
+    def show_error_message(message):
         """
         Shows error messages in a message box.
         """
