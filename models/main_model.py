@@ -25,8 +25,8 @@ class MainModel:
     def set_repo(self, repo_url, callback=None):
         """
         Sets the repo and inserts the data into the database.
-        :param repo_url:
-        :param callback:
+        :param repo_url: URL of the repository.
+        :param callback: Callback method
         :return:
         """
         self.git_traversal.set_repo(repo_url)
