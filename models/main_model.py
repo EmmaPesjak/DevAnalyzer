@@ -6,16 +6,29 @@ from models.db_handler import DBHandler
 import atexit
 from models.git_traversal import GitTraversal
 
-
 class MainModel:
-
+    """
+    Class that represents the main model of the project. Handles all database operations and writing to file.
+    """
     def __init__(self):
+        """
+        Initializes the main model.
+        """
+
+        # Create the database.
         self.db_handler = DBHandler('repo_data.db')
+
+        # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
         self.git_traversal = GitTraversal()
 
     def set_repo(self, repo_url, callback=None):
-        """Inserts the repository into DB."""
+        """
+        Sets the repo and inserts the data into the database.
+        :param repo_url:
+        :param callback:
+        :return:
+        """
         self.git_traversal.set_repo(repo_url)
 
         def background_task():
