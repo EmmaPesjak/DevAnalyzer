@@ -26,14 +26,15 @@ class MainModel:
         """
         Sets the repo and inserts the data into the database.
         :param repo_url: URL of the repository.
-        :param callback: Callback method
-        :return:
+        :param callback: Callback method.
         """
         self.git_traversal.set_repo(repo_url)
 
         def background_task():
+            """
+            Runs the background task of the insertion into the database.
+            """
             try:
-                # Assuming this function returns some result or raises an exception upon failure
                 result = self.db_handler.insert_data_into_db(repo_url)
                 if result != "Success":
                     callback(None, "Was not able to get the repository, please try again, "
@@ -51,9 +52,17 @@ class MainModel:
         thread.start()
 
     def get_all_authors_and_their_commits(self):
+        """
+        Gets all authors and their commits.
+        :return: Returns all authors and their commits.
+        """
         return self.db_handler.get_all_authors_and_their_commits()
 
     def get_top_10_files_per_user(self):
+        """
+        Gets top 10 files per user.
+        :return: Dictionary with top 10 files.
+        """
         data = self.db_handler.get_top_files_per_user()
         top_10_per_user = {}
 
@@ -68,17 +77,23 @@ class MainModel:
         return top_10_per_user
 
     def structure_monthly_activity_by_author(self):
+        """
+        Gets structured monthly activity data per author.
+        :return: Dictionary with structured monthly data.
+        """
         today = datetime.now()
 
         # Adjust strftime to generate month names without the year.
         readable_past_12_months = [(today - relativedelta(months=11 - i)).strftime("%b") for i in range(12)]
 
+        # Get monthly commits.
         data = self.db_handler.get_monthly_commits_by_author()
 
+        # Initialize the dictionary.
         structured_data = defaultdict(lambda: {month: 0 for month in readable_past_12_months})
 
         for month_year, name, commits_count in data:
-            readable_month_year = datetime.strptime(month_year, "%Y-%m").strftime("%b")  # Adjusted to match format.
+            readable_month_year = datetime.strptime(month_year, "%Y-%m").strftime("%b")
 
             # Ensure we fill the commit counts for each author correctly.
             if readable_month_year in structured_data[name]:
@@ -87,6 +102,10 @@ class MainModel:
         return dict(structured_data)
 
     def get_timeline(self):
+        """
+        Gets timeline of activity.
+        :return: Dictionary with monthly commit data.
+        """
         data = self.db_handler.get_commit_counts_past_year()
 
         today = datetime.now()
@@ -107,6 +126,10 @@ class MainModel:
         return readable_format_data
 
     def write_to_file(self):
+        """
+        Writes data to a file.
+        :return: True if the writing to file was successful.
+        """
         filename = "support//repo_stats.py"
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
@@ -128,8 +151,10 @@ class MainModel:
             file.write(content_to_write)
             return True
 
-    """ Empties the database on exit."""
     def cleanup(self):
+        """
+        Delete all data from the database and empty the file.
+        """
 
         filename = "support//repo_stats.py"
         with open(filename, "w", encoding="utf-8") as file:
