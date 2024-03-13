@@ -4,15 +4,23 @@ from dateutil.relativedelta import relativedelta
 from pydriller import Repository
 from datetime import datetime
 
-
 class DBHandler:
+    """
+    Class to handle the repository data, creating and connecting to the database.
+    """
 
     def __init__(self, db_name):
+        """
+        Initialize the DBHandler class.
+        :param db_name: Name of database.
+        """
         self.db_name = db_name
         self.create_database()
 
-    """Creates the database with author, commit, and commit-files tables."""
     def create_database(self):
+        """
+        Creates the database with author, commit, and commit-files tables.
+        """
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -25,7 +33,7 @@ class DBHandler:
                     );
                 ''')
 
-        # Create a table for the commits, containing an ID, contributor ID, and the message.
+        # Create a table for the commits, containing an ID, contributor ID, the message, and the date.
         cursor.execute('''
                     CREATE TABLE IF NOT EXISTS commits (
                         id INTEGER PRIMARY KEY,
@@ -36,7 +44,7 @@ class DBHandler:
                     );
                 ''')
 
-        # Create a table for the files and filepaths that were modified.
+        # Create a table for the files that were modified.
         cursor.execute('''
                        CREATE TABLE IF NOT EXISTS commit_files (
                            id INTEGER PRIMARY KEY,
@@ -49,8 +57,12 @@ class DBHandler:
         conn.commit()
         conn.close()
 
-    """Inserts the data from the repo into the db."""
     def insert_data_into_db(self, repo_url):
+        """
+        Inserts the repository data into database.
+        :param repo_url: Url of the repository.
+        :return: If the insertion was successful or not.
+        """
         self.create_database()  # Ensure the database and tables exist
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -71,7 +83,7 @@ class DBHandler:
                                (author_id, commit.msg, formatted_date))
                 commit_id = cursor.lastrowid
 
-                # For each modified file in the commit, add the modified files and their filepaths.
+                # For each modified file in the commit, add the modified files.
                 for mod in commit.modified_files:
                     cursor.execute('INSERT INTO commit_files (commit_id, file_name) VALUES (?, ?)',
                                    (commit_id, mod.filename))
@@ -89,6 +101,7 @@ class DBHandler:
     def get_all_authors_and_their_commits(self):
         """
         Retrieves all authors along with their commits from the database.
+        :return: Dictionary with author and their commits.
         """
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
@@ -120,6 +133,10 @@ class DBHandler:
         return authors_commits
 
     def get_top_10_changed_files(self):
+        """
+        Retrieves the top 10 changed files.
+        :return: Dictionary with filenames and amount of times they have been changed.
+        """
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -144,6 +161,10 @@ class DBHandler:
         return top_10_changed_files
 
     def get_top_files_per_user(self):
+        """
+        Retrieves the top 10 files per user.
+        :return: Top 10 files per user.
+        """
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -162,6 +183,10 @@ class DBHandler:
         return results
 
     def get_monthly_commits_by_author(self):
+        """
+        Retrieves the monthly commits by author for the past 12 months.
+        :return: Months with amount of commits per author.
+        """
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -189,8 +214,12 @@ class DBHandler:
         conn.close()
         return results
 
-    """Gets the amount of commits each month for the past 12 months."""
     def get_commit_counts_past_year(self):
+        """
+        Retrieves a timeline of amount of commits the past 12 months.
+        :return: Result of retrieval.
+        """
+
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -217,6 +246,10 @@ class DBHandler:
         return results
 
     def database_has_values(self):
+        """
+        Checks if the database has values.
+        :return: True or false based on result.
+        """
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
@@ -233,6 +266,9 @@ class DBHandler:
         return commit_count > 0 or author_count > 0 or commit_files > 0
 
     def clear_database(self):
+        """
+        Clears the database.
+        """
         try:
             conn = sqlite3.connect(self.db_name)
             cursor = conn.cursor()

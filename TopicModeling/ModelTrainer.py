@@ -13,9 +13,18 @@ import pyLDAvis.gensim
 if not os.path.exists('support'):
     os.makedirs('support')
 
-
 class ModelTrainer:
+    """
+    Class to train the LDA model.
+    """
+
     def __init__(self, commits):
+        """
+        Initialize the Model Trainer.
+        :param commits: Commits to be trained on.
+        """
+
+        # Initialize predefined categories.
         self.categories = {
             'ERROR/BUG_HANDLING': ['error', 'bug', 'issue', 'correct', 'resolve', 'patch', 'conflict', 'debug',
                                    'exception', 'fault', 'glitch', 'incorrect', 'crash', 'failure', 'incomplete', 'diagnose',
@@ -57,6 +66,10 @@ class ModelTrainer:
         self.commit_messages = commits
 
     def preprocess_data(self):
+        """
+        Preprocess the git commit messages by defining stop words, lemmatize, and tokenize.
+        :return: Preprocessed commit messages.
+        """
         nlp = spacy.load("en_core_web_sm")
 
         # Define custom stopwords
@@ -78,16 +91,21 @@ class ModelTrainer:
                       and token.is_alpha  # Ensure token is fully alphabetic
                       ]
             preprocessed_commits.append(tokens)
-            print(f'{commit}: {tokens}')
 
         return preprocessed_commits
 
-    def vectorize_data(self, preprocessed_commits):
+    @staticmethod
+    def vectorize_data(preprocessed_commits):
+        """
+        Vectorize the preprocessed commits.
+        :param preprocessed_commits: Preprocessed commits.
+        :return: The dictionary and the bag-of-words corpus.
+        """
         # Create a dictionary object from preprocessed_commits
         dictionary = corpora.Dictionary(preprocessed_commits)
 
         # Filter out low frequency words (remove rare words and limit the vocabulary size)
-        dictionary.filter_extremes(no_below=2, keep_n=5000)  # might adjust these limits.
+        dictionary.filter_extremes(no_below=2, keep_n=5000)
 
         # Create a bag of words (a way to count the number of words in each doc)
         bow_corpus = [dictionary.doc2bow(commit) for commit in preprocessed_commits]
@@ -99,6 +117,10 @@ class ModelTrainer:
         return dictionary, bow_corpus
 
     def train_model(self):
+        """
+        Train the model.
+        """
+
         # Preprocess messages
         preprocessed_commits = self.preprocess_data()
         dictionary, corpus = self.vectorize_data(preprocessed_commits)
@@ -107,16 +129,19 @@ class ModelTrainer:
         lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=12, random_state=100,
                              update_every=1, chunksize=100, passes=10, alpha='auto', per_word_topics=True)
 
-        print("\nTopics found by the LDA model:")
-        for idx, topic in lda_model.print_topics(-1, num_words=10):
-            print(f"Topic {idx}: {topic}")
+        # print("\nTopics found by the LDA model:")
+        # for idx, topic in lda_model.print_topics(-1, num_words=10):
+        #     print(f"Topic {idx}: {topic}")
 
         topic_keywords_with_weights = {}
+
+        # For each topic found in the lda-model, extract the keywords with its weights.
         for idx, topic in lda_model.show_topics(num_topics=-1, formatted=False):
             # Extract keywords and their weights
             keywords_with_weights = [(word, round(weight, 4)) for word, weight in topic]
             topic_keywords_with_weights[idx] = keywords_with_weights
 
+        # Map the keywords to category.
         topic_category_mappings = self.map_topics_to_categories(topic_keywords_with_weights)
 
         print("\nTop Topic-Category Mappings:")
@@ -128,9 +153,15 @@ class ModelTrainer:
             print(
                 f"{i}. Topic {topic_num} -> Category: {best_category} with weight {weight:.3f}\n    Words: {keywords_str}")
 
+        # Save the lda-model.
         self.save_model(lda_model, dictionary, topic_category_mappings, corpus, preprocessed_commits)
 
     def map_topics_to_categories(self, topic_keywords_with_weights):
+        """
+        Maps topic to category.
+        :param topic_keywords_with_weights: Topic keywords with their weights.
+        :return: The result of the mapping.
+        """
 
         topic_category_mappings = []
 
@@ -148,14 +179,13 @@ class ModelTrainer:
                         # Accumulate the weight for that category.
                         category_weights[category] += weight
 
-                # Determine the category with the highest cumulative weight for this topic
+            # Determine the category with the highest cumulative weight for this topic
             best_category = max(category_weights, key=category_weights.get)
             highest_weight = category_weights[best_category]
 
             # Check if there are no matching keywords, and assign to 'OTHER' if so
             if highest_weight == 0:
                 best_category = 'OTHER'
-                # You might also want to set a default weight for 'OTHER', or just keep it at 0
                 topic_category_mappings.append((topic_num, best_category, highest_weight))
             else:
                 topic_category_mappings.append((topic_num, best_category, highest_weight))
@@ -163,6 +193,14 @@ class ModelTrainer:
         return topic_category_mappings
     
     def save_model(self, lda_model, dictionary, topic_category_mappings, corpus,  preprocessed_commits):
+        """
+        Saves the trained model.
+        :param lda_model: Trained model.
+        :param dictionary: Dictionary of preprocessed commits.
+        :param topic_category_mappings: Topic-category mappings.
+        :param corpus: Corpus of the data.
+        :param preprocessed_commits: Preprocessed commits.
+        """
         # Save the LDA model
         lda_model.save('lda_model.gensim')
 
@@ -181,8 +219,9 @@ class ModelTrainer:
         # To run, write "start lda_visualization.html" in terminal
         pyLDAvis.save_html(visualization, "lda_visualization.html")
 
+        # Measure the model.
         print('\nPerplexity: ', lda_model.log_perplexity(corpus,
-                                                         total_docs=10000))  # a measure of how good the model is. lower the better.
+                                                         total_docs=10000))
 
         coherence_model_lda = CoherenceModel(model=lda_model, texts=preprocessed_commits, dictionary=dictionary,
                                              coherence='c_v')
@@ -204,6 +243,11 @@ class ModelTrainer:
 
 
 def fetch_commit_messages(path):
+    """
+    Fetches the commit-messaged from the repository path.
+    :param path: Repository path.
+    :return: Commits.
+    """
     commits = []
     for commit in Repository(path).traverse_commits():
         commits.append(commit.msg)
@@ -211,6 +255,9 @@ def fetch_commit_messages(path):
 
 
 if __name__ == "__main__":
+    """
+    Main function.
+    """
     # Initialize an empty list to hold all commit messages from all repositories
     all_commit_messages = []
 
