@@ -4,11 +4,24 @@ matplotlib.use('agg')
 
 
 class DataVisualizer:
-    def __init__(self, padding):
-        self.padding = padding
+    """
+    Class responsible for creating diagrams to present the analyzed data.
+    """
+
+    def __init__(self):
+        """
+        Initialize the class.
+        """
 
     def create_figure(self, figure_type, data, *args, **kwargs):
-        # Based on figure_type, create different figures
+        """
+        Based on figure_type, create different figures.
+        :param figure_type: The type of figure to create.
+        :param data: A dictionary with label and axis data.
+        :param args: Additional positional arguments that are passed directly to the figure creation method.
+        :param kwargs: Additional keyword arguments that are passed directly to the figure creation method.
+        :return: A matplotlib figure and axes.
+        """
         if figure_type == 'bar':
             return self._create_bar_figure(data, *args, **kwargs)
         elif figure_type == 'pie':
@@ -18,18 +31,16 @@ class DataVisualizer:
         else:
             raise ValueError(f"Unsupported figure type: {figure_type}")
 
-    def _create_bar_figure(self, data, title="Bar Chart", xlabel="X", ylabel="Y"):
+    @staticmethod
+    def _create_bar_figure(data, title="Bar Chart", xlabel="X", ylabel="Y"):
         """
         Creates a bar chart figure.
-
-        Parameters:
-        - data: A dictionary where keys are categories (x-values) and values are the corresponding values (y-values).
-        - title: The title of the chart.
-        - xlabel: The label for the x-axis.
-        - ylabel: The label for the y-axis.
-
-        Returns:
-        A matplotlib figure and axes.
+        :param data: A dictionary where keys are categories (x-values) and values are the
+        corresponding values (y-values).
+        :param title: The title of the chart.
+        :param xlabel: The label for the x-axis.
+        :param ylabel: The label for the y-axis.
+        :return: A matplotlib figure and axes.
         """
         fig, ax = plt.subplots(figsize=(10, 6), dpi=75)
         ax.bar(data.keys(), data.values())
@@ -42,16 +53,13 @@ class DataVisualizer:
         plt.subplots_adjust(bottom=0.3, left=0.15)
         return fig, ax
 
-    def _create_pie_figure(self, data, title="Pie Chart"):
+    @staticmethod
+    def _create_pie_figure(data, title="Pie Chart"):
         """
         Creates a pie chart figure.
-
-        Parameters:
-        - data: A dictionary where keys are labels for the pie sections and values are the corresponding sizes.
-        - title: The title of the chart.
-
-        Returns:
-        A matplotlib figure and axes.
+        :param data: A dictionary where keys are labels for the pie sections and values are the corresponding sizes.
+        :param title: The title of the chart.
+        :return: A matplotlib figure and axes.
         """
         threshold = 0.05  # 5% of the total
         total = sum(data.values())
@@ -69,18 +77,15 @@ class DataVisualizer:
         plt.tight_layout()
         return fig, ax
 
-    def _create_line_figure(self, data, title="Line Chart", xlabel="X", ylabel="Y"):
+    @staticmethod
+    def _create_line_figure(data, title="Line Chart", xlabel="X", ylabel="Y"):
         """
         Creates a line graph figure.
-
-        Parameters:
-        - data: A dictionary where keys are the x-axis labels and values are the corresponding y-values.
-        - title: The title of the chart.
-        - xlabel: The label for the x-axis.
-        - ylabel: The label for the y-axis.
-
-        Returns:
-        A matplotlib figure and axes.
+        :param data: A dictionary where keys are the x-axis labels and values are the corresponding y-values.
+        :param title: The title of the chart.
+        :param xlabel: The label for the x-axis.
+        :param ylabel: The label for the y-axis.
+        :return: A matplotlib figure and axes.
         """
         fig, ax = plt.subplots(figsize=(10, 6), dpi=75)
         ax.plot(list(data.keys()), list(data.values()), marker='o')

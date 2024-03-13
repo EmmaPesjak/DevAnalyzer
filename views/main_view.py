@@ -43,7 +43,7 @@ class MainView:
         Initializes an instance of the MainView class. This constructor method sets up the main
         application window and its UI components.
         """
-        self.visualizer = DataVisualizer(padding=self.PADDING)
+        self.visualizer = DataVisualizer()
         self.root = ctk.CTk()
         self.on_input_change = None
         self.menu_frame = None
