@@ -4,6 +4,9 @@ from models.main_model import MainModel
 
 
 def main():
+    """
+    Main starting point of the application.
+    """
     main_model = MainModel()
     view = MainView()
     controller = MainController(main_model, view)
