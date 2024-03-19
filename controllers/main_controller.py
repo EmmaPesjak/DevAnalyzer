@@ -1,4 +1,5 @@
 from models.batch_analyzer import BatchAnalyzer
+from models.transformer_analyzer import TransformerAnalyzer
 import time
 
 
@@ -18,6 +19,8 @@ class MainController:
         self.view = view
         self.view.set_on_input_change(self.retrieve_url)
         self.analyzer = BatchAnalyzer()
+        self.transformer_analyzer = TransformerAnalyzer()
+
 
     def retrieve_url(self, new_url):
         """
@@ -40,14 +43,15 @@ class MainController:
             self.view.remove_loading_indicator()
             self.view.remove_user_select()
             self.view.show_init_label()
-            self.view.show_error_message("Was not able to get the repository, please try again,"
-                                         " make sure to enter a valid Git repository URL.")
-            # self.view.show_error_message(str(error))
+            #self.view.show_error_message("Was not able to get the repository, please try again,"
+                   #                      " make sure to enter a valid Git repository URL.")
+            self.view.show_error_message(str(error))
         else:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
                 all_commits = self.main_model.get_all_authors_and_their_commits()
                 self.analyzer.analyze_commits(all_commits)
+                self.transformer_analyzer.analyze_commits(self.main_model.get_auths_commits_and_files())
                 # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
             else:
