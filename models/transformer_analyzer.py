@@ -1,13 +1,5 @@
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from transformers import Trainer, TrainingArguments
-import numpy as np
-from sklearn.model_selection import train_test_split
-from datasets import load_metric
-import torch
 from transformers import pipeline
-
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from transformers import Trainer, TrainingArguments
 
 
 class TransformerAnalyzer:
@@ -32,7 +24,7 @@ class TransformerAnalyzer:
         Generates a summary for an author based on commit message classifications.
         """
         summary_counts = {category['label']: 0 for category in classifications}
-        label_mapping = {0: 'Bug Fix', 1: 'Feature Addition', 27: 'hej', 62: 'yo'}  # Based on training labels
+        label_mapping = {0: 'Bug Fix', 1: 'Feature Addition', 27: 'hej'}  # Based on training labels
 
         for classification in classifications:
             label_index = int(classification['label'].split('_')[-1])  # Extract index from LABEL_X
