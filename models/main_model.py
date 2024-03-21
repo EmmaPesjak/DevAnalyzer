@@ -58,6 +58,9 @@ class MainModel:
         """
         return self.db_handler.get_all_authors_and_their_commits()
 
+    def get_auths_commits_and_files(self):
+        return self.db_handler.get_all_authors_commits_and_files()
+
     def get_top_10_files_per_user(self):
         """
         Gets top 10 files per user.
