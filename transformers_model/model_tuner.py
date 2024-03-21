@@ -19,8 +19,7 @@ df = pd.read_csv("customized_dataset.csv")
 # Map human-readable labels for numeric values.
 label_dict = {
     "Bug Fix": 0, "Feature Addition": 1, "Documentation": 2, "Refactoring": 3, "Performance": 4,
-    "Cleanup": 5, "Security": 6, "Styling/Front-End": 7, "Update": 8, "Setup": 9, "Testing": 10,
-    "Git operations": 11
+    "Cleanup": 5, "Security": 6, "Styling/Front-End": 7, "Update": 8, "Setup": 9, "Testing": 10, "Git operations": 11
 }
 # Replace the text labels in the df with their corresponding numeric values.
 df['label'] = df['label'].apply(lambda x: label_dict[x])
