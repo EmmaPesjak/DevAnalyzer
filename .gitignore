@@ -52,4 +52,5 @@ Thumbs.db
 repo_data.db
 support/repo_stats.py
 
+transformers_model/results
 
