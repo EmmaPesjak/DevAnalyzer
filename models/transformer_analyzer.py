@@ -43,8 +43,6 @@ class TransformerAnalyzer:
         """
         summaries_per_user = {}
 
-        print(type(authors_commits_files))
-
         for author, data in authors_commits_files.items():
             commit_messages = [commit_message for commit_message, _ in data]
             classifications = self.classify_commits(commit_messages)
