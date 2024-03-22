@@ -134,7 +134,7 @@ def compute_metrics(pred):
 
 training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written
-    output_dir='./emmatest',
+    output_dir='./results',
     do_train=True,
     do_eval=True,
     #  The number of epochs, defaults to 3.0
@@ -226,7 +226,7 @@ def predict(text):
 # # "Machine Learning itself is moving towards more and more automated"
 # print(predict(text))
 
-model_path = "./results/modelhej"
+model_path = "./results/trained_model"
 trainer.save_model(model_path)
 tokenizer.save_pretrained(model_path)
 
