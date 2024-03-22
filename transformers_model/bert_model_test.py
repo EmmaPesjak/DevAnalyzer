@@ -1,5 +1,5 @@
 from transformers import BertForSequenceClassification, BertTokenizerFast, pipeline
-model_path = "./results/modelhej"
+model_path = "./results/trained_model"
 
 model = BertForSequenceClassification.from_pretrained(model_path)
 tokenizer= BertTokenizerFast.from_pretrained(model_path)
