@@ -36,5 +36,9 @@ def analyze_repository(repo_path):
                         print(f"Commit message: {commit.msg}, file: {file.filename}, Added Javadoc: {javadoc}")
                 else:
                     print(f"Commit message: {commit.msg}, file: {file.filename}, No entire JavaDoc added.")
+            elif file.filename.lower() == "readme.md":
+                diffs = file.diff_parsed['added']  # Focus on added lines
+                diff_text = "\n".join([line[1] for line in diffs])  # Combine added lines into a single string
+                print(f"Diff text: {diff_text}")
 
 analyze_repository('https://github.com/ebbanimer/adventofcode')
