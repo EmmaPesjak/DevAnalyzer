@@ -1,91 +1,79 @@
-import torch, os
 import pandas as pd
 from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast
-from torch.utils.data import Dataset
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-from transformers import DistilBertForSequenceClassification, DistilBertTokenizerFast
-import accelerate
-
-# Disable the Hugging Face Hub symlinks warning
-# os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
-
 from torch import cuda
-print(torch.cuda.is_available())
-
 from transformers_model.data_loader import DataLoader
 
+# Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
+# the training session. Training on a GPU is significantly faster than on a CPU.
 device = 'cuda' if cuda.is_available() else 'cpu'
 
-# Load the dataset using Pandas DataFrame (df).
+# Load the dataset using Pandas DataFrame, contains the data that will be used for training the model.
 df_org = pd.read_csv("customized_dataset.csv")
-
+# Shuffle the dataset to ensure that the training process doesn't get biased by the order of the data.
+# The random_state is set to a fixed value to ensure that the shuffling is reproducible.
 df_org = df_org.sample(frac=1.0, random_state=42)
 
-print(df_org.head())
-
+# Get the label names from the training set. This list of labels represents the different
+# categories that the model will learn to distinguish.
 labels = df_org['label'].unique().tolist()
-labels = [s.strip() for s in labels ]
-print(labels)
+labels = [s.strip() for s in labels]
+# print(f"Labels:\n{labels}")   Can print this to verify labels.
 
-for key, value in enumerate(labels):
-    print(value)
+# Count the number of unique labels, which will be used to specify the
+# number of output neurons in the model (one for each label).
+NUM_LABELS = len(labels)
 
-NUM_LABELS= len(labels)
+# Create two dictionaries for mapping. These mappings are essential for converting between the
+# numerical outputs of the model and the human-readable labels.
+id2label = {idx: label for idx, label in enumerate(labels)}
+label2id = {label: idx for idx, label in enumerate(labels)}
+# print(label2id)  Can print this to verify the mappings.
+# print(id2label)
 
-id2label={id:label for id,label in enumerate(labels)}
-
-label2id={label:id for id,label in enumerate(labels)}
-
-print(label2id)
-
-print(id2label)
-
-print(df_org.head())
-
-df_org["labels"]=df_org.label.map(lambda x: label2id[x.strip()])
-
-print(df_org.head())
-
-label_distribution_percent = df_org.label.value_counts(normalize=True) * 100
+# Creates a new column in the DataFrame ("labels") that contains the numerical ID for each label.
+# This step is crucial for training the model, as machine learning models work with numerical data rather
+# than text labels.
+df_org["labels"] = df_org.label.map(lambda x: label2id[x.strip()])
+# print(df_org.head())   Can print to verify.
 
 # Print out the label distribution in percentages
-print("Label Distribution in Percentages:")
-print(label_distribution_percent)
+print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize=True) * 100}")
 
+# The tokenizer converts text into tokens that the BERT model can understand.
 tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=512)
-
-model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label, label2id=label2id)
+# A BERT model specifically for sequence classification is initialized with the same bert-base-uncased
+# pre-trained weights. It's configured for the number of unique labels in our dataset and is informed
+# about the label mappings (id2label and label2id). This allows the model to output predictions
+# corresponding to the classes of our dataset.
+model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
+                                                      label2id=label2id)
+# Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
+# This is critical for efficient training, especially with large models like BERT.
 model.to(device)
 
-print("-----")
+# Dataset splitting. The dataset is divided into training (50%), validation (25%), and testing (25%)
+# sets based on the message column.
+SIZE = df_org.shape[0]
+train_texts = list(df_org.message[:SIZE // 2])
+val_texts = list(df_org.message[SIZE // 2:(3 * SIZE) // 4])
+test_texts = list(df_org.message[(3 * SIZE) // 4:])
+train_labels = list(df_org.labels[:SIZE // 2])
+val_labels = list(df_org.labels[SIZE // 2:(3 * SIZE) // 4])
+test_labels = list(df_org.labels[(3 * SIZE) // 4:])
 
-SIZE= df_org.shape[0]
-
-train_texts = list(df_org.message[:SIZE//2])
-
-val_texts = list(df_org.message[SIZE//2:(3*SIZE)//4 ])
-
-test_texts = list(df_org.message[(3*SIZE)//4:])
-
-train_labels = list(df_org.labels[:SIZE//2])
-
-val_labels = list(df_org.labels[SIZE//2:(3*SIZE)//4])
-
-test_labels = list(df_org.labels[(3*SIZE)//4:])
-
-print(len(train_texts))
-print(len(val_texts))
-print(len(test_texts))
-
+# The training, validation, and test text data are tokenized using the previously initialized tokenizer.
+# truncation=True ensures texts longer than the maximum allowed sequence length are truncated,
+# and padding=True pads shorter sequences to the maximum length. This standardizes the input size for BERT.
 train_encodings = tokenizer(train_texts, truncation=True, padding=True)
 val_encodings = tokenizer(val_texts, truncation=True, padding=True)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True)
 
+# Custom DataLoader objects are created for each dataset split. These DataLoaders are responsible for
+# batching the data and making it iterable for the training loop.
 train_dataloader = DataLoader(train_encodings, train_labels)
-
 val_dataloader = DataLoader(val_encodings, val_labels)
-
 test_dataset = DataLoader(test_encodings, test_labels)
 
 
@@ -111,19 +99,15 @@ def compute_metrics(pred):
             - Recall (float): The macro recall, which is the number of true positives
               divided by the sum of true positives and false negatives.
     """
-    # Extract true labels from the input object
-    labels = pred.label_ids
+    # Extract true labels from the input object.
+    true_labels = pred.label_ids
 
-    # Obtain predicted class labels by finding the column index with the maximum probability
+    # Obtain predicted class labels by finding the column index with the maximum probability.
     preds = pred.predictions.argmax(-1)
 
-    # Compute macro precision, recall, and F1 score using sklearn's precision_recall_fscore_support function
-    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='macro')
-
-    # Calculate the accuracy score using sklearn's accuracy_score function
-    acc = accuracy_score(labels, preds)
-
-    # Return the computed metrics as a dictionary
+    # Compute macro precision, recall, F1 score, and accuracy using sklearn.
+    precision, recall, f1, _ = precision_recall_fscore_support(true_labels, preds, average='macro')
+    acc = accuracy_score(true_labels, preds)
     return {
         'Accuracy': acc,
         'F1': f1,
@@ -132,8 +116,12 @@ def compute_metrics(pred):
     }
 
 
+# This portion of code configures and initiates the training process for the machine learning model
+# using the Hugging Face Transformers library, specifically using the Trainer class. The process involves
+# setting training arguments, initializing the Trainer, training the model, and then evaluating the
+# model's performance on the training, validation, and test datasets.
 training_args = TrainingArguments(
-    # The output directory where the model predictions and checkpoints will be written
+    # The output directory where the model predictions and checkpoints will be written.
     output_dir='./results',
     do_train=True,
     do_eval=True,
@@ -155,84 +143,38 @@ training_args = TrainingArguments(
     load_best_model_at_end=True
 )
 
+# The Trainer class encapsulates the training loop, automatically handling the training,
+# evaluation, and prediction loops.
 trainer = Trainer(
-    # the pre-trained model that will be fine-tuned
+    # The pre-trained model that will be fine-tuned.
     model=model,
-     # training arguments that we defined above
+    # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
     eval_dataset=val_dataloader,
-    compute_metrics= compute_metrics
+    compute_metrics=compute_metrics
 )
 
+# Start the training process.
 trainer.train()
 
-# Evaluate the model on the training dataset
+# Evaluate the model on the training dataset.
 train_results = trainer.evaluate(eval_dataset=train_dataloader)
 print("Training Set Results:", train_results)
 
-# Evaluate the model on the validation dataset
+# Evaluate the model on the validation dataset.
 val_results = trainer.evaluate(eval_dataset=val_dataloader)
 print("Validation Set Results:", val_results)
 
-# Optionally, evaluate the model on the test dataset, if you have one
+# Optionally, evaluate the model on the test dataset.
 test_results = trainer.evaluate(eval_dataset=test_dataset)
 print("Test Set Results:", test_results)
 
-q=[trainer.evaluate(eval_dataset=df_org) for df_org in [train_dataloader, val_dataloader, test_dataset]]
+# Print eval results.
+q = [train_results, val_results, test_results]
+print(pd.DataFrame(q, index=["train", "val", "test"]).iloc[:, :5])
 
-pd.DataFrame(q, index=["train","val","test"]).iloc[:,:5]
-
-
-def predict(text):
-    """
-    Predicts the class label for a given input text
-
-    Args:
-        text (str): The input text for which the class label needs to be predicted.
-
-    Returns:
-        probs (torch.Tensor): Class probabilities for the input text.
-        pred_label_idx (torch.Tensor): The index of the predicted class label.
-        pred_label (str): The predicted class label.
-    """
-    # Tokenize the input text and move tensors to the GPU if available
-    inputs = tokenizer(text, padding=True, truncation=True, max_length=512, return_tensors="pt").to(device)
-
-    # Get model output (logits)
-    outputs = model(**inputs)
-
-    probs = outputs[0].softmax(1)
-    """ Explanation outputs: The BERT model returns a tuple containing the output logits (and possibly other elements depending on the model configuration). In this case, the output logits are the first element in the tuple, which is why we access it using outputs[0].
-
-    outputs[0]: This is a tensor containing the raw output logits for each class. The shape of the tensor is (batch_size, num_classes) where batch_size is the number of input samples (in this case, 1, as we are predicting for a single input text) and num_classes is the number of target classes.
-
-    softmax(1): The softmax function is applied along dimension 1 (the class dimension) to convert the raw logits into class probabilities. Softmax normalizes the logits so that they sum to 1, making them interpretable as probabilities. """
-
-    # Get the index of the class with the highest probability
-    # argmax() finds the index of the maximum value in the tensor along a specified dimension.
-    # By default, if no dimension is specified, it returns the index of the maximum value in the flattened tensor.
-    pred_label_idx = probs.argmax()
-
-    # Now map the predicted class index to the actual class label
-    # Since pred_label_idx is a tensor containing a single value (the predicted class index),
-    # the .item() method is used to extract the value as a scalar
-    pred_label = model.config.id2label[pred_label_idx.item()]
-
-    return probs, pred_label_idx, pred_label
-
-# Test with a an example text in Turkish
-# text = "Added contribution guidelines"
-# # "Machine Learning itself is moving towards more and more automated"
-# print(predict(text))
-
+# Save the model and tokenizer.
 model_path = "./results/trained_model"
 trainer.save_model(model_path)
 tokenizer.save_pretrained(model_path)
-
-model = BertForSequenceClassification.from_pretrained(model_path)
-tokenizer= BertTokenizerFast.from_pretrained(model_path)
-nlp= pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
-
-print("*******")
-print(nlp("Added a new feature to become the best program in the world"))
