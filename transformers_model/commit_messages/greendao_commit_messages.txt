@@ -935,7 +935,8 @@ Conflicts:
 "README.md: better info on greenDAO 3",""
 "Use correct compile statement in README.
 
-- Explicitly add buildscript (Maven Central) repository, otherwise plugin will not be found.
+- Explicitly add buildscript (Maven Central) repository, otherwise plugin will not be found.
+
 - Closes #354",""
 "Add syntax highlighting to usage snippet.",""
 "Merge pull request #357 from greenrobot/fix-readme-usage-instructions
@@ -1070,9 +1071,12 @@ Is limit, but is meant to be offset instead.",""
 "update android-database-sqlcipher to 3.5.4",""
 "Update build tools in travis config. (#483)
 
-- Use latest available SDK 24 emulator, as tests with generated sources are broken on SDK 19 emulator (`IllegalAccessError`).
-- Update to v25 build tools.
-- Simplify some commands (emulator script is now built-in, Gradle properly supported).
+- Use latest available SDK 24 emulator, as tests with generated sources are broken on SDK 19 emulator (`IllegalAccessError`).
+
+- Update to v25 build tools.
+
+- Simplify some commands (emulator script is now built-in, Gradle properly supported).
+
 Source: https://github.com/googlemaps/android-maps-utils/blob/master/.travis.yml",""
 "Update examples to plugin version 3.2.0.
 

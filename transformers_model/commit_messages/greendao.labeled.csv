@@ -1,0 +1,60 @@
+"initial commit","Setup"
+"Added DaoBase Project","Setup"
+"stripped down because of AbstractDao","Setup"
+"renamed table to entity","Refactoring"
+"renamed column to property","Refactoring"
+"docs, etc","Documentation"
+"changed to android library, load by rowid","Refactoring"
+"docs","Documentation"
+"initial DaoTest project","Setup"
+"new source for generating test entities","Testing"
+"Generated entity, etc.",""
+"Column abstraction, more compact DAO subclasses",""
+"various fixes",""
+"more property types, etc.",""
+"swapped tests",""
+"added testAssignPk",""
+"minor",""
+"value tests",""
+"added 2nd query, delete prepStmt",""
+"added update for entities",""
+"nullable update tests",""
+"initial AbstractDaoMaster",""
+"minor",""
+"divided AbstractDaoTest",""
+"update lists, performance tests",""
+"deleleteAll, more performance tests",""
+"added performance test project for ORMLite",""
+"Collected performance data: greenDAO vs. ORMLite",""
+"read uses constructor if available",""
+"renamed package orm to dao, javadoc, etc.",""
+"javadoc",""
+"consider "has value" of protobuf",""
+"updated performance table",""
+"minor renames",""
+"added index support, property refactoring",""
+"ignore bin",""
+"out path must exist, changed src dir",""
+"added example project",""
+"added Example test",""
+"Applied Apache License 2.0",""
+"added refresh method, DaoException",""
+"added DaoMaster, active entities, to-one relations",""
+"prepared new Properties in DAO, +minor",""
+"resolved flag for to-one",""
+"Using Properties class in DAO",""
+"make load return null for null key","Database"
+"createAllTables, refactored tests, added dao master test","Testing"
+"SQLiteOpenHelper etc.","Database"
+"new DAO example","Setup"
+
+Bug Fix
+Feature Addition
+Testing
+Database
+Styling/Frontend
+Refactoring
+Documentation
+Git Operation
+Setup
+Other
