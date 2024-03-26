@@ -23,7 +23,7 @@ def download_commit_messages(repo_url):
         # Iterate through all commits of the repository
         for commit in Repository(repo_url).traverse_commits():
             # Write each commit message to the file
-            file.write(commit.msg + "\n---\n")
+            file.write(f"\"{commit.msg}\",\"\"\n")
 
 
 # Loop through the repository URLs
