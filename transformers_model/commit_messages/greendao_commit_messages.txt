@@ -1,0 +1,2089 @@
+initial commit
+---
+Added DaoBase Project
+---
+stripped down because of AbstractDao
+---
+renamed table to entity
+---
+renamed column to property
+---
+docs, etc
+---
+changed to android library, load by rowid
+---
+docs
+---
+initial DaoTest project
+---
+new source for generating test entities
+---
+Generated entity, etc.
+---
+Column abstraction, more compact DAO subclasses
+---
+various fixes
+---
+more property types, etc.
+---
+swapped tests
+---
+added testAssignPk
+---
+minor
+---
+value tests
+---
+added 2nd query, delete prepStmt
+---
+added update for entities
+---
+nullable update tests
+---
+initial AbstractDaoMaster
+---
+minor
+---
+divided AbstractDaoTest
+---
+update lists, performance tests
+---
+deleleteAll, more performance tests
+---
+added performance test project for ORMLite
+---
+Collected performance data: greenDAO vs. ORMLite
+---
+read uses constructor if available
+---
+renamed package orm to dao, javadoc, etc.
+---
+javadoc
+---
+consider "has value" of protobuf
+---
+updated performance table
+---
+minor renames
+---
+added index support, property refactoring
+---
+ignore bin
+---
+out path must exist, changed src dir
+---
+added example project
+---
+added Example test
+---
+Applied Apache License 2.0
+---
+added refresh method, DaoException
+---
+added DaoMaster, active entities, to-one relations
+---
+prepared new Properties in DAO, +minor
+---
+resolved flag for to-one
+---
+Using Properties class in DAO
+---
+make load return null for null key
+---
+createAllTables, refactored tests, added dao master test
+---
+SQLiteOpenHelper etc.
+---
+new DAO example
+---
+added run/callInTx
+---
+added date type, added unit test generation
+---
+offset for read, getTablename in abstract DAO
+---
+loadDeep
+---
+queryDeep
+---
+refreshed example
+---
+refined relation test
+---
+simplefied build
+---
+added error info, etc.
+---
+make tests more configurable by sub classes
+---
+added testSemantics
+---
+prepared IdentityScope etc.
+---
+identity scope passing tests
+---
+refactored statements into separate classes
+---
+minor, tests for identity deep query
+---
+attachEntity, more tests, etc.
+---
+fixed loadDeep with idScope
+---
+added intermediate values
+---
+more intelligent to-one in entities
+---
+fixes for not-null to-one relation, fix for loadDeep without results
+---
+testToOneLoadDeepNull
+---
+fix & tests for to-one relations without matches in target table
+---
+DaoSession
+---
+support identity scopes in session
+---
+DaoConfig
+---
+session tests
+---
+method renames to match JPA & Hibernate
+---
+detach, etc.
+---
+Updated DaoExample
+---
+added docs and methods to session
+---
+some dumb docs
+---
+refreshed example jars (preview 2)
+---
+QueryBuilder concept
+---
+quote columns for special names
+---
+first Query working, refactoring
+---
+LazyList
+---
+lazy list iterator
+---
+uncached lazy lists, docs
+---
+list iterator with auto close
+---
+refactoring: TestEntityTestBase
+---
+testNotEqString
+---
+import entities
+---
+added GPL header
+---
+some fixes
+---
+added or to queryBuilder
+---
+added AND
+---
+removed simple OR
+---
+Refactored where conditions for QueryBuilder, DaoLog, etc.
+---
+partial fix for listIterator.previous
+---
+minor fix
+---
+fixed IN
+---
+added javadocs and convenience for query builder
+---
+preview 3
+---
+renamed dao.test package
+---
+improved & extended performance tests
+---
+added test sub packages
+---
+performance work wip
+---
+refactoring
+---
+lock optimization
+---
+new performance figures
+---
+getType, etc
+---
+added  in(Collection)
+---
+close cursor in tests
+---
+preparing to-ones without fk properties (experimental)
+---
+Keep code for generated entities
+---
+check value type, orderDesc
+---
+tested and fixed Date/boolean property values
+---
+renamed DaoBase to DaoCore
+---
+added dummy ressources as a workaround for the git empty directory
+problem
+---
+(not)Null tests for query builder
+---
+enabled findbugs, minor fixes
+---
+using Reference
+---
+prepared: bind to-one values without fk property
+---
+updated build
+---
+testDeleteAll
+---
+fixed order with multiple properties
+---
+testDeleteAll
+---
+comment for not-null values
+---
+fixed testAssignPk for protobuf tests, new line
+---
+kicked out Column again; using Property instead
+---
+added useFkProperty flag to to-ones
+---
+to-many skeleton
+---
+first to-many working
+---
+reset to-many, test refactoring
+---
+new tests for resetting to-many relations
+---
+added order for to-many
+---
+Switched to ADT14
+---
+to-many with custom join properties and multiple join properties
+---
+active entities
+---
+per entity flag for keep section, global entityActive deafult flag,
+clean up, readme
+---
+added missing license header to test classes
+---
+Added some license info and JavaDocs
+---
+JavaDocs, limited scope of DaoConfig
+---
+updated builds, example
+---
+readme for greenDAO
+---
+managing additional imports to fix imports with different package, fixed
+toMany problem in DAO template
+---
+V1.0.1
+---
+superclass and interfaces for entities
+---
+added tests for tree-like entities
+---
+Removed schema version from entities and DAOs
+---
+query test package
+---
+added DeleteQuery
+---
+allow to pass App class for project specific unit tests
+---
+better generics for test, still not perfect though
+---
+fix for building multiple queries with one queryBuilder
+---
+Added performance results for Android 4.0 plus a comparison to 2.3
+---
+created src-test
+---
+added bi-directional 1:N customer/order example
+---
+added convenience methods to add relationships with a name, made Entity
+constructor package-visible, added JavaDocs
+---
+Removed schema version from JavaDoc of generated entities and DAOs
+---
+execute SQL script in TX
+---
+Using a fixed Java 1.6 compiler level for Android projects
+---
+Added LIMIT and OFFSET support for Queries
+---
+Additional docs and unit tests for query limit&offset
+---
+qoute column names in where and order by clauses
+---
+Feature list of 1.1 pre-release
+---
+use LOCALIZED collation for Strings in ORDER BY
+---
+moved order test into separate class
+---
+added test for order with upper/lower case and umlauts
+---
+added orderCustom
+---
+added testOrderRaw
+---
+default names for to-many relations end with "List" now
+---
+Updated libs for example project
+---
+generated example code with current lib version
+---
+updated readme
+---
+updated copyright year for javadocs
+---
+5 test runs
+---
+updated ormlite libs to 4.34-SNAPSHOT and performance test against it
+---
+deprecated query: groupBy & having does not make sense for entities.
+Method will be removed
+---
+Don't assume that a Cursor has a CursorWindow (fix for Roboelectric)
+---
+Additional check that key can be acquired (issue #5)
+---
+updated readme for version 1.1.0 and 1.1.1
+---
+added NOT IN condition (#23)
+---
+preparing V1.1.1 release
+---
+print schema version before generating
+---
+throw exception when trying to add relations to protobuf entities
+---
+new flag for skipping table creation & dropping
+---
+removed unnecessary DAO import for non-active entities
+---
+fixed typo with ordinal
+---
+moved jar to libs (ADT 17)
+---
+added adt dependencies to .classpath
+---
+added galaxy nexus performance data
+---
+preparing jars for V1.1.2
+---
+V1.1.2 release notes added
+---
+renamed to QuerySpecialNamesTest (missing Test suffix)
+---
+Added "order" to special names test
+---
+changed order property to int
+---
+There might be other fields introduced by some tools, just ignore them
+(see issue #28)
+---
+Refelected Properties must be public also (issue #28)
+---
+optimized modifier checking for Properties
+---
+added testWhereWithSpecialNamesWithValues
+---
+make database accessible, refactoring of insert methods
+---
+added insertOrReplaceInTx and another updateInTx variation
+---
+improved testInsertOrReplaceInTx
+---
+prepared readme for next version (unreleased)
+---
+added CountQuery
+---
+added logTableDump method
+---
+Tests: added missing super.setUp and super.teardown, formatting
+---
+testAssignPk only for Long PKs
+---
+Test for String PK
+---
+make DAO and DaoSession transient in entities
+---
+Set Cp1252 encoding in project properties
+---
+updated readme: transient and string PKs
+---
+added AbstractDaoTestStringPk
+---
+added callInTxNoException
+---
+added deleteInTx to DAO, minor clean up
+---
+added AUTOINCREMENT, added java docs for *Dao.Properties
+---
+minor rename to pkAutoincrement
+---
+prepared unit test generation for String PK entities
+---
+idea for future use
+---
+fixed updateKeyAfterInsert for non-long PKs, force NOT NULL for String
+PK, added identity scope test for String PKs
+---
+added testInsertWithoutPK
+---
+fixed templates for PK-less entities, test fix
+---
+added SqliteMaster meta entity
+---
+fixed INDEX creation, added IndexTest
+---
+updated readme for V1.2.0RC
+---
+consider ifNotExists for CREATE INDEX also
+---
+preparing V1.2.0 release
+---
+fixed createEntityWithRandomPk: create collision free PKs
+---
+check executeInsert for -1
+---
+added javaDoc for or() and and()
+---
+outlining some ideas for asynch operations
+---
+added properties to AsyncOperation
+---
+TX merging and listeners
+---
+added async completion features
+---
+start AsyncSession in DaoSession, first two async tests up and running
+---
+added support for all operation types to AsyncOperationExecutor
+---
+Added license headers to asnyc classes, added some async docs, minor
+code improvements
+---
+added enqueueEntityOperation helper methods
+---
+added remaining entity methods to AsyncSession
+---
+prepared async runInTx and callInTx
+---
+added queries to async system
+---
+added DeleteByKey, DeleteAll, Load, LoadAll, Count, and Refresh to async
+operations
+---
+added waitForCompletion methods to AsyncOperation, changed
+AsyncOperationExecutor.waitForCompletion methods not to throw
+InterruptedExecption
+---
+added AbstractAsyncTest
+---
+updated README.md for V1.3.0 Preview (2012-??-??): New asynchronous API
+---
+added basic async tests like TX, exception, etc.
+---
+added a couple of missing breaks
+---
+changed AsyncOperation.getResult semantics
+---
+moved async classes into async package
+---
+introduced AsyncDaoException
+---
+Ignore FindBugs: increment of volatile is fine here because we use a
+lock
+---
+listenerMainThread
+---
+first TX merging successful with test
+---
+added AsyncOperation.sequenceNumber
+---
+added waitForMergeMillis
+---
+added java-formater.xml (Eclipse Code Formatter) so other committers can
+conform with greenDAO's code style
+---
+added queryRawCreate returning a Query object
+---
+added testLike
+---
+Merge branch 'master' of ssh://gitolite@greencentral.de/AndroidDao
+---
+dummy file to avoid errors after checkout (no res folder)
+---
+check value is not an array where a primitive value is required for
+condition
+---
+added deleteByKeyInTx
+---
+added DaoSessionConcurrentTest to verify deadlocks, fixed TX order in
+executeInsertInTx
+---
+Do TX to acquire a connection before locking the stmt to avoid deadlocks
+---
+throw nice exception if entity is updated or deleted with null key
+---
+fixed potential deadlock in update/updateInTx
+---
+refactoring: TestThread and doTx
+---
+DaoSessionConcurrentTest refactoring and 3 separate concurrent threads
+---
+removed redundant identityScope key removal
+---
+fixed delete locking order to avoid potential deadlocks
+---
+fixed insertWithoutSettingPk locking
+---
+added insertOrReplace to DaoSessionConcurrentTest
+---
+added testConcurrentQueryDuringTx: Query doesn't involve any statement
+locking currently, but just to stay on the safe side...
+---
+prepared README.md for upcoming 1.3.0 release
+---
+added some changes of V1.3.0 to README.md
+---
+_testConcurrentLockAndQueryDuringTx: No connection for read can be
+acquired while TX is active; this will deadlock!
+---
+locking order for DeleteQuery
+---
+added DaoSessionConcurrentWALTest
+---
+prepared ThreadLocal for queries
+---
+added forCurrentThread for queries, enforce thread check on queries,
+---
+Added second thread tests to QueryThreadLocalTest
+---
+added CountQueryThreadLocalTest and DeleteQueryThreadLocalTest
+---
+Refactoring: move query classes in new query package
+---
+move IdentityScope related classes in their own package
+---
+fixed identityscope references, moved WhereCondition to query package
+---
+moved internally used classes into internal package
+---
+InternalDaoQueryInterface and InternalUnitTestDaoAccess
+---
+updated README.md to reflect refactorings
+---
+added version property to mybuild.xml
+---
+added version property to mybuild.xml (generator)
+---
+fixed locking for to-many
+---
+make to-one relations more thread safe
+---
+added build.gradle
+---
+prepared maven central upload with gradle
+---
+fixed javadoc problems
+---
+organized imports
+---
+set version to 1.3.0-beta-1
+---
+build.gradle for generator project
+---
+fixed build.gradle to include template files
+---
+runnable build.gradle for example generator project
+---
+dummy build.gradle for DaoExample
+---
+updated DaoExample to use V1.3.0
+---
+put greendao-1.3.0-beta-1.jar in libs for eclipse
+---
+updated freemarker to 2.3.19 for Eclipse
+---
+update year
+---
+settings.gradle for root dir, tests for DaoGenerator
+---
+settings.gradle for root dir
+---
+added .travis.yml
+---
+added empty build.gradle and use Java 6 for travis
+---
+build.gradle: We must check if authentication info is available
+---
+build.gradle: sign only if signing info is available
+---
+remove DaoExample because R missing from build
+---
+removed redundant != null
+---
+switched to gradle Eclipse plugin for generator projects
+---
+setting version to 1.3.0
+---
+setting version to 1.3.0, updated README.md
+---
+fixed dependencies to 1.3.0
+---
+added getSelectKeys to TableStatements
+---
+Make DaoTest a gradle project, doesn't work with android build system
+0.3 yet
+---
+"provided" dependencies for main build.gradle
+---
+ADT 22
+---
+join drafting
+---
+export android lib in .classpath
+---
+added dontCreateApplicationDuringSetUp to DbTest
+---
+initial content provider generation
+---
+added preferedRepo
+---
+Fixed typo.
+---
+Merge pull request #95 from mharper/master
+
+Fixed typo.
+---
+single entity per content provider for now
+---
+Merge branch 'master' of ssh://github.com/greenrobot/greenDAO
+---
+fixed combined where clauses for count queries
+---
+don't care about groovy.compiler.level (eclipse setting)
+---
+Switched version to 1.3.2
+---
+1.3.3-SNAPSHOT: Remove table aliases, not supported for DELETE queries
+---
+removed ThreadLocal for Query to fix leaks
+---
+introduced AbstractQueryData, renamed test
+---
+better generalization of AbstractQueryData
+---
+some clean up
+---
+DeleteQuery also uses QueryData now
+---
+minor test improvement
+---
+index bug fix within gc
+---
+added testLoadIdScope_load
+---
+fixed a concurrency problem with attached entities (#101), added
+AnActiveEntityMultithreadingTest
+---
+V1.3.3 release
+---
+big test refactoring: don't use ApplicationTestCase as base class, which can be problematic when creating the application during setUp()
+---
+ignore IntelliJ stuff
+---
+working gradle build for instTest project
+---
+v1.3.5
+---
+offer some convenience methods to create new Application objects in DbTest
+---
+set generator version to 1.3.1-SNAPSHOT
+---
+added V1.3.4 and V1.3.5 to changelog
+---
+V1.3.6
+---
+added getNotificationUri to comply with API level 19
+---
+DeleteQuery: Don't use tableName here because it causes trouble when table name ends with tablePrefix.
+---
+V1.3.7
+---
+fix schema version with 4 or more digits
+---
+gradlew (1.12)
+---
+adjustments for android build system 0.10.2, trying android with travis
+---
+trying android with travis
+---
+travis: make gradlew executable
+---
+using androidTestCompile, extended .gitignore
+---
+travis: start emu
+---
+travis: added missing file wait_for_emulator
+---
+travis: fix
+---
+travis: +x for wait_for_emulator
+---
+travis: dumb terminal
+---
+travis: only oraclejdk7
+---
+Generator V1.3.1 release
+---
+travis: adjusted command order, added build state to README.md
+---
+link to travis
+---
+Rethrow initial exception in updateInTx if endTransaction also throws
+---
+updated README.md
+---
+Lock must be locked when entering LazyList.loadEntity
+---
+catch exceptions when ending merged transactions, added some JavaDocs
+---
+gradle updates
+---
+added FLAG_TRACK_CREATOR_STACKTRACE, sessionFlags
+---
+updated README.md
+---
+CRLF -> LF
+---
+updated generator dependencies, gradle 2.4
+---
+added outDirEntity to generator
+---
+Merge branch 'master' into join
+---
+extracted WhereCollector from QueryBuilder, Join constructor
+---
+sketching JOIN API
+---
+first working Join
+---
+added SqlUtils.appendProperty, checkLog, testJoinSimpleParameterValue
+---
+JOINs are not supported for DELETE queries, testJoinDelete, testJoinCount
+---
+basic JavaDoc for joins
+---
+Query: formatting, javadoc
+---
+testJoinMixedParameterValues
+---
+joins based on joins
+---
+bye bye Eclipse
+---
+bye bye Eclipse formatting settings
+---
+CRLF -> LF, remaining files
+---
+make internal properties package private (#184)
+---
+Revert "make internal properties package private (#184)"
+
+This reverts commit d467bf5be97801b45b53822b3f0be083940ed016.
+---
+moved TestDaoGenerator into module of its own
+---
+quote columns in PropertyOrderList
+---
+javadoc to mark internal property used by templates
+---
+setParameter for Date and Boolean values, fixes #58
+---
+typos
+---
+single-quote column for indexes and to-many order (#fixes 68)
+---
+place repository in root build.gradle
+---
+place repository in root build.gradle
+---
+throw if interface defined more than once (fixes #87)
+---
+always quote tables (fixes #97)
+---
+fix for implementsInterface
+---
+use double quote for table and property names in templates
+---
+quick fix for CP compilation issues
+---
+fixed some typos, fixes #102
+---
+prepare model for to-many with join
+---
+updated templates for to-many with join
+---
+added testToManyWithJoin
+---
+Add execute bit for Gradle wrapper.
+---
+Merge pull request #195 from johnjohndoe/file-permissions
+
+Add execute bit for Gradle wrapper.
+---
+fix for LazyList.sublist (fixes #146)
+---
+typo
+---
+setting the base for custom property types based on converters
+---
+add additional imports for custom types and converters
+---
+use custom types in entity
+---
+use custom types in dao, simplify dao with databaseValueExpression, using 1L and 0L for better readability
+---
+use custom types in dao.readEntity, simplify dao with getEntityValueExpression, using 1L and 0L for better readability
+---
+added some value tests for CustomTypeEntityTest
+---
+added codeBefore* for properties
+---
+new entity version quotes table name
+---
+use codeBefore* in DateEntity
+---
+set version to 2.0.0-SNAPSHOT, updated README.md
+---
+added addImport for entities
+---
+moved changelog to separate file
+---
+started feature overview
+---
+added "Add greenDAO to your project" section
+---
+moved PropertyConverter into converter package
+---
+prepared IntegerListConverter
+---
+Version 2.0.0
+---
+added AbstractQueryWithLimit, fixed some TODOs and typos
+---
+2.1.0-SNAPSHOT
+---
+first version of CursorQuery
+---
+fix javadoc
+---
+sketching a Database abstraction
+---
+more Database abstraction
+---
+more Database abstraction
+---
+Database abstraction for templates
+---
+SQLCipher database implementation
+---
+fixes, all unit tests are green again
+---
+setting version 2.1.0-SNAPSHOT also for generator
+---
+gradle for ormlite perf test project
+---
+Actually add dependencies for OrmLite perf test.
+---
+Merge pull request #209 from greenrobot-team/fix-missing-dependencies
+
+Actually add dependencies for OrmLite perf test.
+---
+Specify artifact ids in build.gradle files.
+
+- Remove settings.gradle files.
+---
+Update Android SDK build tools to 23.0.0.
+
+- https://developer.android.com/tools/revisions/build-tools.html
+- Also update Android Plugin for Gradle to 1.3.1.
+- http://tools.android.com/tech-docs/new-build-system
+---
+Disable sudo for travis, auto uses new container-based builders.
+---
+Fix Android tests failing due to timeouts.
+
+- http://stackoverflow.com/questions/28949722/android-tests-fail-on-travis-with-shellcommandunresponsiveexception
+---
+Merge pull request #210 from greenrobot-team/fix-project-import
+
+Fix project import
+---
+Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoGenerator/build.gradle
+---
+Make DaoExample a proper Android app project.
+
+- Use latest greenDao release 2.0.0.
+- Fix https://github.com/greenrobot/greenDAO/issues/155.
+---
+Merge pull request #212 from greenrobot-team/fix-example-app
+
+Fix example app
+---
+Update ORMlite to 4.48.
+
+- http://ormlite.com/changelog.txt
+- Also add as a gradle dependecy, remove library jars.
+---
+Clean up ORMlite test config.
+---
+Add jcenter to global repositories.
+---
+Add performance test for realm.
+
+- Add realm 0.82.1.
+- Still have to use old JUnit 3 ApplicationTestCase as there is no new equivalent for AndroidJUnitRunner :(
+---
+Add property access test to greenDAO perf test.
+
+- Simply get every property of the entity under test. Logged as "access-all-1" and "access-all-2".
+---
+Add BuildConfig flags for enabling perf tests, disabled by default.
+---
+For completeness: access properties in ORMLite perf test.
+---
+Set perf test batch size to 10.000, do 8 runs.
+---
+Add perf test for ActiveAndroid.
+---
+Properly call super setUp and tearDown test methods.
+---
+Measure deletion time in third-party perf tests.
+---
+Also run deleteAll after last run.
+---
+Add space before time unit.
+
+- Also add "(batch)" flag to load log output.
+- Fix realm delete log.
+---
+List count of entities for greendao access test.
+---
+Move perf tests to their own directory.
+
+- Also clean up OrmLite test, restructure to recommended gradle folder hierarchy.
+---
+Merge pull request #226 from greenrobot-team/extend-performance-tests
+
+Extend performance tests
+---
+Add Android support library repository to travis
+
+- Fixes build breakage after adding dependency to Android support library.
+---
+Merge pull request #227 from greenrobot-team/add-support-lib-travis
+
+Add Android support library repository to travis
+---
+Fix codeBeforeSetter, added codeBeforeGetterAndSetter
+---
+Merge branch 'master' of ssh://github.com/greenrobot/greenDAO
+---
+fix async queries
+---
+moving to standard src folders
+---
+adding robolectric tests
+---
+Merge branch 'master' into DbAbstraction
+---
+added getAllDaos to DaoSession
+---
+added changes until now for upcoming V2.1.0
+---
+added Parse perf test
+---
+Set SDK and build tools in root gradle, update travis config.
+
+- Compile with SDK level 23.
+- Use build tools 23.0.1.
+---
+Fix case of DaoCore source file directory name.
+---
+Merge pull request #232 from greenrobot-team/set-sdk-in-root
+
+Set SDK level in root Gradle config, fix travis build.
+---
+Comparison performance test for the Cupboard library.
+---
+Don't run tests by default.
+---
+Use spaces for indentation.
+---
+Simplify log output.
+---
+Use SDK level settings from root config.
+---
+Merge pull request #231 from greenrobot-team/erickok-cupboard-performance-test
+
+Cupboard performance test
+---
+Make Parse test an instrumented test.
+
+- Also update parse-android to 1.10.1.
+---
+Add Couchbase perf test.
+
+- Take this with a grain of salt, as Couchbase is a NoSQL (document-based) data store. All ops can only be one-by-one, no batching is supported.
+---
+Add Firebase performance test.
+
+- Use firebase-client-android 2.3.1.
+---
+Merge pull request #230 from greenrobot-team/cleanup-parse-test
+
+Make Parse test an instrumented test
+---
+Merge pull request #234 from greenrobot-team/perf-test-couchbase
+
+Add Couchbase perf test
+---
+Merge pull request #233 from greenrobot-team/perf-test-firebase
+
+Add Firebase performance test.
+---
+Improve Cupboard test.
+
+- Shorten log tag.
+- Add proper start log.
+- Run delete within test.
+- Formatting.
+---
+Add concept of indexed string entity query perf test.
+
+- Added for cupboard first.
+---
+Extract string and index generator to common module.
+---
+Clean up PerformanceTestActiveAndroid.
+---
+Add indexed string test for Active Android.
+
+- Add dependency on Common module.
+- Update support-v4 to 23.0.1.
+- Do database setup within tests, tear down remains global.
+---
+Add tweaks from Active Android indexed test to cupboard test.
+
+- Create entities after database setup.
+- Add log output between steps.
+---
+Clean up OrmLite test.
+---
+Use provided OrmLiteSqliteOpenHelper, fix minimal entity test.
+---
+Add indexed string test for ORMLite.
+
+- Add dependency on Common module.
+---
+Add IndexedStringEntity to dao test module.
+---
+Add indexed string test for greenDAO.
+---
+Actually query for strings in Active Android test.
+---
+Add runs to greendao indexed test.
+---
+Add runs to Active Android indexed test.
+---
+Add runs to cupboard indexed test.
+---
+Add runs to ORMLite indexed test.
+---
+Better result output also for cupboard, ORMLite indexed tests.
+---
+Use transactions for Couchbase, add batch test.
+
+- Turns out there are transactions for Couchbase (though nowhere mentioned in the docs, found out by accident), so add batch tests and measure again!
+---
+Add indexed string test for Couchbase.
+
+- Add dependency on Common module.
+- Use .purge() instead of .delete() for deleting documents (apparently destroys any reference instead of just setting a deleted flag).
+---
+Add indexed string test for Parse.
+
+- Add dependency on Common module.
+- Update parse-android to 1.10.2 (no changelog to be found :(.
+---
+Clean up Realm test.
+
+- Update realm-android to 0.82.2. https://github.com/realm/realm-java/blob/master/changelog.txt
+---
+Add indexed string test for Realm.
+
+- Add dependency on Common module.
+---
+Re-use data access in indexed tests.
+---
+Add indexed string test for Firebase.
+
+- Add dependency on Common module.
+---
+prepared a test for byte arrays as query params (unsupported yet)
+---
+added escapeBlobArgument, just checking a work around for byte[] selection arg in testEqByteArray
+---
+typo
+---
+sketching another alternative to byte[] queries
+---
+fix and reactivate testConcurrentLockAndQueryDuringTx
+---
+Merge pull request #236 from greenrobot-team/indexed-entity-test
+
+Add indexed property performance tests.
+---
+Add perf test for raw SQLite.
+---
+Merge pull request #238 from greenrobot-team/perf-test-sqlite
+
+Add performance test for raw SQLite.
+---
+expose a join's table prefix
+---
+added DeadlockPreventionTest
+---
+DeadlockPreventionTest: dump thread stacks when deadlock is detected
+---
+loadAllFromCursor with deadlock prevention
+---
+updated changelog
+---
+deleted 3rd party performance comparisons (moved to https://github.com/greenrobot/android-database-performance)
+---
+Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoCore/src/main/java/de/greenrobot/dao/AbstractDao.java
+	DaoCore/src/main/java/de/greenrobot/dao/internal/SqlUtils.java
+---
+moving database package into new src folder
+---
+removed org.apache.commons.lang3.RandomStringUtils
+---
+added javaDoc and codeBeforeClass to Entity, freemarker:2.3.23
+---
+added javaDocs for entity properties
+---
+link to survey
+---
+typo
+---
+added DISTINCT to query builder
+---
+V2.1.0
+---
+typo
+---
+V2.1.1-SNAPSHOT: possible fix for #249
+---
+removed link to survey
+---
+disable testLoadAll by default
+---
+Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoGenerator/build.gradle
+---
+regenerated DAOs to fix DbAbstraction
+---
+core 2.1.1-SNAPSHOT
+---
+make Query.setParameter return this to allow a more fluent API
+---
+make loadAllFromCursor return an ArrayList again to allow modifications to the list
+---
+core 2.1.1-SNAPSHOT
+(cherry picked from commit dd9a4b1)
+---
+make Query.setParameter return this to allow a more fluent API
+(cherry picked from commit 40313df)
+---
+make loadAllFromCursor return an ArrayList again to allow modifications to the list
+(cherry picked from commit 49c75be)
+---
+fix imports after merge
+---
+added detachAll to DAO
+---
+updated CHANGELOG.md
+---
+updated README.md
+---
+added CONTRIBUTING.md (adjusted from EventBus)
+---
+avoid creating multiple statements in concurrent situations
+---
+Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoCore/src/main/java/de/greenrobot/dao/AbstractDao.java
+	DaoCore/src/main/java/de/greenrobot/dao/internal/TableStatements.java
+---
+regenerate SimpleEntityContentProvider to fix compilation
+---
+removed obsolete project.properties
+---
+updating to gradle 2.12 and com.android.tools.build:gradle:1.5.0
+---
+gradle: apply idea plugin
+---
+changing group to 'org.greenrobot', using compileOnly dependencies, etc.
+---
+various clean ups & updates
+---
+standard directory layout for test project
+---
+divided test into base, test, and perf-test
+---
+Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoCore/build.gradle
+---
+added tests for encrypted db
+---
+OpenHelpers based on abstracted Database
+---
+renames to EncryptedDatabase and StandardDatabase for consistency, EncryptedDbUtils
+---
+com.android.tools.build:gradle:2.0.0
+---
+updating some links
+---
+V2.2.0
+---
+Merge branch 'master' into encryption
+
+Conflicts:
+	DaoCore/build.gradle
+---
+artifact name greendao-generator-encryption
+---
+adjust example to use encryption
+---
+fix artifact group to use org
+---
+Merge branch 'master' into encryption
+---
+fixing links
+---
+Merge branch 'master' into encryption
+---
+add greendao3 annotations
+---
+minor javadoc change
+---
+Support @ToOne without foreign key
+---
+add @JoinEntity and @JoinOn annotations
+---
+put annotations on generated code (not yet ready)
+---
+com.android.tools.build:gradle:2.1.0
+---
+migration: support @NotNull
+---
+DaoTestGenerator: add application plugin
+---
+migration: support unique
+---
+migration: don't generate "unique = false" for @ToOne
+---
+change annotations: allow to use @Index on properties
+---
+migration: support single-property indexes
+---
+migration: support @Id
+---
+migration: support multi-property indexes
+---
+migration: support custom table name
+---
+migration: support custom column name
+---
+migration: support custom types
+---
+migration: active entity
+---
+support @OrderBy annotation for @ToMany
+---
+v3: support asc/desc on primary key
+---
+migration: make generated fields transient
+---
+DaoGenerator: fix using converter class name without package name
+---
+DaoExample: fix NoteActivity compilation
+---
+DaoGenerator: change version to 3.0.0-1-SNAPSHOT
+---
+update generated Order class
+---
+add @Unique annotation
+---
+migration: support @Unique
+---
+migration: support _id as default column name
+---
+fix NPE in entity.ftl for toMany.orderSpec
+---
+mark Entity's default constructor with @Generated
+---
+Revert content-provider.ftl formatting
+---
+entity.ftl: put java doc and custom code above greendao annotations
+---
+entity.ftl: better formatting for toMany and toOne
+---
+rework @ToOne
+---
+entity.ftl: tiny formatting fix
+---
+v3: support skip table creation
+---
+support asc/desc for indexes on greendao level
+---
+migration: support different schemas
+---
+Merge branch 'master' into greendao3
+---
+java 1.7
+---
+gitignore gradle.properties
+---
+rename pkg annotations -> annotation
+---
+minor: added some @SuppressWarnings("unused"), Java 7 <>, etc.
+---
+Partly revert: v3: support asc/desc on primary key
+---
+moved core classes to org.greenrobot.greendao
+---
+version 3.0.0-6-SNAPSHOT
+---
+de->org fixes for some ftl
+---
+moved generator classes to org.greenrobot.greendao.generator
+---
+DaoTest, DaoTestBase move de->org
+---
+rerun DaoTestGenerator
+---
+move DaoExample and DaoExampleGenerator from de.* to org.*
+---
+move DaoTestPerformance from de.* to org.*
+---
+DaoCore: remove old files
+---
+version 3.0.0-7-SNAPSHOT
+---
+add schema name as prefix for DaoSession and DaoMaster
+---
+version 3.0.0-8-SNAPSHOT
+---
+add @Generated.hash field
+---
+avoid locking while compiling any statement (accessing the db) to avoid deadlocks on lock-savvy DBs like SQLCipher.
+---
+version 2.2.1
+---
+Merge branch 'master' into encryption
+
+Conflicts:
+	DaoCore/build.gradle
+---
+adjust TableStatements for db abstraction
+---
+JavaDoc typo
+---
+Merge branch 'master' into greendao3
+
+Conflicts:
+	DaoCore/build.gradle
+---
+generator: flag for encryption
+---
+Merge branch 'master' into greendao3
+
+Conflicts:
+	DaoExampleGenerator/build.gradle
+	DaoTestGenerator/build.gradle
+---
+fix formatting, imports and schema prefix of encryption/content-provider.ftl
+---
+fix imports and schema prefix for more encryption ftl's
+---
+restore standard/entity.ftl
+---
+3.0.0-10-SNAPSHOT
+---
+fix join entity is not imported into dao
+---
+Merge branch 'fix-join-entity-import' into greendao3
+---
+3.0.0-11-SNAPSHOT
+---
+javadocs, com.android.tools.build:gradle:2.1.2
+---
+convert example project to gradle-plugin
+---
+version 3.0.0-beta
+---
+org.greenrobot:greendao-gradle-plugin:3.0.0-beta
+---
+minor clean up of example entities
+---
+SQLCipher 3.5.0 - it does not understand "COLLATE LOCALIZED ASC", so use standard sorting
+---
+greendao-encryption V2.2.2
+---
+net.zetetic:android-database-sqlcipher:3.5.1, org.robolectric:robolectric:3.1
+---
+Merge branch 'encryption' into v3-encryption
+
+Conflicts:
+	DaoCore/build.gradle
+	DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java
+	DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoMaster.java
+	DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoSession.java
+	DaoCore/src/main/java/org/greenrobot/greendao/InternalUnitTestDaoAccess.java
+	DaoCore/src/main/java/org/greenrobot/greendao/async/AsyncOperation.java
+	DaoCore/src/main/java/org/greenrobot/greendao/async/AsyncOperationExecutor.java
+	DaoCore/src/main/java/org/greenrobot/greendao/async/AsyncSession.java
+	DaoCore/src/main/java/org/greenrobot/greendao/internal/DaoConfig.java
+	DaoCore/src/main/java/org/greenrobot/greendao/query/DeleteQuery.java
+	DaoCore/src/main/java/org/greenrobot/greendao/query/QueryBuilder.java
+	DaoCore/src/main/java/org/greenrobot/greendao/test/AbstractDaoSessionTest.java
+	DaoCore/src/main/java/org/greenrobot/greendao/test/AbstractDaoTest.java
+	DaoCore/src/main/java/org/greenrobot/greendao/test/DbTest.java
+	DaoExample/src/main/java/de/greenrobot/daoexample/CustomerDao.java
+	DaoExample/src/main/java/de/greenrobot/daoexample/DaoMaster.java
+	DaoExample/src/main/java/de/greenrobot/daoexample/DaoSession.java
+	DaoExample/src/main/java/de/greenrobot/daoexample/NoteDao.java
+	DaoExample/src/main/java/de/greenrobot/daoexample/OrderDao.java
+	DaoExample/src/main/java/org/greenrobot/greendao/example/NoteActivity.java
+	DaoGenerator/build.gradle
+	DaoGenerator/src-template/content-provider.ftl
+	DaoGenerator/src-template/standard/dao-master.ftl
+	DaoGenerator/src-template/standard/dao-session.ftl
+	DaoGenerator/src-template/standard/dao.ftl
+	DaoTest/src/androidTest/java/org/greenrobot/greendao/daotest/DaoSessionConcurrentTest.java
+	DaoTest/src/androidTest/java/org/greenrobot/greendao/daotest/DaoSessionConcurrentWALTest.java
+	DaoTest/src/androidTest/java/org/greenrobot/greendao/daotest/DbUtilsTest.java
+	DaoTest/src/test/java/org/greenrobot/greendao/unittest/DaoMaster.java
+	DaoTest/src/test/java/org/greenrobot/greendao/unittest/DaoSession.java
+	DaoTest/src/test/java/org/greenrobot/greendao/unittest/MinimalEntityDao.java
+	DaoTest/src/test/java/org/greenrobot/greendao/unittest/MinimalEntityTest.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/AbcdefEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/AnActiveEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/AutoincrementEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/CustomTypeEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/DaoMaster.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/DaoSession.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/DateEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/ExtendsImplementsEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/IndexedStringEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/JoinManyToDateEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/RelationEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/SimpleEntityContentProvider.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/SimpleEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/SimpleEntityNotNullDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/SpecialNamesEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/SqliteMasterDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/StringKeyValueEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/TestEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/ToManyEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/ToManyTargetEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest/TreeEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/dao/DaoMaster.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/dao/DaoSession.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/dao/KeepEntityDao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/dao/ToManyTarget2Dao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/specialdao/RelationSource2Dao.java
+	DaoTestBase/src/main/java/org/greenrobot/greendao/daotest2/to1_specialdao/ToOneTarget2Dao.java
+---
+back to "import org.greenrobot.greendao" after merge
+---
+moving database package to org.greenrobot.greendao
+---
+fix example project
+---
+removed broken imports from SimpleEntityContentProvider
+---
+fix imports for test
+---
+setting example schema version to 1000
+---
+removed dao generator project for example
+---
+moved basic uploadArchives info into root project for all sub projects
+---
+separated annotations into their own project
+---
+updated NOTICE
+---
+fix generation of unit test artifacts
+---
+annotation refactorings: removed @Table, renames
+---
+3.0.0-beta3
+---
+Merge branch 'v3' into v3-encryption
+
+Conflicts:
+	DaoCore/build.gradle
+	DaoExample/build.gradle
+	DaoGenerator/build.gradle
+	DaoTest/build.gradle
+	build.gradle
+---
+updated sqlcipher.jar to 3.5.1
+---
+fix indexes
+---
+added DatabaseStatement.getRawStatement
+---
+fix indexes 2
+---
+overload bindValues for SQLiteStatement
+---
+fix testConcurrentLockAndQueryDuringTxWAL
+---
+added Database.getRawDatabase
+---
+using SQLiteStatement when possible
+---
+com.android.tools.build:gradle:2.1.2
+---
+git ignore gradle.properties
+---
+added Benchmark class to store benchmarks in a csv/tsv file, PerformanceTest refactoring
+---
+Benchmark: added warm up runs
+---
+Merge branch 'master' into db-abstraction-always-benchmark
+
+Conflicts:
+	.gitignore
+	DaoExample/build.gradle
+	DaoTestPerformance/src/androidTest/java/org/greenrobot/greendao/performance/PerformanceTest.java
+---
+Merge branch 'db-abstraction-always-benchmark' into v3-encryption
+---
+always generate with DB abstraction
+---
+make protected DAO methods final, remove superfluous @inheritdoc
+---
+DAO: import entity only if required
+---
+updated DAO classes with new template version
+---
+fix testListenerMainThread
+---
+testGetForCurrentThread_ManyThreadsDontLeak does not work on newer API levels
+---
+QueryBuilder: make stringOrderCollation customizable
+---
+improve example
+---
+introduced greendao-api
+---
+DatabaseOpenHelper extends native open helpers directly
+---
+single DatabaseOpenHelper for standard & encrypted DBs
+---
+dao-master.ftl: some clean up and new newDevSession method
+---
+update example to v3.0.0
+---
+V3.0.0
+---
+README.md: some first updates for V3.0.0
+---
+example app: ENCRYPT flag
+---
+travis: try Java8 to avoid permgen trouble
+---
+greendao 3.0.1: load SQLCipher native libs by default in DatabaseOpenHelper
+---
+fix tests for encrypted
+---
+(potential) test fixes
+---
+README.md: better info on greenDAO 3
+---
+Use correct compile statement in README.
+
+- Explicitly add buildscript (Maven Central) repository, otherwise plugin will not be found.
+- Closes #354
+---
+Add syntax highlighting to usage snippet.
+---
+Merge pull request #357 from greenrobot/fix-readme-usage-instructions
+
+Use correct compile statement in README.
+---
+Update Android Build Tools to 23.0.3.
+
+- Most notably: Improved the merging performance of the dx tool. https://developer.android.com/studio/releases/build-tools.html#notes
+---
+new clearIdentityScope to allow calling DaoSession.clear() without identity scope
+---
+added save and saveInTx
+---
+organized import
+---
+Merge remote-tracking branch 'github/build-tools-23.0.3'
+---
+added __throwIfDetached() to active entities
+---
+Use latest platform tools and tools with travis.
+---
+minor JavaDoc
+---
+hello Rx
+---
+using TestSubscriber
+---
+added dao.rx() and JavaDoc
+---
+Added rx package
+---
+make rx() use IO scheduler
+---
+oops
+---
+emulate Observable.fromCallable while still in beta
+---
+emulate Observable.fromCallable while still in beta, 2nd try
+---
+test(No)Scheduler
+---
+RxDao.load
+---
+added OptionalDepedenciesTest
+---
+minor
+---
+RxDao.insert
+---
+RxDao.runInTx that will probably move to new RxSession
+---
+updated copyright headers in DaoCore
+---
+clean up
+---
+some minor clean ups
+---
+DAO remove superfluous semicolon, regen test DAOs
+---
+3.1.0-SNAPSHOT
+---
+Merge pull request #361 from greenrobot/fix-travis-build-tools
+
+Use latest platform tools and tools with travis.
+---
+added @Entity(generateConstructors), misc.
+---
+switch DbUtils to Db abstraction (where possible)
+---
+license files for api
+---
+added API hint annotations @Internal, @Beta, and @Experimental
+---
+applied API hints to RX stuff
+---
+applied API hints to RX stuff, also to all methods
+---
+updated/unified copyright texts
+---
+added RxTx
+---
+rxIo() is now rx()
+---
+Disable Example until new plugins are pushed
+---
+RxDao.insertInTx() & .count()
+---
+add remaining methods to RxDao
+---
+added RxQuery with list and unique
+---
+rxjava:1.1.8
+---
+added RxQuery.oneByOne(), disabled  Query.rx() for 3.1 (passing params is unresolved)
+---
+Process.myTid() seems to have issues on some devices (see Github #376)
+---
+move test projects into dir 'tests'
+---
+__setDaoSession last
+---
+disable DaoExample
+---
+new DaoTestAnnotation project based on example
+---
+DaoTestAnnotation fixes
+---
+Test for types and converters in inner classes
+---
+V3.1.0, javadoc fixes and styling, clean up
+---
+fixes for QueryForThreadTest
+---
+fix leak introduced 2 days in 1fd5a337edb91ad53439ab9828f71d7e7df63a59
+---
+removed app from test
+---
+update README.md deps to 3.1.0
+---
+Remove customer and order entities from example.
+
+- Also remove Note from annotation tests.
+---
+Remove unused proguard and Eclipse config files.
+---
+Change example to use objects instead of a cursor.
+
+- Use RecyclerView.
+---
+Disable test generation.
+---
+Add basic RxDao example.
+---
+Unify examples.
+
+- Use same libraries, layouts, icons, colors, ...
+---
+Move DaoExample to examples folder.
+---
+Merge pull request #391 from greenrobot-team/example-cleanup
+
+Update the example to use objects, clean up
+---
+Update Gradle to 2.14.1.
+
+- Gradle security update.
+- Move shared example dependencies to root gradle config file.
+---
+Merge pull request #398 from greenrobot-team/tools-security-updates
+
+Gradle security update
+---
+Add remaining RxRao tests.
+---
+Merge pull request #400 from greenrobot-team/remaining-rx-dao-tests
+
+Add remaining RxRao tests.
+---
+Make annotation test java directory lower case.
+
+- Should fix test collision issues with travis (case-sensitive file system).
+---
+Re-enable auto test generation.
+---
+Use android and greendao plugin version defined in root build.gradle.
+---
+Merge pull request #403 from greenrobot-team/common-android-plugin
+
+Use plugin versions defined in root config on test projects
+---
+Add generateGettersSetters flag to Entity annotation. #358
+---
+Add NotNullThing and basic test.
+---
+Add primitive types with @NotNull annotation.
+---
+Merge pull request #404 from greenrobot-team/fix-test-directory-case
+
+Fix test directory case
+---
+Merge remote-tracking branch 'github-team/not-null-entity-test'
+---
+Merge remote-tracking branch 'github-team/getters-setters-flag'
+---
+V3.1.1
+---
+Rename remaining Java dirs to java.
+---
+Merge pull request #421 from greenrobot-team/fix-java-dirnames
+
+Rename remaining Java dirs to java.
+---
+Add protobuf attribute on @Entity.
+
+- Prepare version 3.2.0-SNAPSHOT.
+---
+Better protobuf support in DAO generator.
+
+- Do not create attachEntitiy method.
+- Use hasX instead of getX != null in hasKey().
+- Prepare version 3.2.0-SNAPSHOT.
+---
+Build greendao 3.2.0-SNAPSHOT.
+---
+added property.nonPrimitiveType flag
+---
+use dbName etc.
+---
+Property: For backwards compatibility, consider notNull. It should be only dependent on nonPrimitiveType in the future.
+---
+minor formatting
+---
+extracted getConfiguration
+---
+V3.2.0
+---
+Fix typo in the comment of QueryBuilder.offset() (#436)
+
+Is limit, but is meant to be offset instead.
+---
+25 all the things
+---
+update android-database-sqlcipher to 3.5.4
+---
+Update build tools in travis config. (#483)
+
+- Use latest available SDK 24 emulator, as tests with generated sources are broken on SDK 19 emulator (`IllegalAccessError`).
+- Update to v25 build tools.
+- Simplify some commands (emulator script is now built-in, Gradle properly supported).
+Source: https://github.com/googlemaps/android-maps-utils/blob/master/.travis.yml
+---
+Update examples to plugin version 3.2.0.
+
+- Do not use root project variables to include dependencies to allow easy copy/paste.
+---
+Merge pull request #502 from greenrobot-team/update-examples
+
+Update examples to plugin version 3.2.0.
+---
+made examples more independent: don't use root variables and have fixed version greenDAO deps (resolving some dep cycle issues, too)
+---
+updated to greendao-gradle-plugin:3.2.1
+---
+Merge remote-tracking branch 'github/master'
+
+# Conflicts:
+#	build.gradle
+#	examples/DaoExample/build.gradle
+#	examples/RxDaoExample/build.gradle
+---
+com.android.tools.build:gradle:2.2.3 for examples
+---
+fixed two method typos
+---
+update to com.android.tools.build:gradle:2.3.0 and gradle 3.3
+---
+example: do not use all-args constructor for Note, it should be reserved for greenDAO
+---
+Improve add instructions.
+---
+Actually get writable db with getEncryptedWritableDb.
+
+- Closes https://github.com/greenrobot/greenDAO/issues/572.
+---
+Support deploying to local repository.
+
+- Set preferedRepo=local in gradle.properties.
+---
+Also escape table name when creating index.
+
+- Closes https://github.com/greenrobot/greenDAO/issues/622
+- Tested with note example (snapshot generator and plugin).
+---
+Support setParameter chaining for all queries.
+
+- Closes https://github.com/greenrobot/greenDAO/issues/563
+- Move setParameter for Date and Boolean up to AbstractQuery.
+- Copy setParameter methods to all query classes, cast return value to specific query class.
+---
+Merge pull request #635 from greenrobot-team/set-parameter-chaining-all-queries
+
+Support setParameter chaining for all query types
+---
+fixed exception being swallowed in updateInTx
+---
+V3.2.2
+---
+V3.2.2 in README
+---
+V3.2.2 in README fix
+---
+updated deps for examples
+---
+more updated deps for examples
+---
+doc updates
+---
+3.2.3-SNAPSHOT, Gradle 3.5 and other dependency updates
+---
+Travis: ANDROID_API_LEVEL=25
+---
+Travis: ANDROID_API_LEVEL back to 24
+---
+Add Database#isOpen(). Closes #700.
+---
+Allow collation for SQLCipher databases.
+
+- Closes https://github.com/greenrobot/greenDAO/issues/727.
+- SQLCipher just does not support collation that requires Android libraries
+  (like 'COLLATE LOCALIZED'). Everything else standard SQLite is supported,
+  so allow it.
+---
+updated README.md
+---
+README: use implementation instead of compile.
+---
+Merge branch 'database-is-open'
+---
+Merge branch 'allow-collate-sqlcipher'
+---
+Update Android Plugin to 3.1.1, Gradle to 4.6, use new configurations.
+
+- Use implementation instead of compile, and so on.
+- Drop buildToolsVersion, is set by Android Plugin now.
+- Update Travis config.
+---
+Compile with Android SDK 27.
+
+- Update examples to target 27, update libraries.
+---
+QueryBuilder: escape table name for JOIN as well.
+
+Closes https://github.com/greenrobot/greenDAO/issues/888
+---
+Travis: use new SDK tools for setup, update for Android Plugin v3.
+---
+Only show how to use SQLCipher, do not actually add.
+
+Many people are having issues because they include SQLCipher code, but
+not the dependency. So add comments instead of actually using it.
+---
+Update Android Plugin to 3.1.4.
+---
+Update RxJava, update SQLCipher version used by tests.
+
+- Update encrypted SQLite version check.
+---
+DaoTest: update Robolectric to 3.8, manually include JUnit.
+---
+Travis: skip performance tests.
+---
+Merge branch 'example-updates'
+---
+Update Android Plugin to 3.2.1.
+
+- Need to move minSdkVersion to build files.
+---
+README: updates.
+---
+README: fix.
+---
+Update Gradle [4.6 -> 4.10.3].
+---
+DatabaseOpenHelper: add constructor accepting DatabaseErrorHandler.
+
+Available since Honeycomb.
+
+https://github.com/greenrobot/greenDAO/issues/839
+---
+README: add ProGuard rules.
+---
+Merge pull request #990 from greenrobot/proguard-rules-in-readme
+
+README: add ProGuard rules.
+---
+Merge branch '839-database-error-handler'
+---
+Update Gradle [4.10.3 -> 5.6.4].
+---
+Increase Gradle default daemon heap size.
+---
+Extract publish.gradle, only publish required projects.
+---
+DatabaseOpenHelper: move EncryptedHelper out of class, use reflection.
+---
+Merge pull request #924 from greenrobot/428-avoid-art-warning
+
+Wrap EncryptedHelper in interface to reduce Art warnings
+---
+README: add keep rule for SqlCipherEncryptedHelper.
+---
+Update Android Plugin [3.2.1 -> 3.5.3].
+---
+Compile with SDK 29, for examples also target SDK 29.
+---
+Examples: migrate to AndroidX, remove redundant casts, code clean-up.
+---
+Examples: use Java 8 features.
+---
+Add required Android JUnit test classes removed in SDK 28.
+---
+Robolectric workaround: set enableUnitTestBinaryResources false.
+---
+Merge pull request #1015 from greenrobot/updates
+
+Updates
+---
+https etc.
+---
+fix JavaDocs: escape or replace some characters (>, <, &)
+---
+Update freemarker [2.3.22 -> 2.3.29].
+---
+DaoGenerator: set freemarker incompatible improvements to 2.3.29.
+
+Configuration does not appear to document breaking changes.
+---
+Merge branch 'freemarker-update'
+---
+prep 3.3.0
+---
+upgrade example and test dependencies to 3.3.0
+---
+Examples: use custom OpenHelper implementation.
+
+Steer users away from DevOpenHelper to reduce support requests.
+---
+README: Direct users to ObjectBox.
+---
+README: fix image link.
+---
+Use greendao-gradle-plugin 3.3.1
+---

@@ -1,0 +1,3256 @@
+(no commit message)
+---
+Fixes issue 8
+---
+XXX重命名成TEMP
+---
+1.修改Dump和Main以便在程序直接中调用
+2.增加将.class转换成.dex的能力（需要android sdk）
+
+
+Update issue 9
+Labels: Priority-Low
+Status: WontFix
+经过简单验证，dex2jar在处理switch语句的时候没有发现问题，这个问题是由于反编译软件不完善引起的。如果可能请提供给我更详细的错误信息（如出错的.dex文件）。
+---
+测试不通过的问题
+---
+临时保存
+---
+(no commit message)
+---
+Starting 'temp' branch
+
+--HG--
+branch : temp
+---
+(no commit message)
+
+--HG--
+branch : temp
+---
+(no commit message)
+
+--HG--
+branch : temp
+---
+使用asm analysis进行分析，解决无法区别const_0 和const_null指令的问题
+
+
+Fixes issue 2
+
+--HG--
+branch : temp
+---
+(no commit message)
+
+--HG--
+branch : temp
+---
+Merge with 6825c482e281424834ab256d1fe102ee298c491a
+---
+Added tag 0.0.6 for changeset 9361e645790f
+---
+Starting '0.0.7' branch
+
+--HG--
+branch : 0.0.7
+---
+1.修改label的处理方式，使其使用asm的label
+2.增强dump,可以显示异常处理相关的Label
+
+--HG--
+branch : 0.0.7
+---
+(no commit message)
+
+--HG--
+branch : 0.0.7
+---
+全部使用int/long来表示数据float/double无法表示
+
+--HG--
+branch : 0.0.7
+---
+改善dump对const的显示支持
+
+--HG--
+branch : 0.0.7
+---
+1.改善dump显示
+2.优化对FILL_ARRAY_DATA指令的优化效果
+3.完善对0/null的识别能力(Issue 2)
+
+--HG--
+branch : 0.0.7
+---
+1.在处理array相关指令dexInterpreter出错的问题
+2.移动用于测试的dex文件位置,便于简化测试
+
+--HG--
+branch : 0.0.7
+---
+1.针对OP_ADD_INT_LIT8优化
+
+--HG--
+branch : 0.0.7
+---
+(no commit message)
+
+--HG--
+branch : 0.0.7
+---
+1.添加丢失的OP_FILLED_NEW_ARRAY_RANG支持
+
+Update issue 14
+Labels: Priority-Low
+问题已经找到，已经解决。
+但是我写的单元测试dx没有转换出OP_FILLED_NEW_ARRAY_RANG这条指令，您能否将那个出问题的.dex文件发给我，谢谢。
+
+--HG--
+branch : 0.0.7
+---
+1.修复case OP_FILLED_NEW_ARRAY_RANGE丢失的break;
+
+
+Fixes issue 14
+thank you beanchx
+
+--HG--
+branch : 0.0.7
+---
+Merge with 35f82e7169758ef8e908f1806c4e928f0c1165a6
+---
+1.增加dump命令行
+---
+Added tag 0.0.7 for changeset 4713eec717a3
+---
+1.添加REM_DOUBLE_2ADDR,REM_FLOAT_2ADDR指令支持
+
+Fixes  issue 19
+---
+(no commit message)
+---
+Added tag 0.0.7.1 for changeset 6743b6bb8a38
+---
+(no commit message)
+---
+1.修复处理内部类时的一个NPE，
+
+Fixes  issue 21
+---
+Added tag 0.0.7.2 for changeset 5de91e5a0e95
+---
+Merge with fa2ee2bd78e0455c95b32f0327e2066e6cf3e34f
+
+--HG--
+branch : 0.0.7
+---
+1.完善dex文件读取
+
+
+Fixes issue 22
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.3 for changeset 98cb7e78cfaf
+
+--HG--
+branch : 0.0.7
+---
+1.完善v3块切分
+
+--HG--
+branch : 0.0.7
+---
+1.完善代码分析
+
+Update  issue 23
+Labels: Priority-High
+Status: Started
+
+Update  issue 17
+Labels: Priority-High
+Status: Started
+
+--HG--
+branch : 0.0.7
+---
+1.将OP_INVOKE_SUPER转换成INVOKEVIRTUAL
+
+--HG--
+branch : 0.0.7
+---
+1.不把OP_ADD_INT_LIT8转换成IINC指令
+
+Update issue 23
+已知出现该问题的原因有两个
+1.OP_ADD_INT_LIT8指令会被优化成IINC指令,并在分块的时候未被正确处理
+2.class文件中long(J)/double(D)类型占用两个长度的Local变量
+
+现在1已经解决
+
+--HG--
+branch : 0.0.7
+---
+1.完善dex读取
+
+--HG--
+branch : 0.0.7
+---
+1.完善V3转换
+
+--HG--
+branch : 0.0.7
+---
+修复一个POP指令使用错误
+
+Fixes issue 26
+
+--HG--
+branch : 0.0.7
+---
+1.完善V3转换
+
+--HG--
+branch : 0.0.7
+---
+1.增加版本号
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.4 for changeset f415c01ff925
+
+--HG--
+branch : 0.0.7
+---
+1.与0.0.8靠拢
+
+--HG--
+branch : 0.0.7
+---
+1.使用commons-io 2.0
+2.支持直接处理apk文件
+3.添加OP_CONST_STRING_JUMBO支持
+4.完善dex读取
+5.修复读取中文字符串bug
+
+--HG--
+branch : 0.0.7
+---
+1.添加范型支持
+
+--HG--
+branch : 0.0.7
+---
+(no commit message)
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.5 for changeset 9605cc1f3139
+
+--HG--
+branch : 0.0.7
+---
+1.使用slf4j-simple替换logback
+2.版本号变为0.0.7.6
+3.修改.sh/.bat脚本，支持在别的目录直接调用
+4.解决try-catch-handler在有monitor-enter/exit时的位置问题
+
+Fixes issue 30
+
+--HG--
+branch : 0.0.7
+---
+1.修改JRE要求为1.6
+2.使用AnnotationVisitor代替DexAnnotationVisitor
+3.程序启动时显示版本
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.6 for changeset 45e1e724eee2
+
+--HG--
+branch : 0.0.7
+---
+1.版本0.0.7.6改为0.0.7.7
+
+--HG--
+branch : 0.0.7
+---
+1.移除pxb.android.dex2jar.org.objectweb.asm.tree包直接使用org.objectweb.asm.tree
+
+--HG--
+branch : 0.0.7
+---
+1.移除pxb.android.dex2jar.org.objectweb.asm.tree包直接使用org.objectweb.asm.tree
+
+--HG--
+branch : 0.0.7
+---
+Add .hgignore
+
+--HG--
+branch : 0.0.7
+---
+1.使用寄存器编号为Integer.MAX_VALUE来保存方法返回值
+
+Fixes issue 31
+
+--HG--
+branch : 0.0.7
+---
+1.清理代码
+
+--HG--
+branch : 0.0.7
+---
+1.开始调整指令顺序
+
+--HG--
+branch : 0.0.7
+---
+1.在处理OP_INVOKE_SUPER指令时使用INVOKEVIRTUAL代替,解决在反编译后访问父类的方法丢失"super."的问题
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.7 for changeset cb85fc62c818
+
+--HG--
+branch : 0.0.7
+---
+1.修改版本为0.0.7.8
+2.解决生成的class文件使用dx重新转换时使用的指令与原始指令不同的问题(未使用invoke-super,而是要了invoke-direct)
+
+--HG--
+branch : 0.0.7
+---
+1.完善调整指令顺序
+
+--HG--
+branch : 0.0.7
+---
+Fixes issue 38
+
+--HG--
+branch : 0.0.7
+---
+1.使用space替换tab
+
+--HG--
+branch : 0.0.7
+---
+1.修改asm 的Analyzer使其不特殊处理long/double类型的变量
+2.根据变量的类型重新编号
+
+Fixes issue 36
+
+--HG--
+branch : 0.0.7
+---
+1.修复在分析指令时死循环的问题
+
+Fixes issue 33
+
+--HG--
+branch : 0.0.7
+---
+Added tag 0.0.7.8 for changeset 9bb7ad84eace
+
+--HG--
+branch : 0.0.7
+---
+start working 0.0.7.9
+
+--HG--
+branch : 0.0.7
+---
+1.清理代码
+2.使用命令行时,当转某个类失败时将继续，而不退出程序
+
+--HG--
+branch : 0.0.7
+---
+1.Ignore annotation dalvik/annotation/EnclosingMethod on method
+
+Fixes issue 3
+
+--HG--
+branch : 0.0.7
+---
+no functional change
+
+--HG--
+branch : 0.0.7
+---
+1.解决读取class annotation 的一个问题
+2.将DexAnnotationReader中的读取部分代码于Constant中的代码合并
+
+Fixes issue 42
+
+--HG--
+branch : 0.0.7
+---
+尝试指令顺序调整
+
+--HG--
+branch : 0.0.7
+---
+1.rename package pxb.android.dex2jar to com.googlecode.dex2jar
+
+--HG--
+branch : 0.0.7
+---
+1. issue 33, issue 43在启动参数中设置默认jvm内存大小
+
+--HG--
+branch : 0.0.7
+---
+1.maven打包发布包
+
+--HG--
+branch : 0.0.7
+---
+1. 修复读取dex中java/lang/Object类时其父类是null导致的一个NPE问题
+2. 提高异常信息的可读性
+
+Fixes issue 44
+
+--HG--
+branch : 0.0.7
+---
+Starting '0.0.9.x' branch
+
+idea about using soot to translate
+
+--HG--
+branch : 0.0.9.x
+---
+move files to dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+cut into 3 projects
+
+--HG--
+branch : 0.0.9.x
+---
+1.add pom.xml
+
+--HG--
+branch : 0.0.9.x
+---
+1.移除OP_ADD_INT_2ADDR
+
+--HG--
+branch : 0.0.9.x
+---
+1.移除/合并指令
+
+--HG--
+branch : 0.0.9.x
+---
+1.移除/合并指令
+
+--HG--
+branch : 0.0.9.x
+---
+1.移除/合并指令
+
+--HG--
+branch : 0.0.9.x
+---
+1.rewrite dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1.revert dex-translator to use reader 1.0
+
+--HG--
+branch : 0.0.9.x
+---
+1.rewrite dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1.rewrite dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1.rewrite dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1.Fix some bug
+
+--HG--
+branch : 0.0.9.x
+---
+1.dex-dumper using dex-reader 1.1
+
+--HG--
+branch : 0.0.9.x
+---
+1.在visitConstStmt中使用String来传递const-class
+
+--HG--
+branch : 0.0.9.x
+---
+1.add total reg size
+
+--HG--
+branch : 0.0.9.x
+---
+1.change license of dex-translator-soot to LGPL
+
+--HG--
+branch : 0.0.9.x
+---
+1.fix bug
+
+--HG--
+branch : 0.0.9.x
+---
+1.fix bug
+
+--HG--
+branch : 0.0.9.x
+---
+1.fix bug
+
+--HG--
+branch : 0.0.9.x
+---
+1.重写dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1.将OP_AGET_* 统一为OP_AGET，OP_APUT_* 统一为OP_APUT
+
+--HG--
+branch : 0.0.9.x
+---
+1.rw soot
+
+--HG--
+branch : 0.0.9.x
+---
+1.rw soot
+
+--HG--
+branch : 0.0.9.x
+---
+[no commit message]
+
+--HG--
+branch : 0.0.9.x
+---
+1.删除soot的代码
+2.部分实现LocalSpliter
+
+--HG--
+branch : 0.0.9.x
+---
+MethodExpr 修改为 InvokeExpr
+
+LocalSplit的bug修复
+
+--HG--
+branch : 0.0.9.x
+---
+improve local split ,start working local remove
+
+--HG--
+branch : 0.0.9.x
+---
+finish local remover
+
+--HG--
+branch : 0.0.9.x
+---
+Update test
+
+--HG--
+branch : 0.0.9.x
+---
+remove dex-translator-soot
+rename dex-soot-rw to dex-ir
+
+--HG--
+branch : 0.0.9.x
+---
+完成到ir的转换
+ls出错,需要反向遍历cfg
+
+--HG--
+branch : 0.0.9.x
+---
+修改IR结构
+
+--HG--
+branch : 0.0.9.x
+---
+修改IR结构
+
+--HG--
+branch : 0.0.9.x
+---
+修改IR结构
+完善localsplit,localremove
+
+--HG--
+branch : 0.0.9.x
+---
+1.CFG使用TreeSet代替HashSet以保证每次运行时访问顺序相同
+2.toString优化
+
+--HG--
+branch : 0.0.9.x
+---
+1.完善doc
+
+--HG--
+branch : 0.0.9.x
+---
+start work loacl type
+
+--HG--
+branch : 0.0.9.x
+---
+完成ir到asm的转换
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+恢复IR中NEW指令
+
+--HG--
+branch : 0.0.9.x
+---
+Pop a local if it has no read
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+copy license and notice to dex-ir project
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+add clone method to values and stmts
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+associate the type(e.op) and type(e) in CHECK_CAST expr
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+--HG--
+branch : 0.0.9.x
+---
+bug fix
+
+New issue
+Summary: Exception Handler
+Labels: Type-Defect Priority-High
+Status: Accepted
+程序在处理try-catch-finally块时有异常,特别在处理包含synchronized快
+
+--HG--
+branch : 0.0.9.x
+---
+将CPM,CMPL,CMPG拆分成LCMP,FCMPL,DCMPL,FCMPG,DCMPG
+将CAST指令单独为一个类，添加源类型及目的类型
+
+
+Fixes  issue 71
+
+--HG--
+branch : 0.0.9.x
+---
+Spelling stuff
+
+
+Fixes issue 78
+
+Fixes issue 74
+
+--HG--
+branch : 0.0.9.x
+---
+call visitEnum if value is a Field
+
+Fixes issue 75
+
+--HG--
+branch : 0.0.9.x
+---
+add
+visitLineNumber
+visitLocalVariable
+
+Fixes issue 76
+
+--HG--
+branch : 0.0.9.x
+---
+1.change version of dex-reader to 1.2
+2.Make dex-reader independant from ASM3.
+3.add class DexAnnotationVisitor,DexLabel
+4.add method visitType(String name, String type) to DexAnnotationVisitor
+
+Fixes issue 77
+
+--HG--
+branch : 0.0.9.x
+---
+add support NO_INDEX in debug_info_item
+
+--HG--
+branch : 0.0.9.x
+---
+1.add class DexType
+2.remove method visitType(String name, String type) from DexAnnotationVisitor
+
+--HG--
+branch : 0.0.9.x
+---
+remove dex-dumper
+
+--HG--
+branch : 0.0.9.x
+---
+put the generated jar in the same folder of the dex file.
+
+Fixes issue 83
+
+
+--HG--
+branch : 0.0.9.x
+---
+1.change LocalType.type(Value v) to LocalType.typeOf(Value v)
+2. if the type not detected, use type in constant
+
+
+Fixes issue 71
+
+--HG--
+branch : 0.0.9.x
+---
+1.update dex-reader to 1.3
+2.clean old code of dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+更正DexFileReader.java302行对Field的参数顺序
+
+--HG--
+branch : 0.0.9.x
+---
+1. add api similar with org.objectweb.asm.util.ASMifierClassVisitor
+
+--HG--
+branch : 0.0.9.x
+---
+1. remove dependency of slf4j
+2. remove accessflags from Field and Method, and pass it by visitMethod/visitField
+3. fix EmptyVisitor
+4. add config to DexFileReader to support SKIP_CODE,SKIP_DEBUG
+5. remove Proto
+6. hide class used only inside dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+1. move config from constuctor to accept()
+
+--HG--
+branch : 0.0.9.x
+---
+1.Fix bug in StmtList
+
+--HG--
+branch : 0.0.9.x
+---
+1. write exception and code visit order to a file
+
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+1. add version to menifest
+
+--HG--
+branch : 0.0.9.x
+---
+start 0.0.9.1
+
+--HG--
+branch : 0.0.9.x
+---
+1. fixes bug in DexCodeReader
+2. add test case for issue 87
+
+
+Update issue 87
+Status:Accepted
+Labels:Priority-High
+There are bug when translate code without end. for example. while(true) { do something...}
+
+--HG--
+branch : 0.0.9.x
+---
+1. rewrite localsplit
+
+Fixes issue 87
+
+--HG--
+branch : 0.0.9.x
+---
+1. fix a bug in local split
+
+--HG--
+branch : 0.0.9.x
+---
+start 0.0.9.2
+
+--HG--
+branch : 0.0.9.x
+---
+Fix a bug in reading dex encoded_values
+
+--HG--
+branch : 0.0.9.x
+---
+1. add omited code to some exception handler
+
+
+Update issue 63
+Status:Accepted
+This issue was caused by omited code in exception handler generated by android dx tool, will fix in 0.0.9.2
+
+
+Fixes issue 63
+
+--HG--
+branch : 0.0.9.x
+---
+1. fix a bug in local remove
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 88
+
+--HG--
+branch : 0.0.9.x
+---
+add version number to dex-ir
+
+--HG--
+branch : 0.0.9.x
+---
+start 0.0.9.3
+
+--HG--
+branch : 0.0.9.x
+---
+New issue
+Summary: support @dalvik.annotation.AnnotationDefault
+Labels: Type-Defect Priority-High
+Status: Accepted
+translate @dalvik.annotation.AnnotationDefault to mv.visitAnnotationDefault
+
+--HG--
+branch : 0.0.9.x
+---
+add support to translate Annotation class
+
+Fixes issue 89
+Fixes issue 41
+
+--HG--
+branch : 0.0.9.x
+---
+1. remove dependence from slf4j, to keep dex2jar simple
+
+--HG--
+branch : 0.0.9.x
+---
+1. remove type field from Local
+
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+readd dex-dumper
+
+--HG--
+branch : 0.0.9.x
+---
+merge dex-dumper to dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+Fix a bug in local type
+Fix a bug in visitAnnotationDefault
+Update dump api
+
+Fixes issue 73
+
+--HG--
+branch : 0.0.9.x
+---
+add support to visit a label inside an instruction (issue 65)
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.4
+
+--HG--
+branch : 0.0.9.x
+---
+apply 491dd2810da1 to 0.0.9.x
+
+--HG--
+branch : 0.0.9.x
+---
+issue 11
+
+--HG--
+branch : 0.0.9.x
+---
+issue 11
+
+--HG--
+branch : 0.0.9.x
+---
+issue 11
+
+--HG--
+branch : 0.0.9.x
+---
+issue 11
+
+--HG--
+branch : 0.0.9.x
+---
+add jumbo-style instruction support
+
+--HG--
+branch : 0.0.9.x
+---
+add ReverseEndian support
+
+--HG--
+branch : 0.0.9.x
+---
+add version to pom.xml
+
+--HG--
+branch : 0.0.9.x
+---
+add big-endian support
+
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+add RandomAccessFielInput for read dex in android devices
+
+--HG--
+branch : 0.0.9.x
+---
+add SKIP_ANNOTATION and SKIP_FIELD_CONSTANT
+
+--HG--
+branch : 0.0.9.x
+---
+apply patch from jcmdev0.
+
+ignore TestDexClassV from junit
+
+Fixes issue 94
+
+--HG--
+branch : 0.0.9.x
+---
+add support for register allocation
+
+--HG--
+branch : 0.0.9.x
+---
+add support for register allocation
+
+Fixes issue 91
+
+--HG--
+branch : 0.0.9.x
+---
+never reuse this(local 0)
+
+convert [x + (-1)] to [x - 1] and [x - (-1)] to [x + 1]
+
+Fixes issue 93
+
+--HG--
+branch : 0.0.9.x
+---
+log warn about apiLevel
+
+--HG--
+branch : 0.0.9.x
+---
+improve type analyzer
+
+--HG--
+branch : 0.0.9.x
+---
+add TestUtils.initDexFileReader(...) to set apiLevel if possible
+
+--HG--
+branch : 0.0.9.x
+---
+i
+
+--HG--
+branch : 0.0.9.x
+---
+deprecated uncompleted classes
+
+--HG--
+branch : 0.0.9.x
+---
+improve register allocation
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.5
+
+--HG--
+branch : 0.0.9.x
+---
+fix a bug in dex-reader
+
+
+Fixes issue 97
+
+--HG--
+branch : 0.0.9.x
+---
+reduce the size of array return by live analyze
+
+--HG--
+branch : 0.0.9.x
+---
+improve asmifier
+
+--HG--
+branch : 0.0.9.x
+---
+add ZERO transformer
+
+Fixes issue 96
+
+--HG--
+branch : 0.0.9.x
+---
+check dead code in zero transform
+
+--HG--
+branch : 0.0.9.x
+---
+check dead code in zero transform
+
+--HG--
+branch : 0.0.9.x
+---
+update dx to android-platform-tools-rev10
+
+--HG--
+branch : 0.0.9.x
+---
+add dex-tools
+
+--HG--
+branch : 0.0.9.x
+---
+add cmd jar2jasmin
+
+--HG--
+branch : 0.0.9.x
+---
+add cmd jasmin2jar
+
+--HG--
+branch : 0.0.9.x
+---
+add cmd asm-verify jar2dex
+
+--HG--
+branch : 0.0.9.x
+---
+not impl apk-sign/apk-extract
+
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+start 0.0.9.6
+
+--HG--
+branch : 0.0.9.x
+---
+update config maven-assembly-plugin
+
+--HG--
+branch : 0.0.9.x
+---
+use ldc_w/ldc2_w to IF/DJ
+
+--HG--
+branch : 0.0.9.x
+---
+fix a bug in generate asm code
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.7
+
+--HG--
+branch : 0.0.9.x
+---
+ignore *~ from hg
+
+--HG--
+branch : 0.0.9.x
+---
+add d2j-apk-sign.sh
+
+--HG--
+branch : 0.0.9.x
+---
+use SignApk.java from android to provider apk-sign
+
+--HG--
+branch : 0.0.9.x
+---
+update NOTICE.txt
+
+--HG--
+branch : 0.0.9.x
+---
+remove analysis package from dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+update java doc of dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+--HG--
+branch : 0.0.9.x
+---
+move endremover/exceptionHanderCurrect to dex-ir
+
+--HG--
+branch : 0.0.9.x
+---
+add exception handler, update d2j-dex2jar to more configurable
+
+--HG--
+branch : 0.0.9.x
+---
+update test output
+
+--HG--
+branch : 0.0.9.x
+---
+add getClassSize() to DexFileReader
+
+--HG--
+branch : 0.0.9.x
+---
+hg kwexpand
+
+--HG--
+branch : 0.0.9.x
+---
+remove depedence from commons-io,commons-codec,
+add commons-lite to provide class needed by dex-reader
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 98
+
+--HG--
+branch : 0.0.9.x
+---
+update basecmd to initOptions from parent class
+
+--HG--
+branch : 0.0.9.x
+---
+clean the code
+
+--HG--
+branch : 0.0.9.x
+---
+update project description
+
+--HG--
+branch : 0.0.9.x
+---
+update project description
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.8
+
+--HG--
+branch : 0.0.9.x
+---
+add config to generate .class code not reuse register
+
+--HG--
+branch : 0.0.9.x
+---
+improve junit test output
+improve d2j-dex2jar, d2j-apk-sign
+
+--HG--
+branch : 0.0.9.x
+---
+add switch to turn off topologicalSort
+
+--HG--
+branch : 0.0.9.x
+---
+use a fork of jasmin
+
+--HG--
+branch : 0.0.9.x
+---
+support trans dubug info
+
+--HG--
+branch : debug-support
+---
+Fix a bug in read ics,
+
+Fixes issue 110
+
+--HG--
+branch : 0.0.9.x
+---
+add cmd d2j-init-deobf and d2j-jar-remap
+
+--HG--
+branch : 0.0.9.x
+---
+use LCONST_0/1 FCONST_0/1/2 DCONST_0/1 is possible
+
+--HG--
+branch : 0.0.9.x
+---
+add dex-translator debug mode
+
+--HG--
+branch : 0.0.9.x
+---
+1. merge LineNumStmt to LabelStmt,
+2. enable V3Test to process debug info
+
+--HG--
+branch : debug-support
+---
+update NOTICE.txt to add contributors, Thanks for their great help.
+
+--HG--
+branch : debug-support
+---
+merge LOCALVARIABLE to IrMethod.vars
+
+--HG--
+branch : debug-support
+---
+print error if use -r and -d together in cmd
+
+--HG--
+branch : debug-support
+---
+merge debug-support to 0.0.9.x
+
+Fixes issue 90
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.9
+
+--HG--
+branch : 0.0.9.x
+---
+add min/max length support to init-deobf
+
+--HG--
+branch : 0.0.9.x
+---
+print 'all' if the catch type is null
+
+--HG--
+branch : 0.0.9.x
+---
+add switch -p to print ir to console
+
+--HG--
+branch : 0.0.9.x
+---
+add cmd d2j-jar-access to modify a class/field/method accessFlag
+
+--HG--
+branch : 0.0.9.x
+---
+implement OPTIMIZE_SYNCHRONIZED
+
+update issue 115
+implement OPTIMIZE_SYNCHRONIZED
+
+--HG--
+branch : 0.0.9.x
+---
+update issue 115
+add unit test
+
+--HG--
+branch : 0.0.9.x
+---
+print a -> b to stderr
+
+--HG--
+branch : 0.0.9.x
+---
+clear ACC_DECLARED_SYNCHRONIZED and ACC_CONSTRUCTOR from method flags
+
+Fixes issue 117
+
+--HG--
+branch : 0.0.9.x
+---
+deprecat dex2jar.sh
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 120
+
+Update issue 120
+Status: Accepted
+seems something wrong with array references.
+
+--HG--
+branch : 0.0.9.x
+---
+type array reference as Object in local type.
+
+
+Fixes issue 120
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 121
+
+
+Update issue 121
+Status: Accepted
+the generated IrMethod is fine,
+and there are something wrong with IrMethod2AsmMethod
+
+--HG--
+branch : 0.0.9.x
+---
+make RETURN stmt throw because the contained expr may throw.
+
+
+Fixes issue 121
+
+--HG--
+branch : 0.0.9.x
+---
+update the test case,
+add test case for issue 101
+
+Update issue 101
+Status: Accepted
+the class can success translate by dex2jar,
+but got "java.lang.ClassFormatError: Illegal exception table range in class file " while load the class to JVM.
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 122, issue 123
+
+Update issue 122
+Status: Accepted
+
+Update issue 123
+Status: Accepted
+
+--HG--
+branch : 0.0.9.x
+---
+comments test case for issue 122,123
+
+--HG--
+branch : 0.0.9.x
+---
+Fix when the largest local(type J) index is n and optimize-sync will use n+1
+change optimize-sync to use n+2
+
+--HG--
+branch : 0.0.9.x
+---
+Fix the wrong arguements in V3Test
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 126
+Apply patch from yyjdelete, does some modification based on the patch.
+And now the .dex file can save all the code using jd-gui
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.10
+
+--HG--
+branch : 0.0.9.x
+---
+merge code from google#umito.nl,
+add InputStreamDataIn.openApk()
+
+Update issue 127
+The code looks great, I merge it to the source,
+and I change SeekableStream/MemoryCacheSeekableStream to it's
+original name(make it possible to use shared pkg org.apache.xmlgraphics/batik-codec/1.7).
+now we can open apk on Android using InputStreamDataIn.openApk(file)
+
+--HG--
+branch : 0.0.9.x
+---
+fix Issue 128
+
+--HG--
+branch : 0.0.9.x
+---
+Fix Issue 129
+
+--HG--
+branch : 0.0.9.x
+---
+Fix Issue 124
+Temporarily disable type merge when both not null
+
+--HG--
+branch : 0.0.9.x
+---
+fix ArrayIndexOutOfBoundsException when zero-ops in FilledArrayExpr
+
+--HG--
+branch : 0.0.9.x
+---
+For (Integer)-1, using ICONST_M1 instead of BIPUSH 255
+
+--HG--
+branch : 0.0.9.x
+---
+add method to array datain
+
+--HG--
+branch : 0.0.9.x
+---
+fix NPE while list empty folder
+
+--HG--
+branch : 0.0.9.x
+---
+Change the String Encoding from UTF8 to MUTF8
+
+Fix issue reported by Jack Li
+if String contains ZERO, for example "hi\u0000test",
+after dex2jar it will be translate to "hi\ufffd\ufffdtest".
+This is caused by the mismatch String encoding while reading String data
+in dex file, dex file is encoded in MUTF8, but we are decode using UTF8.
+
+--HG--
+branch : 0.0.9.x
+---
+re-implement the inner class access flag.
+add support to generate class in inner class
+
+--HG--
+branch : 0.0.9.x
+---
+Update issue 130
+Status: Fixed
+if-eq vx, vx, offset
+we add a trick to skip the if-eq, and direct read from offset
+
+--HG--
+branch : 0.0.9.x
+---
+1. Enable type merge for a special case, and add a test case.
+2. v[int]: Merge type of v with type of Object.
+
+--HG--
+branch : 0.0.9.x
+---
+Merge.
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for opt-sync for a local
+
+New issue
+Summary: opt-sync for a local cause the .class verification fail
+Labels: Type-Defect,Priority-Medium
+the following code will cause the issue.
+public static void a() {
+a0 = System.out
+L0:
+lock a0 <= a0 is inside a try-catch
+a1="haha"
+a0.println(a1)
+L1:
+unlock a0
+return
+L2:
+a1 := @Exception
+unlock a0
+throw a1
+=============
+.catch L0 - L1 > L2 // all
+}
+by opt-sync, we add a new local a2, after visit "L0:", we visit "L2:", and "unlock a2", we got a2 is undefined.
+public static void a() {
+a0 = System.out
+L0:
+a2=dup a0
+lock a2
+a1="haha"
+a0.println(a1)
+L1:
+unlock a0
+return
+L2:
+a1 := @Exception
+unlock a2
+throw a1
+=============
+.catch L0 - L1 > L2 // all
+}
+
+--HG--
+branch : 0.0.9.x
+---
+re-implement the topologicalSort, use a customized stack to replace the recursive function.
+add test case to test a large instruction method
+
+Update issue 99
+re-implement the topologicalSort, use a customized stack to replace the recursive function.
+hope this can fix the issue
+
+--HG--
+branch : 0.0.9.x
+---
+remove _ts_tos from Stmt as it is not needed.
+
+--HG--
+branch : 0.0.9.x
+---
+1. Not generate tryCatchBlock in IrMethod2AsmMethod
+2. Add the ability to remove Trap if all Stmts are not throw
+3. Check for empty TryCatchBlock in TestUtils
+
+Thanks Henddher Pedroza for his test case and support.
+
+--HG--
+branch : 0.0.9.x
+---
+use 1.3 to provider jar remap
+
+--HG--
+branch : 0.0.9.x
+---
+Fix NPE when generate jasmin file if no instruction
+
+--HG--
+branch : 0.0.9.x
+---
+Fix Bug in generate InnerClass
+
+--HG--
+branch : 0.0.9.x
+---
+replace Type in ASMifier
+
+--HG--
+branch : 0.0.9.x
+---
+Add support to null array initial to NPE
+
+Fix issue 122
+
+--HG--
+branch : 0.0.9.x
+---
+Fix a bug in ZeroTransformer
+
+--HG--
+branch : 0.0.9.x
+---
+add support to do strict type analyze
+
+--HG--
+branch : 0.0.9.x
+---
+change the V3Test output folder to target/
+enable class loading test for I101Test
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.11
+
+--HG--
+branch : 0.0.9.x
+---
+add support to auto cast value from int to byte,short,char
+
+--HG--
+branch : 0.0.9.x
+---
+clean up code
+
+--HG--
+branch : 0.0.9.x
+---
+fix Comparator in typeAnalyze
+
+--HG--
+branch : 0.0.9.x
+---
+Fix an issue while we are not translate annotation defualt if the value is an enum
+
+Fixes issue 142
+
+--HG--
+branch : 0.0.9.x
+---
+use the flag from class as the interface/abstract flag in inner class
+
+--HG--
+branch : 0.0.9.x
+---
+move the change to V3InnerClzGather
+
+--HG--
+branch : 0.0.9.x
+---
+Fix a bug in toplogicalsort
+
+--HG--
+branch : 0.0.9.x
+---
+Fix NPE by r483
+
+--HG--
+branch : 0.0.9.x
+---
+change cmd argument
+
+--HG--
+branch : 0.0.9.x
+---
+1. use p-rename 1.4
+2. dex-tools same version as dex-translator
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.12
+
+--HG--
+branch : 0.0.9.x
+---
+fix a spell mistack
+
+--HG--
+branch : 0.0.9.x
+---
+clean _ls_forward_frame while init CFG
+
+--HG--
+branch : 0.0.9.x
+---
+improve ZeroTransformer to insert x=0 if a ZERO local is merged to a non-ZERO local
+
+--HG--
+branch : 0.0.9.x
+---
+reimplement ZeroAnalyze
+
+--HG--
+branch : 0.0.9.x
+---
+merge LiveAnalyze to use BaseLiveAnalyze
+
+--HG--
+branch : 0.0.9.x
+---
+add junit tes case for ZERO test
+
+--HG--
+branch : 0.0.9.x
+---
+introduce a new tool to decrypt string in class file
+
+--HG--
+branch : 0.0.9.x
+---
+generate 'folder' in the jar file generated by dex2jar
+
+--HG--
+branch : 0.0.9.x
+---
+Fix NPE in generat Asm Method
+
+--HG--
+branch : 0.0.9.x
+---
+merge p-rename repository, and rename to jar-rename
+
+Fixes issue 151
+
+--HG--
+branch : 0.0.9.x
+---
+improve cmd line parser
+
+--HG--
+branch : 0.0.9.x
+---
+use array to pass try-catch
+
+--HG--
+branch : 0.0.9.x
+---
+1. not generate code for a1=a1;
+2. replace GOTO stmt if its target is a return stmt
+3. clean unused StmtLabel before LocalSplit
+4. trim exception handler
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.13
+
+--HG--
+branch : 0.0.9.x
+---
+not clean LabelStmt used by LocalVar
+
+--HG--
+branch : 0.0.9.x
+---
+fix empty file in jar
+
+--HG--
+branch : 0.0.9.x
+---
+fix empty file in jar
+
+--HG--
+branch : 0.0.9.x
+---
+Update issue 152
+Status: Fixed
+use iterator instead of recursion in BaseLiveAnalyze
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 154
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 154
+
+--HG--
+branch : 0.0.9.x
+---
+add EXPAND_FRAMES to ClassReader
+use non-public in decrypt-string
+
+--HG--
+branch : 0.0.9.x
+---
+use ecj instead of javac
+
+--HG--
+branch : 0.0.9.x
+---
+fix a eclipse worning in DexFileReader
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 160
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.14
+
+--HG--
+branch : 0.0.9.x
+---
+improve d2j-decrypt-string support (int)Ljava/lang/String; as decrypt-method
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 168, waiting for fix
+
+--HG--
+branch : 0.0.9.x
+---
+add test case for issue 169
+use commons-compress if find in classpath
+
+Fixes issue 169
+
+--HG--
+branch : 0.0.9.x
+---
+fix error on extract apk
+
+--HG--
+branch : 0.0.9.x
+---
+update test case for enc-zip
+
+--HG--
+branch : 0.0.9.x
+---
+update issue 142
+add support to translate array in default annotation value.
+
+--HG--
+branch : 0.0.9.x
+---
+maks ZipInputStreamHack for openjdk6
+
+--HG--
+branch : 0.0.9.x
+---
+maks ZipInputStreamHack for openjdk6
+
+--HG--
+branch : 0.0.9.x
+---
+only use iinc if the increment is a signed short
+
+--HG--
+branch : 0.0.9.x
+---
+fix class not find on windows
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.15
+
+--HG--
+branch : 0.0.9.x
+---
+apply patch from paulhooijenga
+
+Fixes issue 177
+
+--HG--
+branch : 0.0.9.x
+---
+remove dep from commons-cli
+
+--HG--
+branch : 0.0.9.x
+---
+add -v,--verbose argument to print out progress of translate
+add test case for issue 197
+ignore bad EnclosingClass annotation
+
+Fixes issue 197
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 179
+Fixes issue 180
+
+--HG--
+branch : 0.0.9.x
+---
+start work 0.0.9.16
+
+--HG--
+branch : 0.0.9.x
+---
+clean exec mode from file
+
+--HG--
+branch : 0.0.9.x
+---
+generate .bat and .sh at build time
+
+--HG--
+branch : 0.0.9.x
+---
+fix maven build error while generate .bat and .sh
+
+--HG--
+branch : 0.0.9.x
+---
+ignore method annotation value and null annotation value
+
+--HG--
+branch : 0.0.9.x
+---
+clean up help message
+
+--HG--
+branch : 0.0.9.x
+---
+fix issue in ExceptionHandlerCurrectTransformer, add ExceptionRef if possible
+
+--HG--
+branch : 0.0.9.x
+---
+decrypt multi method at once
+
+--HG--
+branch : 0.0.9.x
+---
+add support to skip translate code
+
+--HG--
+branch : 0.0.9.x
+---
+add option IGNORE_READ_EXCEPTION
+
+--HG--
+branch : 0.0.9.x
+---
+hide process mesage
+
+--HG--
+branch : 0.0.9.x
+---
+use a better invocation scripts for windows from lanchon
+
+Update issue 192
+Status: Fixed
+merge to 0.0.9.x
+
+--HG--
+branch : 0.0.9.x
+---
+handle opcode GLITCH
+
+Fixes issue 194
+
+--HG--
+branch : 0.0.9.x
+---
+handle <*init> method name GLITCH
+
+Fixes issue 195
+
+--HG--
+branch : 0.0.9.x
+---
+add support to detect dup methods
+
+Fixes issue 200
+
+--HG--
+branch : 0.0.9.x
+---
+fix annotation read bug
+
+--HG--
+branch : 0.0.9.x
+---
+not skip bad <*init>
+
+update issue 195
+keep bad <*init>
+
+--HG--
+branch : 0.0.9.x
+---
+travel all parent to find method in decrypt-string
+
+Fixes issue 216
+
+--HG--
+branch : 0.0.9.x
+---
+init all reg to 0 at top of a method.
+
+Update issue 219
+a simple and tricky fix for this issue by init all reg to 0 at top of a method.
+
+--HG--
+branch : 0.0.9.x
+---
+Fixes issue 222
+
+--HG--
+branch : 0.0.9.x
+---
+merge code 2.x
+
+--HG--
+branch : 2.x
+---
+add tool to update dex checksums
+
+--HG--
+branch : 2.x
+---
+add tool to update dex checksums
+
+--HG--
+branch : 2.x
+---
+compatible with gradle 2.0
+
+--HG--
+branch : 2.x
+---
+fix checksum bug
+
+--HG--
+branch : 2.x
+---
+remove dep commons-codec
+
+--HG--
+branch : 2.x
+---
+fix offset check in code read
+
+--HG--
+branch : 2.x
+---
+fix set argument type of java.nio.Path in BaseCmd
+
+--HG--
+branch : 2.x
+---
+ignore build folder for gradle
+
+--HG--
+branch : 2.x
+---
+add help clasee baksmaliClass
+
+--HG--
+branch : 2.x
+---
+add tool to clean up apk
+
+--HG--
+branch : 2.x
+---
+add tool to replace method invoke
+
+--HG--
+branch : 2.x
+---
+set gradle compiler encdoing to UTF-8
+
+--HG--
+branch : 2.x
+---
+fix read bug in StdApk
+
+--HG--
+branch : 2.x
+---
+jimple THROW
+
+--HG--
+branch : 2.x
+---
+fix compiler warnings
+
+--HG--
+branch : 2.x
+---
+merge patch from t3stwhat
+
+Erase default value of final static constant which will be assigned in clinit.
+在clinit裡才初始的常數, 原本都會輸出成0, 雖然是不影響用jd-gui看,
+但如果要實際拿來做lib reference, final static的變數會直接inline, 編出來就會出錯...
+
+--HG--
+branch : 2.x
+---
+merge patch from t3stwhat
+
+add ability to keep clinit method for DexFix
+ONLY_CLINIT equals to (KEEP_CLINIT | SKIP_CODE)
+
+--HG--
+branch : 2.x
+---
+sort all InnerClass
+
+--HG--
+branch : 2.x
+---
+fix write array of in annotation
+
+--HG--
+branch : 2.x
+---
+remove NEW if possible
+
+--HG--
+branch : 2.x
+---
+merge patch from t3stwhat, fix crash on save to windows path like 'C:\\abc.jar'
+
+--HG--
+branch : 2.x
+---
+fix npe while read duplicate class
+
+--HG--
+branch : 2.x
+---
+type as int if the type is ZI
+
+--HG--
+branch : 2.x
+---
+disable result check due to type strategy change
+
+--HG--
+branch : 2.x
+---
+support debug signature
+fix field signature reading error
+
+--HG--
+branch : 2.x
+---
+fix annotation gone in dex-write
+
+--HG--
+branch : 2.x
+---
+add to for extracting odex from dalvik memory dump
+
+--HG--
+branch : 2.x
+---
+support longOpt as key
+
+--HG--
+branch : 2.x
+---
+support longOpt as key
+
+--HG--
+branch : 2.x
+---
+not use default encoding
+
+--HG--
+branch : 2.x
+---
+start working 2.1
+
+--HG--
+branch : 2.x
+---
+split DIV to Idiv/Ldiv/Fdiv/Ddiv
+
+Fixes issue 230
+
+--HG--
+branch : 2.x
+---
+add notice and lincense
+
+--HG--
+branch : 2.x
+---
+add open-source-license.txt
+
+--HG--
+branch : 2.x
+---
+merge DecryptStringCmd.java@43d692ab4917 to 2.x
+
+--HG--
+branch : 2.x
+---
+merge patch from Enea Stanzani.
+
+enable d2j-decrypt-string
+support wide range of parameter types
+
+--HG--
+branch : 2.x
+---
+delete unused functions
+
+--HG--
+branch : 2.x
+---
+add readme.md
+
+--HG--
+branch : 2.x
+---
+fix email address
+
+--HG--
+branch : 2.x
+---
+use full url
+
+--HG--
+branch : 2.x
+---
+delete unused functions
+
+--HG--
+branch : 2.x
+---
+update antlr to 3.5.2
+fix compile error on java 8
+
+--HG--
+branch : 2.x
+---
+change the relative from Path to String
+
+--HG--
+branch : 2.x
+---
+correct array type display is ir
+
+--HG--
+branch : 2.x
+---
+support .param in smali
+
+--HG--
+branch : 2.x
+---
+support smali-2.0 syntax
+
+--HG--
+branch : 2.x
+---
+mark dx as test compile
+
+--HG--
+branch : 2.x
+---
+enable apk-sign
+use Base64.NO_WRAP instead of Base64.DEFAULT to remove tailing '\n' in MF/SF files
+
+--HG--
+branch : 2.x
+---
+for http://sourceforge.net/p/dex2jar/tickets/233/
+mark hasException public
+
+--HG--
+branch : 2.x
+---
+fix apksign verify error on android
+
+--HG--
+branch : 2.x
+---
+warn invalid inner class name
+
+--HG--
+branch : 2.x
+---
+sort smali file by name
+
+--HG--
+branch : 2.x
+---
+merge patch from yyjdelete
+
+Fix that IINC does not work as expected
+
+--HG--
+branch : 2.x
+---
+update asm to 5.0.3
+fix jasmin bug
+
+--HG--
+branch : 2.x
+---
+improve j2ir
+
+--HG--
+branch : 2.x
+---
+fix jasmin support and j2ir
+
+--HG--
+branch : 2.x
+---
+add -da,--deep-analyze use dex2jar IR to static analyze more const arguments
+support primitive array type like 'byte[]'
+support decrypt jeb-like 'String m(byte[], int, int)' method
+
+--HG--
+branch : 2.x
+---
+support AOP like code weave
+
+--HG--
+branch : 2.x
+---
+support AOP like code weave
+
+--HG--
+branch : 2.x
+---
+ssa direct
+
+--HG--
+branch : 2.x
+---
+replace bad instruction to throw new VerifyError(...)
+
+--HG--
+branch : 2.x
+---
+more strict to read dex
+
+--HG--
+branch : 2.x
+---
+Merge
+
+--HG--
+branch : 2.x
+---
+Merge
+
+--HG--
+branch : 2.x
+---
+fix exception handler on dex2ir
+fix other bugs
+
+--HG--
+branch : 2.x
+---
+Goodbye googlecode, thanks for the hosting
+
+--HG--
+branch : 2.x
+---
+replace getParameterCount with getParameterTypes().length for jdk7
+
+--HG--
+branch : 2.x
+---
+implement  method replacement
+
+--HG--
+branch : 2.x
+---
+fix jasmin format on switch
+
+--HG--
+branch : 2.x
+---
+fix compile error
+
+--HG--
+branch : 2.x
+---
+fix jar weaver unit test
+
+--HG--
+branch : 2.x
+---
+keep mapItem even if size is 0
+
+--HG--
+branch : 2.x
+---
+compatible with gradle 2.3
+
+--HG--
+branch : 2.x
+---
+disable end remove
+
+--HG--
+branch : 2.x
+---
+support 'invoke-x/range {}, ...'
+
+--HG--
+branch : 2.x
+---
+implement dex weaver
+
+--HG--
+branch : 2.x
+---
+extra indent for smali opcode
+
+--HG--
+branch : 2.x
+---
+add d2j-class-version-switch to change the major version of class files
+
+--HG--
+branch : 2.x
+---
+support * in weave config file
+support change invocationTypePrefix config
+
+--HG--
+branch : 2.x
+---
+add d2j-j6 to generate dex2jar for jdk6
+
+--HG--
+branch : 2.x
+---
+set the gradle defaultTasks
+
+--HG--
+branch : 2.x
+---
+support git/hg revision in meta-info
+
+--HG--
+branch : 2.x
+---
+support gradle installApp and distTar
+
+--HG--
+branch : 2.x
+---
+support txt/gz error file
+
+--HG--
+branch : 2.x
+---
+Revert "keep mapItem even if size is 0"
+
+--HG--
+branch : 2.x
+---
+make sure the items are not empty
+
+--HG--
+branch : 2.x
+---
+make sure ids in smali are escaped
+
+--HG--
+branch : 2.x
+---
+fix crash on jasmin
+
+--HG--
+branch : 2.x
+---
+fix throw new Runtime(...) when error
+
+--HG--
+branch : 2.x
+---
+support divide by zeor
+
+--HG--
+branch : 2.x
+---
+compiler error on CI
+
+--HG--
+branch : 2.x
+---
+keep sh files simple
+
+--HG--
+branch : 2.x
+---
+fix
+#4 register maybe used before calling its constructor
+
+https://github.com/pxb1988/dex2jar/issues/4
+
+--HG--
+branch : 2.x
+---
+Merge
+
+--HG--
+branch : 2.x
+---
+suppor multidex on d2j-dex2jar
+
+--HG--
+branch : 2.x
+---
+shutup compiler
+
+--HG--
+branch : 2.x
+---
+improve FILL_ARRAY_DATA
+
+--HG--
+branch : 2.x
+---
+handler .param reg and translate reg to parameter index when parse smali
+
+--HG--
+branch : 2.x
+---
+fix compiler error in generating asmifier of dex file
+
+--HG--
+branch : 2.x
+---
+use antlr4 to parse smali files
+
+Fix issue #16
+https://github.com/pxb1988/dex2jar/issues/16
+
+--HG--
+branch : 2.x
+---
+fix compiler error by perv commit
+
+--HG--
+branch : 2.x
+---
+remove println
+
+--HG--
+branch : 2.x
+---
+Fix issue #27, NPE on accept DexAnnotationVisitor
+
+https://github.com/pxb1988/dex2jar/issues/27
+
+--HG--
+branch : 2.x
+---
+BaseCmd: support auto config @Opt
+
+--HG--
+branch : 2.x
+---
+check for null on read_annotation_set_ref_list
+
+https://github.com/pxb1988/dex2jar/issues/30
+
+--HG--
+branch : 2.x
+---
+update dx from 1.7 to 23.0.0
+
+--HG--
+branch : 2.x
+---
+always cleanup access flags in class
+
+--HG--
+branch : 2.x
+---
+fix bug in lengthOfUleb128
+
+--HG--
+branch : 2.x
+---
+treat int as uint in minLine
+
+--HG--
+branch : 2.x
+---
+spport read zip from maped memory
+
+--HG--
+branch : 2.x
+---
+Merge
+
+--HG--
+branch : 2.x
+---
+auto chose instruction for goto/goto_16 and const_string
+
+--HG--
+branch : 2.x
+---
+transform Array.newInstance to new-multi-array
+
+--HG--
+branch : 2.x
+---
+Fix a few typos in the command line option descriptions
+---
+fix crash on negative arraysize, https://bitbucket.org/pxb1988/dex2jar/issues/2/decompiler-error
+
+--HG--
+branch : 2.x
+---
+fix compile error with dx-23.0.0
+
+--HG--
+branch : 2.x
+---
+replace to 'throw new NegativeArraySizeException()' when init a nagative size array
+
+--HG--
+branch : 2.x
+---
+Merge
+
+--HG--
+branch : 2.x
+---
+enable d2j-asm-verify and d2j-jar-access
+
+--HG--
+branch : 2.x
+---
+use antlr plugin on gradle to generate parser
+
+--HG--
+branch : 2.x
+---
+Merge pull request #35 from sschuberth/2.x
+
+Fix a few typos in the command line option descriptions
+---
+Merge branch '2.x' of git@github.com:pxb1988/dex2jar.git into 2.x
+---
+Fix issue 5 on bitbucket
+https://bitbucket.org/pxb1988/dex2jar/issues/5/there-are-2-methods-fail-to-translate
+
+implement getOpcode for customize type descriptor
+---
+Fix issue 1 on bitbucket
+https://bitbucket.org/pxb1988/dex2jar/issues/1/javalangruntimeexception-can-not-merge-i
+return int when merge int and boolean
+---
+enable travis build
+---
+remove maxHeapSize
+---
+add gradle wrapper
+---
+Update README.md
+
+enable travis status on README.md
+---
+allow multi class in one smali file
+---
+prevent endless loop on enclosingClass
+
+apply patch from ChaeHoon Lim, with modification
+---
+[decrypt-string] mute exception stack
+
+https://github.com/pxb1988/dex2jar/issues/51
+---
+disable test case
+---
+[decrypt-string] add argument -v,--verbose to control output
+
+https://github.com/pxb1988/dex2jar/issues/51
+---
+fix type detect on arrays
+fix https://github.com/pxb1988/dex2jar/issues/28
+---
+fix bug on MultiArrayTransformer
+---
+[type] minor improve of type transformer
+---
+Add usage section to README
+---
+Add links for GitHub
+---
+add support ignore a class
+---
+fix type descriptor
+---
+[type] merge all array values
+fix https://github.com/pxb1988/dex2jar/issues/101
+---
+Merge pull request #73 from TWiStErRob/patch-1
+
+Add links for GitHub
+---
+Merge pull request #70 from barriosnahuel/patch-1
+
+Add usage section to README
+---
+Merge pull request #88 from kcheng-mvp/2.x
+
+add support ignore a class
+---
+'dex 038' support
+---
+Fixed README formatting
+---
+support translate INVOKE_POLYMORPHIC
+---
+d2j-smali support polymorphic/custom
+---
+handle InvokePolymorphicExpr as java8 style
+---
+skip exception
+---
+reset deobf init
+---
+fix search for smalis on ideaj
+---
+github has attachement support
+---
+special allow merge of Z and I
+---
+change to super OnUseCallBack
+---
+sort locals in RemoveConstantFromSSA
+---
+null safe in LambadaNameSafeClassAdapter
+---
+add test case for method code too large
+---
+update gradle to 4.0
+---
+use jdk8 for travis
+---
+remove maven pom.xml
+---
+use dx from android-build-tools 27.0.3
+---
+fix build error
+---
+fix test error
+---
+find test file by resource
+---
+fixed issue 185
+
+https://github.com/pxb1988/dex2jar/issues/185
+
+some zip use a large comment filed which will exceed the zip file content.
+---
+[dex038] write class version 1.7 if dex version > DEX_037
+---
+insert a Nop between two LabelStmt if both have phis
+
+fixes https://github.com/pxb1988/dex2jar/issues/186
+---
+fix test fail
+---
+translate DEX_037 to V1_8
+
+fix https://github.com/pxb1988/dex2jar/issues/194
+---
+support method handle of type INVOKE_CONSTRUCTOR/INVOKE_DIRECT/INVOKE_INTERFACE
+---
+Fix IllegalFormatConversionException
+
+This commit fixes a `java.util.IllegalFormatConversionException`,
+which would occur when decompiling certain APKs:
+
+```
+com.googlecode.d2j.DexException: Error process class: [731]Landroid/support/e/a;
+  at com.googlecode.d2j.reader.DexFileReader.accept(DexFileReader.java:604)
+  at com.googlecode.d2j.reader.DexFileReader.accept(DexFileReader.java:565)
+  at com.googlecode.d2j.smali.Baksmali.to(Baksmali.java:99)
+  at com.googlecode.d2j.smali.BaksmaliCmd.doCommandLine(BaksmaliCmd.java:60)
+  at com.googlecode.dex2jar.tools.BaseCmd.doMain(BaseCmd.java:288)
+  at com.googlecode.d2j.smali.BaksmaliCmd.main(BaksmaliCmd.java:24)
+Caused by: java.util.IllegalFormatConversionException: d != java.lang.String
+  at java.base/java.util.Formatter$FormatSpecifier.failConversion(Formatter.java:4421)
+  at java.base/java.util.Formatter$FormatSpecifier.printInteger(Formatter.java:2936)
+  at java.base/java.util.Formatter$FormatSpecifier.print(Formatter.java:2890)
+  at java.base/java.util.Formatter.format(Formatter.java:2671)
+  at java.base/java.util.Formatter.format(Formatter.java:2607)
+  at java.base/java.lang.String.format(String.java:2734)
+  at com.googlecode.d2j.smali.BaksmaliDumpOut.s(BaksmaliDumpOut.java:62)
+  at com.googlecode.d2j.smali.BaksmaliCodeDumper.visitFilledNewArrayStmt(BaksmaliCodeDumper.java:252)
+  at com.googlecode.d2j.node.DexCodeNode$FilledNewArrayStmtNode.accept(DexCodeNode.java:300)
+  at com.googlecode.d2j.node.DexCodeNode.accept(DexCodeNode.java:62)
+  at com.googlecode.d2j.smali.BaksmaliDumper.baksmaliCode(BaksmaliDumper.java:517)
+  at com.googlecode.d2j.smali.BaksmaliDumper.baksmaliMethod(BaksmaliDumper.java:445)
+  at com.googlecode.d2j.smali.BaksmaliDumper.baksmaliClass(BaksmaliDumper.java:397)
+  at com.googlecode.d2j.smali.BaksmaliDexFileVisitor$1.visitEnd(BaksmaliDexFileVisitor.java:60)
+  at com.googlecode.d2j.reader.DexFileReader.accept(DexFileReader.java:601)
+  ... 5 more
+```
+---
+Add clearer usage instructions and do some minor formatting
+
+Based off of @friederbluemle's instructions in https://github.com/pxb1988/dex2jar/issues/170
+---
+Update README.md
+
+Fix typo
+---
+fix crash on pattern empty-try-catch-with-goto-head
+---
+Update README.md
+---
+fix issue #207
+---
+Increase heap size
+
+-Xmx1024 is not enough to decompile Android's framework.jar
+---
+Merge pull request #327 from echooo10/bugfix_issue#207
+
+fix issue #207
+---
+Merge pull request #217 from claui/fix-format-exception
+
+Fix IllegalFormatConversionException
+---
+Merge pull request #386 from paulo-raca/largerHeap
+
+Increase heap size
+---
+Merge pull request #128 from jschmid/patch-1
+
+Fixed README formatting
+---
+Merge branch '2.x' into 2.x
+---
+Merge pull request #219 from ayyrickay/2.x
+
+Add clearer usage instructions and do some minor formatting
+---
+update to gradle 6.9.1
+---
+move to github (#512)
+
+* move to github
+---
+set version to 2.1
+---
+start v2.2
+---
+java 8 now
+---
+auto test d2j-error-zips/*-error.zip
+---
+https://github.com/pxb1988/dex2jar/issues/500
+---
+fix https://github.com/pxb1988/dex2jar/issues/501
+---
+add test case for https://github.com/pxb1988/dex2jar/issues/501
+---
+skip param annotation if out of range
+
+fixes https://github.com/pxb1988/dex2jar/issues/485
+---
+also parse method is summary.txt
+
+https://github.com/pxb1988/dex2jar/issues/495
+---
+the exception handler is dead cause NPE in unssa
+
+fix https://github.com/pxb1988/dex2jar/issues/477
+---
+fix Method code to large (#513)
+
+* fix Method code to large
+
+* format
+---
+cherry-pick form
+
+https://github.com/ThexXTURBOXx/dex2jar/commit/85e41523ee9ed68709bb769d3f763bc301db2d64
+https://github.com/ThexXTURBOXx/dex2jar/commit/ffa0574dff776404d4fa4368057c72f610521a5c
+https://github.com/ThexXTURBOXx/dex2jar/commit/56e6c8602c2bd326b994955926e668e2e018bbfd
+---
+Add workaround for invalid signatures
+
+cherry-pick from
+
+https://github.com/ThexXTURBOXx/dex2jar/commit/f1da047322d91427fd176367faa0c45472aa745f
+---
+Delete Mercurial stuff
+---
+Remove Java 6 compat
+
+It didn't work anyways.... Besides, you should definetly NOT use Java 6 nowadays
+
+(cherry picked from commit 3a13f99df3d7b42fe04829af721cde75001405d6)
+---
+Fix NPE
+
+(cherry picked from commit 9335d9d945be92a67c41dbe2c449f8c4c0a6f7be)
+---
+Fix grammar & typo
+---
+fix ClassCastException
+
+NewTransformer#findInvokeExpr attempts to cast InvokePolymorphicExpr to InvokeExpr under certain inputs, which causes a ClassCastException.
+
+this patch is similar with
+
+https://github.com/pxb1988/dex2jar/pull/486/commits/9c6cde4f598f8a59ff1d54d197284be0efc1fa69
+https://github.com/pxb1988/dex2jar/pull/486/commits/9c0db1d636d7291bcf9e0265c132c6a4bccd0706
+---
+check signature before pass to visitor
+
+if signature is invalid, pass null to visitor.
+class,method,field signature are checked
+
+this patch revert commit 5e4c90f7150ffe16d98940448efd2bdb4a83245b
+
+fixes https://github.com/pxb1988/dex2jar/issues/455
+---
+clean up before TypeTransformer
+https://github.com/pxb1988/dex2jar/issues/477
+---
+Update ASM to 9.5, drop AsmBridge (#591)
+
+* Update ASM to 9.5, drop AsmBridge
+
+asm may introduce incompatible between versions, the `api` pass to ClassVisitor() is for compatible.
+i believe keep the `api` separately is better than global constant. as we can upgrade asm without touching/review all dex2jar codes.
+
+AsmBridge is a tricky to 'Method Code too large', drop it.
+
+cherry-pick 600f04ade396e51087041d3d3d23487ce7238866 from https://github.com/ThexXTURBOXx/dex2jar
+
+* upgrade to new asm api
+
+---------
+
+Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>
+---
+Better warning
+
+
+# Conflicts:
+#	dex-reader/src/main/java/com/googlecode/d2j/reader/DexFileReader.java
+---
+Migrate to Google's smali fork
+
+# Conflicts:
+#	build.gradle
+#	d2j-smali/build.gradle
+#	d2j-smali/src/test/java/a/SmaliTest.java
+---
+upgrade to dx-30.0.2.jar
+---
+support dex 039 and 040
+---
+Merge pull request #592 from pxb1988/dex040
+
+* support dex039 & dex040
+
+support read/write/smali/baksmali dex039.
+
+support const-mothod-type and const-method-handler, syntax is same as google's smali fork. (google 's smali 3.0.3 can't assemble the two instruction back to dex)
+
+dex040 support space and other unicode in SimpleName, d2j-smali will escape space char to unicode.
+---
+support dex 038
+---
+Merge pull request #593 from pxb1988/dex038
+
+support dex 038
+---
+Improve handling of large arrays
+
+
+# Conflicts:
+#	dex-translator/src/main/java/com/googlecode/d2j/dex/Dex2Asm.java
+---
+Finally fix handling of large arrays
+
+
+# Conflicts:
+#	dex-translator/src/main/java/com/googlecode/d2j/dex/Dex2Asm.java
+---
+Extract Hex class resource logic to a separate method (#20)
+
+* feat: Extract Hex class resource logic to a separate method
+
+Sorry for the weird commit message, I couldn't find a way to word it better. Anyways..
+
+This commit extracts the `getResourceAsStream` call to a separate, protected method so it can be overrided, and we can provide the Hex class from a different source.
+
+* fix: Check if Hex class stream is null
+---
+fix typos of hex strings decoding
+---
+Merge pull request #594 from pxb1988/improve-handling-large-arrays
+
+Improve handling large arrays
+---
+Fix issues with J2IRConverter (#595)
+
+* Fix issues with J2IRConverter
+
+cherry-pick 09273cdb367bacfe8ad8cf32c4f34da2c881566b
+
+---------
+
+Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>
+---
+typo similar with ffa0574dff776404d4fa4368057c72f610521a5c (#596)
+---
+update github actions (#597)
+
+* Update GitHub Actions
+
+
+---------
+
+Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>
+---
+Add serialVersionUIDs
+
+
+# Conflicts:
+#	dex-reader/src/main/java/com/googlecode/d2j/reader/DexFileReader.java
+---
+Apply miscellaneous fixes
+
+Most of these are from some fork
+
+# Conflicts:
+#	build.gradle
+#	d2j-j6/build.gradle
+#	d2j-jasmin/build.gradle
+#	d2j-smali/build.gradle
+#	d2j-smali/src/test/java/a/SmaliTest.java
+#	dex-reader-api/src/main/java/com/googlecode/d2j/DexConstants.java
+#	dex-reader/build.gradle
+#	dex-reader/src/main/java/com/googlecode/d2j/reader/DexFileReader.java
+#	dex-tools/build.gradle
+#	dex-tools/src/main/java/com/googlecode/d2j/tools/jar/InitOut.java
+#	dex-tools/src/main/java/com/googlecode/d2j/tools/jar/InvocationWeaver.java
+#	dex-translator/build.gradle
+#	dex-translator/src/main/java/com/googlecode/d2j/dex/Dex2Asm.java
+#	dex-translator/src/main/java/org/objectweb/asm/AsmBridge.java
+#	gradle/wrapper/gradle-wrapper.properties
+---
+update antlr to 4.9.3 (#599)
+
+Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>
+---
+Merge pull request #598 from pxb1988/apply-misc-fixes
+
+Apply miscellaneous fixes
+---
+bring back asm bridge (#601)
+
+* revert AsmBridge
+
+* Update dependencies
+
+* Apply miscellaneous fixes
+
+* Reformat code
+
+* Reformat
+
+* Reformat code based on CheckStyle
+
+* clean up
+
+---------
+
+Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>
+---
+remove hidden access flags (#600)
+
+* remove hidden access flags
+
+cherry-pick f6dc51e578c1304b3a0c5b9d6ff32f13ecf3651f
+
+* move removeHiddenAccess to Dex2Asm
+---
+Fix bug Nico found randomly
+
+cherry-pick f90e6bf77f097c6145801c17757f8e7d58d207e4
+---
+Workaround for #25
+---
+get version from GITHUB_REF_NAME (#605)
+---
