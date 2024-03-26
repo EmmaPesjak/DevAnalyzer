@@ -1,1 +1,150 @@
-"package rename to io.objectbox", "Refactoring"
+"package rename to io.objectbox","Refactoring"
+"move java tests to tests sub dir","Refactoring"
+"minor improvements to flatbuffers model, move java model classes with cp and sed","Refactoring"
+"fix imports for new model package","Setup"
+"more flexible BoxStoreBuilder.java and android Context support","Database"
+"defaultStore in BoxStoreBuilder.java","Database"
+"move defaultStore in BoxStore.java","Refactoring"
+"collect entity classes using builder","Database"
+"renamed some VS stuff to ObjectBox, removed .gitignore for tests","Refactoring"
+"load lib objectbox","Setup"
+"minor","Other"
+"added property flag NON_PRIMITIVE_TYPE
+
+added Properties class
+
+give Cursors a Properties instance
+
+verify entity is know before returning a box
+
+prepared 2nd entity TestEntityMinimal.java for unit testing
+
+sharedReadTx to make txs across boxes work
+
+fix some test deps","Feature Addition"
+"Box: some JavaDocs, shortcut for null or empty collections","Documentation"
+"prep daocompat for upload","Setup"
+"find scalars using a list","Feature Addition"
+"Java: find string returns a list","Feature Addition"
+"added find()s to Box","Feature Addition"
+"various, e.g. running bulk perf test from example app","Testing"
+"perf test: added fixed byte array with length 6","Testing"
+"find string using property id","Feature Addition"
+"add version","Setup"
+"getting all entities in native, crashes at the moment (local reference table overflow (max=512)) and is slower on Desktop when deleting local refs
+
+Java_io_objectbox_Cursor_nativePutSimpleEntity
+
+Basic copy of query and builder API.
+
+Initial query implementation using objectbox find.
+
+Use find method overloads based on value type.
+
+Java_io_objectbox_Cursor_nativeFindScalarPropertyId","Database"
+"testUnalignedMemoryAccess","Testing"
+"CursorBytesTest.java: Sizes must be multiple of 4 (currently not enforced)","Testing"
+"fix some java tests: pad bytes to length 4","Testing"
+"moved objectbox-api to objectbox-java-api","Refactoring"
+"prepared Query&Builder on the Java side","Database"
+"fixes to build Query in Java","Bug Fix"
+"added @Temporary to API","Feature Addition"
+"init Property IDs (for query builder)","Database"
+"fixes to make Java Query work","Bug Fix"
+"count for Java Query","Database"
+"!=, >, < for scalars","Feature Addition"
+"== and != for String","Feature Addition"
+"contains, startsWith, and endsWith for String","Feature Addition"
+"java find with offset and limit","Database"
+"in and betwwen for Java QueryBuilder (FIXME DbException: invalid unordered_map<K, T> key)
+
+Java query builder: null/notNull && FP
+
+Fix TestEntityProperties types and all properties field.
+
+- Also populate simpleLong property in Query test.
+
+Support additional query conditions.
+
+Do not validate values for null/notNull operations.
+
+Actually copy values for in op.
+
+Add Float support to PropertyCondition greater/less ops.
+
+- They support Double, so they should support Float as well.
+
+rename WhereCondition to QueryCondition","Database"
+"fix tests using DummyProperties","Testing"
+"Add contains, starts/endsWith to Property class.
+
+- Replacement for like() from greenDAO.","Feature Addition"
+"prep some PropertyConverter stuff to happen in C++","Feature Addition"
+"fix","Bug Fix"
+"Generate converter info into Property Java class (0.9.1-SNAPSHOT)","Feature Addition"
+"make Properties available to BoxStore, prep native registration","Feature Addition"
+"fix JniPropertyConverter.javaClassName","Bug Fix"
+"added testBigResultList","Testing"
+"fix JavaDoc errors","Bug Fix"
+"make property flags uint and type ushort","Feature Addition"
+"added idAssignable flag","Feature Addition"
+"Put @Id(assignable = true) on Order","Feature Addition"
+"Need to retain Entity annotation for ProGuard. #25
+
+- With RetentionPolicy.SOURCE the annotation is already stripped by the compiler, before ProGuard gets a chance to transform the byte code. So set at least RetentionPolicy.CLASS.","Bug Fix"
+"added refId to @Entity and @Property","Database"
+"add refId and id to model","Database"
+"added id and refId to ModelBuilder","Database"
+"ignore tests with size != modulo 4","Testing"
+"add indexId to model","Database"
+"consider ids in generator","Other"
+"fixes for model IDs","Bug Fix"
+"add lastEntityId and lastIndexId to model","Database"
+"lastEntityId lastIndexId in model builder, etc","Database"
+"lastEntityId lastIndexId in generator, fix modelIndexId in ftl","Database"
+"RetentionPolicy.CLASS for a couple more annotations","Feature Addition"
+"added lastPropertyId to model entity","Database"
+"added lastEntityId to model builder and ftl","Database"
+"generator fixes","Bug Fix"
+"test adjustments for recent schema sync changes (ref IDs etc.)","Testing"
+"added OrderFlags","Feature Addition"
+"QueryOrder: support for null flags (first, last, zero)","Database"
+"removed NULLS_FIRST order flag, CASE_SENSITIVE replaces IGNORE_CASE_ASCII","Feature Addition"
+"added order to QueryBuilder.java","Database"
+"improved JavaDoc on queries","Documentation"
+"JNI call find without offset/limit if possible",""
+"StringOrder for string query conditions","Database"
+"use collect400000 and collect430000 to consume non-primitive values first","Feature Addition"
+"collect002033 for FP intensive entities, added Char type to generator","Feature Addition "
+"collect004000 for primitives only","Feature Addition"
+"properties to begin with lower char in accordance to JPA2","Feature Addition"
+"Store and verify id in generated Property","Database"
+"createMinMaxVisitor with type trades to compile with VS, connected new query aggregates to java, remove too but still throws","Database"
+"Query.java: fix remove()","Database"
+"add testFindKeysUnordered","Testing"
+"return long for native QueryBuilder methods","Database"
+"basic setParameter for Java","Feature Addition"
+"Port stringOrderCollation to QueryBuilder.
+
+- Though change signature to accept only new StringOrder constant instead of any SQLite collate string.
+
+Support setParameter in daocompat, properly rebuild query.
+
+- Support setParameter and undeprecate it.
+- The ObjectBox query is now (re)built when creating a new query or resetting it (for a new thread). QueryBuilder now only records desired conditions and orders. Previously would simply re-use the same ObjectBox query object built by QueryBuilder, which would obviously not be re-set to initial values.
+
+JNI/Java: setParameter for FP, between for FP
+
+Support double values for setParameter.
+
+- Also throw on unsupported parameter types.
+
+Support double values for BETWEEN op.
+
+- Add test.
+
+add :tests:test-proguard","Database"
+"@Retention(RetentionPolicy.CLASS) for all","Refactoring"
+"make Query.setParameter return Query to make Query chainable","Database"
+"0.9.3","Other"
+"JNI for new Store and Tx methods (renewal etc.)","Feature Addition"
