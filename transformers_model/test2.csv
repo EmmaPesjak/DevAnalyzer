@@ -1,0 +1,109 @@
+message,label
+"Retrained the model, cleaned the database, working on performance","Refactoring"
+"Performance: Improved performance
+
+Preprocess in batches to improve he speed","Refactoring"
+"minor changed in db","Database"
+"Improved the lda model by adding keywords in categories","Feature Addition"
+"Added a new class for git mining, instead of using database","Feature Addition"
+"Merge pull request #42 from EmmaPesjak/performance
+
+Performance","Git Operation"
+"fixed bug where error message when wrong repo url was entererd, also fixed better handling of the loading indicator and removal of user select.","Bug Fix"
+"fixed bug where the app crasched upon closing","Bug Fix"
+"changed timeline and commitsByAuthors from database to direct git mining","Refactoring"
+"changed users top files and timeline from database to direct git mining","Refactoring"
+"remove last database methods and implemented a timer to test if this is faster","Database"
+"optimized time between db and git traversal","Database"
+"fixed error message","Bug Fix"
+"Merge pull request #43 from EmmaPesjak/error_handling
+
+Error handling","Git Operation"
+"feature, the model can now be tranied on several repositories","Feature Addition"
+"Merge pull request #44 from EmmaPesjak/model_trainer
+
+feature, the model can now be tranied on several repositories","Git Operation"
+"feature: added a reset function for the model","Git Operation"
+"bug fixed gitignore","Bug Fix"
+"added categories and retrained the model","Feature Addition"
+"Merge pull request #45 from EmmaPesjak/reset_model
+
+Reset model","Git Operation"
+"Removed filepath from db","Database"
+"git traversal instead of db","Database"
+"Merge pull request #46 from EmmaPesjak/git-traversal
+
+Git traversal","Git Operation"
+"improved and clean topic modelling","Refactoring"
+"Merge pull request #47 from EmmaPesjak/topic
+
+improved and clean topic modelling","Git Operation"
+"styled the diagrams in the gui","Styling/Frontend"
+"Feature: added help box implementation","Feature Addition"
+"Merge pull request #48 from EmmaPesjak/diagram_naming
+
+Diagram naming","Git Operation"
+"Feature: added LDA perplexity and coherence","Feature Addition"
+"Merge pull request #49 from EmmaPesjak/topic_coherence_perplexity
+
+Feature: added LDA perplexity and coherence","Git Operation"
+"removed the identifier in model","Refactoring"
+"Added stop words and refined the params.
+
+Current values; p=-6.678, c=0.568","Feature Addition"
+"Improved model; p = -7.09, c = 0.55 on 4 repos","Feature Addition"
+"Styling: Added a label for repository on main view","Styling/Frontend"
+"Merge pull request #50 from EmmaPesjak/lda-model
+
+Lda model","Git Operation"
+"Refactor: cleaned the code","Refactoring"
+"Merge pull request #51 from EmmaPesjak/cleaner
+
+Refactor: cleaned the code","Git Operation"
+"Added comment descriptions in the data_visualizer class","Documentation"
+"Added comment descriptions in the main_view class","Documentation"
+"Added comment descriptions in the main_controller class","Documentation"
+"Added comment descriptions in the git_traversal class","Documentation"
+"Merge pull request #52 from EmmaPesjak/comments
+
+Comments","Git Operation"
+"Added description to batch-analyzer, db-handler, and modeltrainer.","Documentation"
+"Added description to main model","Documentation"
+"Done with description in main model.","Documentation"
+"Merge pull request #53 from EmmaPesjak/demo
+
+Demo","Git Operation"
+"feature addition: added a transformer analyzer","Feature Addition"
+"added folders for transformers","Feature Addition"
+"bugfix, fixed bug where transformers import didn't work","Bug Fix"
+"Merge pull request #54 from EmmaPesjak/transformers
+
+feature addition: added a transformer analyzer","Git Operation"
+"Test push","Testing"
+"Added model files and customized dataset","Feature Addition"
+"Fixed error with git operations","Bug Fix"
+"Added BERT transformers model","Feature Addition"
+"Merge pull request #55 from EmmaPesjak/hejbertmodel
+
+Hejbertmodel","Git Operation"
+"Added more messages, improved model prediction","Feature Addition"
+"Refactored and deleted unused files.","Refactoring"
+"Merge pull request #56 from EmmaPesjak/train-data
+
+Train data","Git Operation"
+"Cleaned the transformers code and added a lot of descriptive comments","Refactoring"
+"Merge pull request #57 from EmmaPesjak/cleanup_model
+
+Cleaned the transformers code and added a lot of descriptive comments","Git Operation"
+"Added functionality to extract javadoc in a repository for modified files","Feature Addition"
+"Merge pull request #58 from EmmaPesjak/javadoc
+
+Added functionality to extract javadoc in a repository for modified f…","Git Operation"
+"Added readme check","Feature Addition"
+"Merge pull request #59 from EmmaPesjak/javadoc
+
+Added readme check","Git Operation"
+"Added git commit mining for labeling","Feature Addition"
+"Merge pull request #60 from EmmaPesjak/git-mining
+
+Added git commit mining for labeling","Git Operation"
