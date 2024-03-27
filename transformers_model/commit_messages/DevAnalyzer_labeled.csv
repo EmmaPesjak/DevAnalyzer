@@ -1,265 +1,265 @@
-"Initial commit","Setup"
+"Initial commit","Structure/Documentation"
 "Initial commit
 
-MVC structure set up.","Setup"
-"Added gitignore","Setup"
+MVC structure set up.","Structure/Documentation"
+"Added gitignore","Structure/Documentation"
 "Tested commit","Testing"
-"git commit -m "Added test-data" -m "Added dummy data to configure the UI."","Styling/Frontend"
-"git commit -m "Root and menu created." -m "Created a base UI with an options-menu."","Styling/Frontend"
+"git commit -m "Added test-data" -m "Added dummy data to configure the UI."","Data Handling"
+"git commit -m "Root and menu created." -m "Created a base UI with an options-menu."","Feature"
 "Merge pull request #1 from EmmaPesjak/skeleton_view
 
 Skeleton view","Git Operation"
 "Exit handling
 
-Feature: Added functionality for closing the application.","Feature Addition"
+Feature: Added functionality for closing the application.","Feature"
 "Merge pull request #2 from EmmaPesjak/exit_handling
 
 Exit handling","Git Operation"
 "Layout
 
-Feature:Configured a grid layout to have one side menu bar and one expandable window for the rest of the application.","Styling/Frontend"
+Feature:Configured a grid layout to have one side menu bar and one expandable window for the rest of the application.","Feature"
 "Menubar created
 
-Feature: The menu bar is configured and a dark/light mode has been added.","Styling/Frontend"
+Feature: The menu bar is configured and a dark/light mode has been added.","Feature"
 "Merge pull request #3 from EmmaPesjak/menubar
 
 Menubar","Git Operation"
 "Refactored view
 
-Refactored mainview to be more readable aby separating code into methods.","Refactoring"
+Refactored mainview to be more readable aby separating code into methods.","Structure/Documentation"
 "Added diagrams
 
-Feature: Added charts to overview with test data, using matplot.lib","Styling/Frontend"
+Feature: Added charts to overview with test data, using matplot.lib","Feature"
 "Refactored diagrams
 
-Changed layout of diagrams to a grid","Refactoring"
+Changed layout of diagrams to a grid","Structure/Documentation"
 "Merge pull request #4 from EmmaPesjak/diagrams
 
 Diagrams","Git Operation"
 "Feature: user specific data
 
-Added functionality so that a new window opens when selecting a user.","Feature Addition"
+Added functionality so that a new window opens when selecting a user.","Feature"
 "Merge pull request #5 from EmmaPesjak/user_specific
 
 Feature: user specific data","Git Operation"
 "Feature
 
-Added frames to the user menu layout","Styling/Frontend"
+Added frames to the user menu layout","Feature"
 "Merge pull request #6 from EmmaPesjak/user_analysis
 
 Feature","Git Operation"
 "Feature
 
-Added diagrams for specific user.","Feature Addition"
+Added diagrams for specific user.","Feature"
 "Feature
 
-Added info-text in info-bar","Styling/Frontend"
+Added info-text in info-bar","Feature"
 "Merge pull request #7 from EmmaPesjak/user-diagrams
 
 User diagrams","Git Operation"
 "Feature
 
-Added the event listener for the repo-input, which will be passed to model for data mining","Styling/Frontend"
+Added the event listener for the repo-input, which will be passed to model for data mining","Feature"
 "Merge pull request #8 from EmmaPesjak/repository-mining
 
 Feature","Git Operation"
 "Fix: refactor
 
-Refactored and moved cominstance attributes to the __init__ metod.","Refactoring"
+Refactored and moved cominstance attributes to the __init__ metod.","Structure/Documentation"
 "Fix: refactor
 
-Refactored and added comments","Refactoring"
+Refactored and added comments","Structure/Documentation"
 "Merge pull request #9 from EmmaPesjak/view_cleanup
 
 View cleanup","Git Operation"
 "Pydriller set up
 
-Set up PyDriller and retrieved data from repository path","Setup"
+Set up PyDriller and retrieved data from repository path","Data Handling"
 "Author git mining
 
-Retrieves authors from provided repository","Feature Addition"
+Retrieves authors from provided repository","Data Handling"
 "Feature
 
-Retrieves correct amount of commits for project","Feature Addition"
+Retrieves correct amount of commits for project","Feature"
 "Feature
 
-Writes authors with its commits to json file","Feature Addition"
+Writes authors with its commits to json file","Feature"
 "Feature
 
-Added method for getting total amount of commits, to be updated in view.","Feature Addition"
+Added method for getting total amount of commits, to be updated in view.","Feature"
 "Merge pull request #10 from EmmaPesjak/repository-mining
 
 Repository mining","Git Operation"
 "Fix: Diagram display/update
 
-Changed so that the diagrams and repo information is only displayed after a repository has been selected. The diagrams/infobar is also updated after a new repo is selected.","Styling/Frontend"
+Changed so that the diagrams and repo information is only displayed after a repository has been selected. The diagrams/infobar is also updated after a new repo is selected.","Feature"
 "Feature: Loading repo in sepatate thread
 
-Added functionality for fetching repositories in a separate thread. Also added a loading widget","Feature Addition"
+Added functionality for fetching repositories in a separate thread. Also added a loading widget","Feature"
 "Merge pull request #11 from EmmaPesjak/widow-update
 
 Widow update","Git Operation"
 "Feature: DataVisualizer
 
-Break out the diagram making into a separate class.","Refactoring"
+Break out the diagram making into a separate class.","Structure/Documentation"
 "Fix: loading
 
-Fixed so that all old data is removed from the GUI and only the loading text is visible while getting new repositories.","Styling/Frontend"
+Fixed so that all old data is removed from the GUI and only the loading text is visible while getting new repositories.","Feature"
 "Merge pull request #12 from EmmaPesjak/data_visualizer
 
 Data visualizer","Git Operation"
 "Feature
 
-Added a filtering method for ignoring merge commits","Feature Addition"
+Added a filtering method for ignoring merge commits","Feature"
 "Feature for retrieving all data
 
-Retrieves authors, commit messages with timestamps, and the files + filepaths that have been changed.","Database"
-"Feature: Added a SQLite db for storing commit data","Database"
-"Feature: Empty the database on exit","Database"
-"Feature: Gets total amount of commits","Feature Addition"
-"Feature: Gets most active month","Feature Addition"
+Retrieves authors, commit messages with timestamps, and the files + filepaths that have been changed.","Data Handling"
+"Feature: Added a SQLite db for storing commit data","Data Handling"
+"Feature: Empty the database on exit","Data Handling"
+"Feature: Gets total amount of commits","Feature"
+"Feature: Gets most active month","Feature"
 "Feature: DB Clears for new repo
 
-Added functionality for clearing the database when user enters a new repo","Database"
+Added functionality for clearing the database when user enters a new repo","Data Handling"
 "Feature: Added CommitAnalyzer
 
-Added a new class with a tuple of categories, where to analyze commit messages using NLP","Feature Addition"
+Added a new class with a tuple of categories, where to analyze commit messages using NLP","Feature"
 "Merge pull request #13 from EmmaPesjak/author-filtering
 
 Author filtering","Git Operation"
 "Feature: Only returns the names of authors
 
-The get_authors now only returns the names in a list instead of author object.","Feature Addition"
+The get_authors now only returns the names in a list instead of author object.","Structure/Documentation"
 "Bug: Fixed bug with returning author files
 
-Fixed issue with returning the author commits and files.","Bug Fix"
+Fixed issue with returning the author commits and files.","Bug Fix/Error Handling"
 "Fixed bug: Timeline count
 
-Fixed bug related to returning all 12 months commit count","Bug Fix"
+Fixed bug related to returning all 12 months commit count","Bug Fix/Error Handling"
 "Feature: Fixed all select endpoints
 
-Added och adjusted all endpoints","Database"
+Added och adjusted all endpoints","Data Handling"
 "Fix: Commit messages
 
-Fixed so it returns a list instead of list of tuples","Bug Fix"
+Fixed so it returns a list instead of list of tuples","Feature"
 "Merge pull request #14 from EmmaPesjak/db-requests
 
 Db requests","Git Operation"
-"Feature: added preprocessing of data","Feature Addition"
+"Feature: added preprocessing of data","Feature"
 "Merge pull request #15 from EmmaPesjak/nlp
 
 Feature: added preprocessing of data","Git Operation"
 "Feature: Added checks for input
 
-Added a check for verifying the git repo, with displaying an error message to user","Styling/Frontend"
-"Fix: Refined input check","Refactoring"
+Added a check for verifying the git repo, with displaying an error message to user","Feature"
+"Fix: Refined input check","Feature"
 "Merge pull request #16 from EmmaPesjak/input-check
 
 Input check","Git Operation"
-"Feature: continued the preprocessing of data with vectorization.","Feature Addition"
+"Feature: continued the preprocessing of data with vectorization.","Feature"
 "Merge pull request #17 from EmmaPesjak/vectorization
 
 Feature: continued the preprocessing of data with vectorization.","Git Operation"
-"fixed so that commit messages are lowercased","Feature Addition"
-"Feature: added LDA topic modelling","Feature Addition"
+"fixed so that commit messages are lowercased","Feature"
+"Feature: added LDA topic modelling","Feature"
 "Merge pull request #18 from EmmaPesjak/lowercasing_commits
 
 fixed so that commit messages are lowercased","Git Operation"
 "Merge pull request","Git Operation"
-"Feature: category mapping and removal of low frequency words","Feature Addition"
+"Feature: category mapping and removal of low frequency words","Feature"
 "Merge pull request #20 from EmmaPesjak/low_frequency
 
 Feature: category mapping and removal of low frequency words","Git Operation"
 "Docs: Notes on categorizing
 
-TODO's; how to find context to categorize","Documentation"
-"Fixed categories","Bug Fix"
+TODO's; how to find context to categorize","Structure/Documentation"
+"Fixed categories","Feature"
 "Merge pull request #21 from EmmaPesjak/mapping
 
 Docs: Notes on categorizing","Git Operation"
 "Feature: Added priority keywords
 
-Added dictionary for priority words in categorization","Feature Addition"
-"Fix: Refined categories and added stop words","Feature Addition"
-"Refined comments","Documentation"
+Added dictionary for priority words in categorization","Feature"
+"Fix: Refined categories and added stop words","Feature"
+"Refined comments","Structure/Documentation"
 "Merge pull request #22 from EmmaPesjak/mapping
 
 Mapping","Git Operation"
 "Feature: Added substrings in mapping
 
-Added checks for matching substrings in mapping to categories","Feature Addition"
+Added checks for matching substrings in mapping to categories","Feature"
 "Merge pull request #23 from EmmaPesjak/category-fix
 
 Feature: Added substrings in mapping","Git Operation"
-"Fix: Issue with commits dates","Bug Fix"
+"Fix: Issue with commits dates","Bug Fix/Error Handling"
 "Merge pull request #24 from EmmaPesjak/category-fix
 
 Fix: Issue with commits dates","Git Operation"
-"fixed bug mianloop not on main thread","Bug Fix"
+"fixed bug mianloop not on main thread","Bug Fix/Error Handling"
 "Merge pull request #25 from EmmaPesjak/diagram_update
 
 fixed bug mianloop not on main thread","Git Operation"
-"moved thread management from view to model","Refactoring"
+"moved thread management from view to model","Structure/Documentation"
 "Merge pull request #26 from EmmaPesjak/view_clean
 
 moved thread management from view to model","Git Operation"
-"Added todo comments","Documentation"
-"Feature: Write authors with commits to files","Feature Addition"
-"Feature: Write top 5 files","Feature Addition"
-"Deleted calc-data","Refactoring"
+"Added todo comments","Structure/Documentation"
+"Feature: Write authors with commits to files","Feature"
+"Feature: Write top 5 files","Feature"
+"Deleted calc-data","Structure/Documentation"
 "Merge pull request #27 from EmmaPesjak/author-fix
 
 Author fix","Git Operation"
-"Feature: Monthly commits by contributor added","Feature Addition"
+"Feature: Monthly commits by contributor added","Feature"
 "Merge pull request #28 from EmmaPesjak/author-fix
 
 Feature: Monthly commits by contributor added","Git Operation"
-"added comments to the code!","Documentation"
-"fixed hardcoding of total commits","Refactoring"
+"added comments to the code!","Structure/Documentation"
+"fixed hardcoding of total commits","Feature"
 "rebased main","Git Operation"
-"working on bug","Bug Fix"
+"working on bug","Bug Fix/Error Handling"
 "Merge pull request #29 from EmmaPesjak/view_cleaning
 
 View cleaning","Git Operation"
-"Write monthly commits to file","Feature Addition"
+"Write monthly commits to file","Feature"
 "Merge pull request #30 from EmmaPesjak/author-fix
 
 Write monthly commits to file","Git Operation"
-"Fixed bug were old cashed data were used in the diagrams.","Bug Fix"
-"Fixed bug that created errors if any non-latin characters were in user names","Bug Fix"
-"fixed diagram overlap","Bug Fix"
+"Fixed bug were old cashed data were used in the diagrams.","Bug Fix/Error Handling"
+"Fixed bug that created errors if any non-latin characters were in user names","Bug Fix/Error Handling"
+"fixed diagram overlap","Bug Fix/Error Handling"
 "Merge pull request #31 from EmmaPesjak/data_bug
 
 Data bug","Git Operation"
-"Fixed to reverse the month list","Bug Fix"
-"Fixed gitignore repo_stats","Git Operation"
+"Fixed to reverse the month list","Feature"
+"Fixed gitignore repo_stats","Structure/Documentation"
 "Merge pull request #32 from EmmaPesjak/reverse-list
 
 Reverse list","Git Operation"
-"Fixed diagram layout","Styling/Frontend"
-"added topics to categories","Feature Addition"
+"Fixed diagram layout","Feature"
+"added topics to categories","Feature"
 "Merge pull request #33 from EmmaPesjak/diagrams
 
 Diagrams","Git Operation"
-"Changed top 5 to top 10","Feature Addition"
+"Changed top 5 to top 10","Feature"
 "Merge pull request #34 from EmmaPesjak/top-10
 
 Changed top 5 to top 10","Git Operation"
-"Feature: Moved topicmodeling to run independently on a script for training","Refactoring"
+"Feature: Moved topicmodeling to run independently on a script for training","Structure/Documentation"
 "Merge pull request #35 from EmmaPesjak/author-commits
 
 Feature: Moved topicmodeling to run independently on a script for tra…","Git Operation"
-"removed some hard coded values","Refactoring"
-"fixed hard coded over all statistics","Refactoring"
-"fixed hard coded user statistics, added reading from file","Refactoring"
-"changed formatting of monthly_commits_by_contributor","Refactoring"
-"removed hard coded user statistics and updated diagrams!","Refactoring"
-"added colors and fixed deprecation error","Bug Fix"
-"added a check that data exists for specific users when creating diagrams","Feature Addition"
+"removed some hard coded values","Structure/Documentation"
+"fixed hard coded over all statistics","Feature"
+"fixed hard coded user statistics, added reading from file","Feature"
+"changed formatting of monthly_commits_by_contributor","Feature"
+"removed hard coded user statistics and updated diagrams!","Feature"
+"added colors and fixed deprecation error","Bug Fix/Error Handling"
+"added a check that data exists for specific users when creating diagrams","Feature"
 "Merge pull request #36 from EmmaPesjak/remove_hard_coding
 
 Remove hard coding","Git Operation"
-"analyze work in progress","Feature Addition"
+"analyze work in progress","Feature"
 "merged done","Git Operation"
 "Merge pull request #37 from EmmaPesjak/used-load-model
 
@@ -270,130 +270,130 @@ Used load model","Git Operation"
 include topic model on gitignore","Git Operation"
 "Feature: Summarizes the categories
 
-Summarizes categories with amount of git commits.","Feature Addition"
+Summarizes categories with amount of git commits.","Feature"
 "Feature: Write summary to file
 
-Writes summary in categories to file","Feature Addition"
+Writes summary in categories to file","Feature"
 "Merge pull request #39 from EmmaPesjak/used-load-model
 
 Used load model","Git Operation"
-"feature: removed the hard coded values of type of commit.","Refactoring"
-"refactored user diagrams so that those with availiable data will be displayed","Refactoring"
-"refactored overview diagrams so that those with availiable data will be displayed","Refactoring"
-"refactored the info text to handle null values","Refactoring"
+"feature: removed the hard coded values of type of commit.","Feature"
+"refactored user diagrams so that those with availiable data will be displayed","Structure/Documentation"
+"refactored overview diagrams so that those with availiable data will be displayed","Structure/Documentation"
+"refactored the info text to handle null values","Structure/Documentation"
 "Merge pull request #40 from EmmaPesjak/view_types
 
 View types","Git Operation"
-"cleaned some code and added sql query for gettin all authors and their commits","Database"
-"feature: added functionality to analyze each contributor's commits","Feature Addition"
+"cleaned some code and added sql query for gettin all authors and their commits","Data Handling"
+"feature: added functionality to analyze each contributor's commits","Feature"
 "Merge pull request #41 from EmmaPesjak/cleaning
 
 Cleaning","Git Operation"
-"Retrained the model, cleaned the database, working on performance","Refactoring"
+"Retrained the model, cleaned the database, working on performance","Feature"
 "Performance: Improved performance
 
-Preprocess in batches to improve he speed","Refactoring"
-"minor changed in db","Database"
-"Improved the lda model by adding keywords in categories","Feature Addition"
-"Added a new class for git mining, instead of using database","Feature Addition"
+Preprocess in batches to improve he speed","Feature"
+"minor changed in db","Data Handling"
+"Improved the lda model by adding keywords in categories","Feature"
+"Added a new class for git mining, instead of using database","Data Handling"
 "Merge pull request #42 from EmmaPesjak/performance
 
 Performance","Git Operation"
-"fixed bug where error message when wrong repo url was entererd, also fixed better handling of the loading indicator and removal of user select.","Bug Fix"
-"fixed bug where the app crasched upon closing","Bug Fix"
-"changed timeline and commitsByAuthors from database to direct git mining","Refactoring"
-"changed users top files and timeline from database to direct git mining","Refactoring"
-"remove last database methods and implemented a timer to test if this is faster","Database"
-"optimized time between db and git traversal","Database"
-"fixed error message","Bug Fix"
+"fixed bug where error message when wrong repo url was entererd, also fixed better handling of the loading indicator and removal of user select.","Bug Fix/Error Handling"
+"fixed bug where the app crasched upon closing","Bug Fix/Error Handling"
+"changed timeline and commitsByAuthors from database to direct git mining","Data Handling"
+"changed users top files and timeline from database to direct git mining","Data Handling"
+"remove last database methods and implemented a timer to test if this is faster","Data Handling"
+"optimized time between db and git traversal","Data Handling"
+"fixed error message","Bug Fix/Error Handling"
 "Merge pull request #43 from EmmaPesjak/error_handling
 
 Error handling","Git Operation"
-"feature, the model can now be tranied on several repositories","Feature Addition"
+"feature, the model can now be tranied on several repositories","Feature"
 "Merge pull request #44 from EmmaPesjak/model_trainer
 
 feature, the model can now be tranied on several repositories","Git Operation"
-"feature: added a reset function for the model","Git Operation"
-"bug fixed gitignore","Bug Fix"
-"added categories and retrained the model","Feature Addition"
+"feature: added a reset function for the model","Feature"
+"bug fixed gitignore","Bug Fix/Error Handling"
+"added categories and retrained the model","Feature"
 "Merge pull request #45 from EmmaPesjak/reset_model
 
 Reset model","Git Operation"
-"Removed filepath from db","Database"
-"git traversal instead of db","Database"
+"Removed filepath from db","Data Handling"
+"git traversal instead of db","Data Handling"
 "Merge pull request #46 from EmmaPesjak/git-traversal
 
 Git traversal","Git Operation"
-"improved and clean topic modelling","Refactoring"
+"improved and clean topic modelling","Structure/Documentation"
 "Merge pull request #47 from EmmaPesjak/topic
 
 improved and clean topic modelling","Git Operation"
-"styled the diagrams in the gui","Styling/Frontend"
-"Feature: added help box implementation","Feature Addition"
+"styled the diagrams in the gui","Feature"
+"Feature: added help box implementation","Feature"
 "Merge pull request #48 from EmmaPesjak/diagram_naming
 
 Diagram naming","Git Operation"
-"Feature: added LDA perplexity and coherence","Feature Addition"
+"Feature: added LDA perplexity and coherence","Feature"
 "Merge pull request #49 from EmmaPesjak/topic_coherence_perplexity
 
 Feature: added LDA perplexity and coherence","Git Operation"
-"removed the identifier in model","Refactoring"
+"removed the identifier in model","Feature"
 "Added stop words and refined the params.
 
-Current values; p=-6.678, c=0.568","Feature Addition"
-"Improved model; p = -7.09, c = 0.55 on 4 repos","Feature Addition"
-"Styling: Added a label for repository on main view","Styling/Frontend"
+Current values; p=-6.678, c=0.568","Feature"
+"Improved model; p = -7.09, c = 0.55 on 4 repos","Feature"
+"Styling: Added a label for repository on main view","Feature"
 "Merge pull request #50 from EmmaPesjak/lda-model
 
 Lda model","Git Operation"
-"Refactor: cleaned the code","Refactoring"
+"Refactor: cleaned the code","Structure/Documentation"
 "Merge pull request #51 from EmmaPesjak/cleaner
 
 Refactor: cleaned the code","Git Operation"
-"Added comment descriptions in the data_visualizer class","Documentation"
-"Added comment descriptions in the main_view class","Documentation"
-"Added comment descriptions in the main_controller class","Documentation"
-"Added comment descriptions in the git_traversal class","Documentation"
+"Added comment descriptions in the data_visualizer class","Structure/Documentation"
+"Added comment descriptions in the main_view class","Structure/Documentation"
+"Added comment descriptions in the main_controller class","Structure/Documentation"
+"Added comment descriptions in the git_traversal class","Structure/Documentation"
 "Merge pull request #52 from EmmaPesjak/comments
 
 Comments","Git Operation"
-"Added description to batch-analyzer, db-handler, and modeltrainer.","Documentation"
-"Added description to main model","Documentation"
-"Done with description in main model.","Documentation"
+"Added description to batch-analyzer, db-handler, and modeltrainer.","Structure/Documentation"
+"Added description to main model","Structure/Documentation"
+"Done with description in main model.","Structure/Documentation"
 "Merge pull request #53 from EmmaPesjak/demo
 
 Demo","Git Operation"
-"feature addition: added a transformer analyzer","Feature Addition"
-"added folders for transformers","Feature Addition"
-"bugfix, fixed bug where transformers import didn't work","Bug Fix"
+"feature addition: added a transformer analyzer","Feature"
+"added folders for transformers","Structure/Documentation"
+"bugfix, fixed bug where transformers import didn't work","Bug Fix/Error Handling"
 "Merge pull request #54 from EmmaPesjak/transformers
 
 feature addition: added a transformer analyzer","Git Operation"
 "Test push","Testing"
-"Added model files and customized dataset","Feature Addition"
-"Fixed error with git operations","Bug Fix"
-"Added BERT transformers model","Feature Addition"
+"Added model files and customized dataset","Feature"
+"Fixed error with git operations","Bug Fix/Error Handling"
+"Added BERT transformers model","Feature"
 "Merge pull request #55 from EmmaPesjak/hejbertmodel
 
 Hejbertmodel","Git Operation"
-"Added more messages, improved model prediction","Feature Addition"
-"Refactored and deleted unused files.","Refactoring"
+"Added more messages, improved model prediction","Feature"
+"Refactored and deleted unused files.","Structure/Documentation"
 "Merge pull request #56 from EmmaPesjak/train-data
 
 Train data","Git Operation"
-"Cleaned the transformers code and added a lot of descriptive comments","Refactoring"
+"Cleaned the transformers code and added a lot of descriptive comments","Structure/Documentation"
 "Merge pull request #57 from EmmaPesjak/cleanup_model
 
 Cleaned the transformers code and added a lot of descriptive comments","Git Operation"
-"Added functionality to extract javadoc in a repository for modified files","Feature Addition"
+"Added functionality to extract javadoc in a repository for modified files","Feature"
 "Merge pull request #58 from EmmaPesjak/javadoc
 
 Added functionality to extract javadoc in a repository for modified f…","Git Operation"
-"Added readme check","Feature Addition"
+"Added readme check","Feature"
 "Merge pull request #59 from EmmaPesjak/javadoc
 
 Added readme check","Git Operation"
-"Added git commit mining for labeling","Feature Addition"
+"Added git commit mining for labeling","Feature"
 "Merge pull request #60 from EmmaPesjak/git-mining
 
 Added git commit mining for labeling","Git Operation"
