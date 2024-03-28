@@ -10,7 +10,7 @@ summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 # minimizing CPU, RAM, and power usage."
 
 # Men! kraschar för för långa readmes så vi måste segmentera eller välja ut stycken från dem
-# Bestämma exakt vilken modell vi vill använda
+# Bestämma exakt vilken modell vi vill använda, T5 är ett annat option
 
 # TODO: detta får man ju ta från miningen
 readme_content = """
@@ -66,7 +66,10 @@ Thank you! Stay updated with our [blog](https://objectbox.io/blog).
 """
 
 # Generate summary
-summary = summarizer(readme_content, max_length=130, min_length=30, do_sample=False) #TODO välja en bra längd på summarien här
+summary = summarizer(readme_content, max_length=130, min_length=30, do_sample=False)
+#TODO välja en bra längd på summarien här
+# do_sample controls whether the model should sample multiple times,
+# affecting the diversity of the output. Setting it to False makes the output more deterministic.
 
 # Print the summarized content
 print(summary[0]['summary_text'])
