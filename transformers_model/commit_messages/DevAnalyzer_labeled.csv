@@ -4,7 +4,7 @@
 MVC structure set up.","Structure/Documentation"
 "Added gitignore","Structure/Documentation"
 "Tested commit","Testing"
-"git commit -m "Added test-data" -m "Added dummy data to configure the UI."","Data Handling'"
+"git commit -m "Added test-data" -m "Added dummy data to configure the UI."","Data Handling"
 "git commit -m "Root and menu created." -m "Created a base UI with an options-menu."","Feature"
 "Merge pull request #1 from EmmaPesjak/skeleton_view
 
