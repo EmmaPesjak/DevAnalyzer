@@ -397,3 +397,44 @@ Added readme check",""
 "Merge pull request #60 from EmmaPesjak/git-mining
 
 Added git commit mining for labeling",""
+"Changed format in git mining script",""
+"Labeled 150 rows from a repo",""
+"Labeled our repo",""
+"Merge pull request #61 from EmmaPesjak/object-box-labeling
+
+Labeled 150 rows from a repo",""
+"Started manual labeling of greendao doc",""
+"Started manual labeling of greendao doc",""
+"continued labelling docs",""
+"Merge pull request #62 from EmmaPesjak/labelling
+
+Labelling",""
+"continued labelling docs",""
+"Merge pull request #63 from EmmaPesjak/labeling
+
+continued labelling docs",""
+"Feature: Continued on labeling greendao",""
+"Feature: Continued on labeling",""
+"Merge pull request #64 from EmmaPesjak/continue-labeling
+
+Continue labeling",""
+"testing the new labelled data with the model",""
+"Merge pull request #65 from EmmaPesjak/model_test
+
+testing the new labelled data with the model",""
+"restructured the labeling docs",""
+"Merge pull request #66 from EmmaPesjak/label_correct
+
+restructured the labeling docs",""
+"Done with relabeling of DevAnalyzer",""
+"Done with relabeling of ObjectBox",""
+"Merge pull request #67 from EmmaPesjak/re-labeling
+
+Re labeling",""
+"Testing bert model on new labelled data",""
+"Added more tests of messages to print",""
+"Added a very basic readme model",""
+"added some documentation",""
+"Merge pull request #68 from EmmaPesjak/bert_test
+
+Bert test",""
