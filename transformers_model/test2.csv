@@ -1,109 +1,1412 @@
 message,label
-"Retrained the model, cleaned the database, working on performance","Refactoring"
+"Initial commit","Structure/Documentation"
+"Initial commit
+
+MVC structure set up.","Structure/Documentation"
+"Added gitignore","Structure/Documentation"
+"Tested commit","Testing"
+"git commit -m "Added test-data" -m "Added dummy data to configure the UI."","Data Handling"
+"git commit -m "Root and menu created." -m "Created a base UI with an options-menu."","Feature"
+"Merge pull request #1 from EmmaPesjak/skeleton_view
+
+Skeleton view","Git Operation"
+"Exit handling
+
+Feature: Added functionality for closing the application.","Feature"
+"Merge pull request #2 from EmmaPesjak/exit_handling
+
+Exit handling","Git Operation"
+"Layout
+
+Feature:Configured a grid layout to have one side menu bar and one expandable window for the rest of the application.","Feature"
+"Menubar created
+
+Feature: The menu bar is configured and a dark/light mode has been added.","Feature"
+"Merge pull request #3 from EmmaPesjak/menubar
+
+Menubar","Git Operation"
+"Refactored view
+
+Refactored mainview to be more readable aby separating code into methods.","Structure/Documentation"
+"Added diagrams
+
+Feature: Added charts to overview with test data, using matplot.lib","Feature"
+"Refactored diagrams
+
+Changed layout of diagrams to a grid","Structure/Documentation"
+"Merge pull request #4 from EmmaPesjak/diagrams
+
+Diagrams","Git Operation"
+"Feature: user specific data
+
+Added functionality so that a new window opens when selecting a user.","Feature"
+"Merge pull request #5 from EmmaPesjak/user_specific
+
+Feature: user specific data","Git Operation"
+"Feature
+
+Added frames to the user menu layout","Feature"
+"Merge pull request #6 from EmmaPesjak/user_analysis
+
+Feature","Git Operation"
+"Feature
+
+Added diagrams for specific user.","Feature"
+"Feature
+
+Added info-text in info-bar","Feature"
+"Merge pull request #7 from EmmaPesjak/user-diagrams
+
+User diagrams","Git Operation"
+"Feature
+
+Added the event listener for the repo-input, which will be passed to model for data mining","Feature"
+"Merge pull request #8 from EmmaPesjak/repository-mining
+
+Feature","Git Operation"
+"Fix: refactor
+
+Refactored and moved cominstance attributes to the __init__ metod.","Structure/Documentation"
+"Fix: refactor
+
+Refactored and added comments","Structure/Documentation"
+"Merge pull request #9 from EmmaPesjak/view_cleanup
+
+View cleanup","Git Operation"
+"Pydriller set up
+
+Set up PyDriller and retrieved data from repository path","Data Handling"
+"Author git mining
+
+Retrieves authors from provided repository","Data Handling"
+"Feature
+
+Retrieves correct amount of commits for project","Feature"
+"Feature
+
+Writes authors with its commits to json file","Feature"
+"Feature
+
+Added method for getting total amount of commits, to be updated in view.","Feature"
+"Merge pull request #10 from EmmaPesjak/repository-mining
+
+Repository mining","Git Operation"
+"Fix: Diagram display/update
+
+Changed so that the diagrams and repo information is only displayed after a repository has been selected. The diagrams/infobar is also updated after a new repo is selected.","Feature"
+"Feature: Loading repo in sepatate thread
+
+Added functionality for fetching repositories in a separate thread. Also added a loading widget","Feature"
+"Merge pull request #11 from EmmaPesjak/widow-update
+
+Widow update","Git Operation"
+"Feature: DataVisualizer
+
+Break out the diagram making into a separate class.","Structure/Documentation"
+"Fix: loading
+
+Fixed so that all old data is removed from the GUI and only the loading text is visible while getting new repositories.","Feature"
+"Merge pull request #12 from EmmaPesjak/data_visualizer
+
+Data visualizer","Git Operation"
+"Feature
+
+Added a filtering method for ignoring merge commits","Feature"
+"Feature for retrieving all data
+
+Retrieves authors, commit messages with timestamps, and the files + filepaths that have been changed.","Data Handling"
+"Feature: Added a SQLite db for storing commit data","Data Handling"
+"Feature: Empty the database on exit","Data Handling"
+"Feature: Gets total amount of commits","Feature"
+"Feature: Gets most active month","Feature"
+"Feature: DB Clears for new repo
+
+Added functionality for clearing the database when user enters a new repo","Data Handling"
+"Feature: Added CommitAnalyzer
+
+Added a new class with a tuple of categories, where to analyze commit messages using NLP","Feature"
+"Merge pull request #13 from EmmaPesjak/author-filtering
+
+Author filtering","Git Operation"
+"Feature: Only returns the names of authors
+
+The get_authors now only returns the names in a list instead of author object.","Structure/Documentation"
+"Bug: Fixed bug with returning author files
+
+Fixed issue with returning the author commits and files.","Bug Fix/Error Handling"
+"Fixed bug: Timeline count
+
+Fixed bug related to returning all 12 months commit count","Bug Fix/Error Handling"
+"Feature: Fixed all select endpoints
+
+Added och adjusted all endpoints","Data Handling"
+"Fix: Commit messages
+
+Fixed so it returns a list instead of list of tuples","Feature"
+"Merge pull request #14 from EmmaPesjak/db-requests
+
+Db requests","Git Operation"
+"Feature: added preprocessing of data","Feature"
+"Merge pull request #15 from EmmaPesjak/nlp
+
+Feature: added preprocessing of data","Git Operation"
+"Feature: Added checks for input
+
+Added a check for verifying the git repo, with displaying an error message to user","Feature"
+"Fix: Refined input check","Feature"
+"Merge pull request #16 from EmmaPesjak/input-check
+
+Input check","Git Operation"
+"Feature: continued the preprocessing of data with vectorization.","Feature"
+"Merge pull request #17 from EmmaPesjak/vectorization
+
+Feature: continued the preprocessing of data with vectorization.","Git Operation"
+"fixed so that commit messages are lowercased","Feature"
+"Feature: added LDA topic modelling","Feature"
+"Merge pull request #18 from EmmaPesjak/lowercasing_commits
+
+fixed so that commit messages are lowercased","Git Operation"
+"Merge pull request","Git Operation"
+"Feature: category mapping and removal of low frequency words","Feature"
+"Merge pull request #20 from EmmaPesjak/low_frequency
+
+Feature: category mapping and removal of low frequency words","Git Operation"
+"Docs: Notes on categorizing
+
+TODO's; how to find context to categorize","Structure/Documentation"
+"Fixed categories","Feature"
+"Merge pull request #21 from EmmaPesjak/mapping
+
+Docs: Notes on categorizing","Git Operation"
+"Feature: Added priority keywords
+
+Added dictionary for priority words in categorization","Feature"
+"Fix: Refined categories and added stop words","Feature"
+"Refined comments","Structure/Documentation"
+"Merge pull request #22 from EmmaPesjak/mapping
+
+Mapping","Git Operation"
+"Feature: Added substrings in mapping
+
+Added checks for matching substrings in mapping to categories","Feature"
+"Merge pull request #23 from EmmaPesjak/category-fix
+
+Feature: Added substrings in mapping","Git Operation"
+"Fix: Issue with commits dates","Bug Fix/Error Handling"
+"Merge pull request #24 from EmmaPesjak/category-fix
+
+Fix: Issue with commits dates","Git Operation"
+"fixed bug mianloop not on main thread","Bug Fix/Error Handling"
+"Merge pull request #25 from EmmaPesjak/diagram_update
+
+fixed bug mianloop not on main thread","Git Operation"
+"moved thread management from view to model","Structure/Documentation"
+"Merge pull request #26 from EmmaPesjak/view_clean
+
+moved thread management from view to model","Git Operation"
+"Added todo comments","Structure/Documentation"
+"Feature: Write authors with commits to files","Feature"
+"Feature: Write top 5 files","Feature"
+"Deleted calc-data","Structure/Documentation"
+"Merge pull request #27 from EmmaPesjak/author-fix
+
+Author fix","Git Operation"
+"Feature: Monthly commits by contributor added","Feature"
+"Merge pull request #28 from EmmaPesjak/author-fix
+
+Feature: Monthly commits by contributor added","Git Operation"
+"added comments to the code!","Structure/Documentation"
+"fixed hardcoding of total commits","Feature"
+"rebased main","Git Operation"
+"working on bug","Bug Fix/Error Handling"
+"Merge pull request #29 from EmmaPesjak/view_cleaning
+
+View cleaning","Git Operation"
+"Write monthly commits to file","Feature"
+"Merge pull request #30 from EmmaPesjak/author-fix
+
+Write monthly commits to file","Git Operation"
+"Fixed bug were old cashed data were used in the diagrams.","Bug Fix/Error Handling"
+"Fixed bug that created errors if any non-latin characters were in user names","Bug Fix/Error Handling"
+"fixed diagram overlap","Bug Fix/Error Handling"
+"Merge pull request #31 from EmmaPesjak/data_bug
+
+Data bug","Git Operation"
+"Fixed to reverse the month list","Feature"
+"Fixed gitignore repo_stats","Structure/Documentation"
+"Merge pull request #32 from EmmaPesjak/reverse-list
+
+Reverse list","Git Operation"
+"Fixed diagram layout","Feature"
+"added topics to categories","Feature"
+"Merge pull request #33 from EmmaPesjak/diagrams
+
+Diagrams","Git Operation"
+"Changed top 5 to top 10","Feature"
+"Merge pull request #34 from EmmaPesjak/top-10
+
+Changed top 5 to top 10","Git Operation"
+"Feature: Moved topicmodeling to run independently on a script for training","Structure/Documentation"
+"Merge pull request #35 from EmmaPesjak/author-commits
+
+Feature: Moved topicmodeling to run independently on a script for tra…","Git Operation"
+"removed some hard coded values","Structure/Documentation"
+"fixed hard coded over all statistics","Feature"
+"fixed hard coded user statistics, added reading from file","Feature"
+"changed formatting of monthly_commits_by_contributor","Feature"
+"removed hard coded user statistics and updated diagrams!","Feature"
+"added colors and fixed deprecation error","Bug Fix/Error Handling"
+"added a check that data exists for specific users when creating diagrams","Feature"
+"Merge pull request #36 from EmmaPesjak/remove_hard_coding
+
+Remove hard coding","Git Operation"
+"analyze work in progress","Feature"
+"merged done","Git Operation"
+"Merge pull request #37 from EmmaPesjak/used-load-model
+
+Used load model","Git Operation"
+"include topic model on gitignore","Git Operation"
+"Merge pull request #38 from EmmaPesjak/used-load-model
+
+include topic model on gitignore","Git Operation"
+"Feature: Summarizes the categories
+
+Summarizes categories with amount of git commits.","Feature"
+"Feature: Write summary to file
+
+Writes summary in categories to file","Feature"
+"Merge pull request #39 from EmmaPesjak/used-load-model
+
+Used load model","Git Operation"
+"feature: removed the hard coded values of type of commit.","Feature"
+"refactored user diagrams so that those with availiable data will be displayed","Structure/Documentation"
+"refactored overview diagrams so that those with availiable data will be displayed","Structure/Documentation"
+"refactored the info text to handle null values","Structure/Documentation"
+"Merge pull request #40 from EmmaPesjak/view_types
+
+View types","Git Operation"
+"cleaned some code and added sql query for gettin all authors and their commits","Data Handling"
+"feature: added functionality to analyze each contributor's commits","Feature"
+"Merge pull request #41 from EmmaPesjak/cleaning
+
+Cleaning","Git Operation"
+"Retrained the model, cleaned the database, working on performance","Feature"
 "Performance: Improved performance
 
-Preprocess in batches to improve he speed","Refactoring"
-"minor changed in db","Database"
-"Improved the lda model by adding keywords in categories","Feature Addition"
-"Added a new class for git mining, instead of using database","Feature Addition"
+Preprocess in batches to improve he speed","Feature"
+"minor changed in db","Data Handling"
+"Improved the lda model by adding keywords in categories","Feature"
+"Added a new class for git mining, instead of using database","Data Handling"
 "Merge pull request #42 from EmmaPesjak/performance
 
 Performance","Git Operation"
-"fixed bug where error message when wrong repo url was entererd, also fixed better handling of the loading indicator and removal of user select.","Bug Fix"
-"fixed bug where the app crasched upon closing","Bug Fix"
-"changed timeline and commitsByAuthors from database to direct git mining","Refactoring"
-"changed users top files and timeline from database to direct git mining","Refactoring"
-"remove last database methods and implemented a timer to test if this is faster","Database"
-"optimized time between db and git traversal","Database"
-"fixed error message","Bug Fix"
+"fixed bug where error message when wrong repo url was entererd, also fixed better handling of the loading indicator and removal of user select.","Bug Fix/Error Handling"
+"fixed bug where the app crasched upon closing","Bug Fix/Error Handling"
+"changed timeline and commitsByAuthors from database to direct git mining","Data Handling"
+"changed users top files and timeline from database to direct git mining","Data Handling"
+"remove last database methods and implemented a timer to test if this is faster","Data Handling"
+"optimized time between db and git traversal","Data Handling"
+"fixed error message","Bug Fix/Error Handling"
 "Merge pull request #43 from EmmaPesjak/error_handling
 
 Error handling","Git Operation"
-"feature, the model can now be tranied on several repositories","Feature Addition"
+"feature, the model can now be tranied on several repositories","Feature"
 "Merge pull request #44 from EmmaPesjak/model_trainer
 
 feature, the model can now be tranied on several repositories","Git Operation"
-"feature: added a reset function for the model","Git Operation"
-"bug fixed gitignore","Bug Fix"
-"added categories and retrained the model","Feature Addition"
+"feature: added a reset function for the model","Feature"
+"bug fixed gitignore","Bug Fix/Error Handling"
+"added categories and retrained the model","Feature"
 "Merge pull request #45 from EmmaPesjak/reset_model
 
 Reset model","Git Operation"
-"Removed filepath from db","Database"
-"git traversal instead of db","Database"
+"Removed filepath from db","Data Handling"
+"git traversal instead of db","Data Handling"
 "Merge pull request #46 from EmmaPesjak/git-traversal
 
 Git traversal","Git Operation"
-"improved and clean topic modelling","Refactoring"
+"improved and clean topic modelling","Structure/Documentation"
 "Merge pull request #47 from EmmaPesjak/topic
 
 improved and clean topic modelling","Git Operation"
-"styled the diagrams in the gui","Styling/Frontend"
-"Feature: added help box implementation","Feature Addition"
+"styled the diagrams in the gui","Feature"
+"Feature: added help box implementation","Feature"
 "Merge pull request #48 from EmmaPesjak/diagram_naming
 
 Diagram naming","Git Operation"
-"Feature: added LDA perplexity and coherence","Feature Addition"
+"Feature: added LDA perplexity and coherence","Feature"
 "Merge pull request #49 from EmmaPesjak/topic_coherence_perplexity
 
 Feature: added LDA perplexity and coherence","Git Operation"
-"removed the identifier in model","Refactoring"
+"removed the identifier in model","Feature"
 "Added stop words and refined the params.
 
-Current values; p=-6.678, c=0.568","Feature Addition"
-"Improved model; p = -7.09, c = 0.55 on 4 repos","Feature Addition"
-"Styling: Added a label for repository on main view","Styling/Frontend"
+Current values; p=-6.678, c=0.568","Feature"
+"Improved model; p = -7.09, c = 0.55 on 4 repos","Feature"
+"Styling: Added a label for repository on main view","Feature"
 "Merge pull request #50 from EmmaPesjak/lda-model
 
 Lda model","Git Operation"
-"Refactor: cleaned the code","Refactoring"
+"Refactor: cleaned the code","Structure/Documentation"
 "Merge pull request #51 from EmmaPesjak/cleaner
 
 Refactor: cleaned the code","Git Operation"
-"Added comment descriptions in the data_visualizer class","Documentation"
-"Added comment descriptions in the main_view class","Documentation"
-"Added comment descriptions in the main_controller class","Documentation"
-"Added comment descriptions in the git_traversal class","Documentation"
+"Added comment descriptions in the data_visualizer class","Structure/Documentation"
+"Added comment descriptions in the main_view class","Structure/Documentation"
+"Added comment descriptions in the main_controller class","Structure/Documentation"
+"Added comment descriptions in the git_traversal class","Structure/Documentation"
 "Merge pull request #52 from EmmaPesjak/comments
 
 Comments","Git Operation"
-"Added description to batch-analyzer, db-handler, and modeltrainer.","Documentation"
-"Added description to main model","Documentation"
-"Done with description in main model.","Documentation"
+"Added description to batch-analyzer, db-handler, and modeltrainer.","Structure/Documentation"
+"Added description to main model","Structure/Documentation"
+"Done with description in main model.","Structure/Documentation"
 "Merge pull request #53 from EmmaPesjak/demo
 
 Demo","Git Operation"
-"feature addition: added a transformer analyzer","Feature Addition"
-"added folders for transformers","Feature Addition"
-"bugfix, fixed bug where transformers import didn't work","Bug Fix"
+"feature addition: added a transformer analyzer","Feature"
+"added folders for transformers","Structure/Documentation"
+"bugfix, fixed bug where transformers import didn't work","Bug Fix/Error Handling"
 "Merge pull request #54 from EmmaPesjak/transformers
 
 feature addition: added a transformer analyzer","Git Operation"
 "Test push","Testing"
-"Added model files and customized dataset","Feature Addition"
-"Fixed error with git operations","Bug Fix"
-"Added BERT transformers model","Feature Addition"
+"Added model files and customized dataset","Feature"
+"Fixed error with git operations","Bug Fix/Error Handling"
+"Added BERT transformers model","Feature"
 "Merge pull request #55 from EmmaPesjak/hejbertmodel
 
 Hejbertmodel","Git Operation"
-"Added more messages, improved model prediction","Feature Addition"
-"Refactored and deleted unused files.","Refactoring"
+"Added more messages, improved model prediction","Feature"
+"Refactored and deleted unused files.","Structure/Documentation"
 "Merge pull request #56 from EmmaPesjak/train-data
 
 Train data","Git Operation"
-"Cleaned the transformers code and added a lot of descriptive comments","Refactoring"
+"Cleaned the transformers code and added a lot of descriptive comments","Structure/Documentation"
 "Merge pull request #57 from EmmaPesjak/cleanup_model
 
 Cleaned the transformers code and added a lot of descriptive comments","Git Operation"
-"Added functionality to extract javadoc in a repository for modified files","Feature Addition"
+"Added functionality to extract javadoc in a repository for modified files","Feature"
 "Merge pull request #58 from EmmaPesjak/javadoc
 
 Added functionality to extract javadoc in a repository for modified f…","Git Operation"
-"Added readme check","Feature Addition"
+"Added readme check","Feature"
 "Merge pull request #59 from EmmaPesjak/javadoc
 
 Added readme check","Git Operation"
-"Added git commit mining for labeling","Feature Addition"
+"Added git commit mining for labeling","Feature"
 "Merge pull request #60 from EmmaPesjak/git-mining
 
 Added git commit mining for labeling","Git Operation"
+"initial commit","Structure/Documentation"
+"Added DaoBase Project","Structure/Documentation"
+"stripped down because of AbstractDao","Structure/Documentation"
+"renamed table to entity","Data Handling"
+"renamed column to property","Data Handling"
+"docs, etc","Structure/Documentation"
+"changed to android library, load by rowid","Structure/Documentation"
+"docs","Structure/Documentation"
+"initial DaoTest project","Structure/Documentation"
+"new source for generating test entities","Testing"
+"Generated entity, etc.","Data Handling"
+"Column abstraction, more compact DAO subclasses","Data Handling"
+"various fixes","Bug Fix/Error Handling"
+"more property types, etc.","Feature"
+"swapped tests","Testing"
+"added testAssignPk","Testing"
+"minor","Other"
+"value tests","Testing"
+"added 2nd query, delete prepStmt","Data Handling"
+"added update for entities","Data Handling"
+"nullable update tests","Testing"
+"initial AbstractDaoMaster","Structure/Documentation"
+"minor","Other"
+"divided AbstractDaoTest","Structure/Documentation"
+"update lists, performance tests","Testing"
+"deleleteAll, more performance tests","Testing"
+"added performance test project for ORMLite","Testing"
+"Collected performance data: greenDAO vs. ORMLite","Data Handling"
+"read uses constructor if available","Feature"
+"renamed package orm to dao, javadoc, etc.","Structure/Documentation"
+"javadoc","Structure/Documentation"
+"consider "has value" of protobuf","Data Handling"
+"updated performance table","Data Handling"
+"minor renames","Structure/Documentation"
+"added index support, property refactoring","Structure/Documentation"
+"ignore bin","Structure/Documentation"
+"out path must exist, changed src dir","Structure/Documentation"
+"added example project","Structure/Documentation"
+"added Example test","Structure/Documentation"
+"Applied Apache License 2.0","Structure/Documentation"
+"added refresh method, DaoException","Feature"
+"added DaoMaster, active entities, to-one relations","Data Handling"
+"prepared new Properties in DAO, +minor","Data Handling"
+"resolved flag for to-one","Bug Fix/Error Handling"
+"Using Properties class in DAO","Feature"
+"make load return null for null key","Data Handling"
+"createAllTables, refactored tests, added dao master test","Testing"
+"SQLiteOpenHelper etc.","Data Handling"
+"new DAO example","Structure/Documentation"
+"added run/callInTx","Feature"
+"added date type, added unit test generation","Testing"
+"offset for read, getTablename in abstract DAO","Data Handling"
+"loadDeep","Data Handling"
+"queryDeep","Data Handling"
+"refreshed example","Other"
+"refined relation test","Testing"
+"simplefied build","Structure/Documentation"
+"added error info, etc.","Bug Fix/Error Handling"
+"make tests more configurable by sub classes","Testing"
+"added testSemantics","Testing"
+"prepared IdentityScope etc.","Structure/Documentation"
+"identity scope passing tests","Testing"
+"refactored statements into separate classes","Structure/Documentation"
+"minor, tests for identity deep query","Testing"
+"attachEntity, more tests, etc.","Testing"
+"fixed loadDeep with idScope","Bug Fix/Error Handling"
+"added intermediate values","Feature"
+"more intelligent to-one in entities","Data Handling"
+"fixes for not-null to-one relation, fix for loadDeep without results","Data Handling"
+"testToOneLoadDeepNull","Testing"
+"fix & tests for to-one relations without matches in target table","Testing"
+"DaoSession","Other"
+"support identity scopes in session","Other"
+"DaoConfig","Structure/Documentation"
+"session tests","Testing"
+"method renames to match JPA & Hibernate","Structure/Documentation"
+"detach, etc.","Other"
+"Updated DaoExample","Structure/Documentation"
+"added docs and methods to session","Structure/Documentation"
+"some dumb docs","Structure/Documentation"
+"refreshed example jars (preview 2)","Structure/Documentation"
+"QueryBuilder concept","Data Handling"
+"quote columns for special names","Data Handling"
+"first Query working, refactoring","Structure/Documentation"
+"LazyList","Feature"
+"lazy list iterator","Feature"
+"uncached lazy lists, docs","Structure/Documentation"
+"list iterator with auto close","Feature"
+"refactoring: TestEntityTestBase","Structure/Documentation"
+"testNotEqString","Testing"
+"import entities","Data Handling"
+"added GPL header","Feature"
+"some fixes","Bug Fix/Error Handling"
+"added or to queryBuilder","Data Handling"
+"added AND","Data Handling"
+"removed simple OR","Data Handling"
+"Refactored where conditions for QueryBuilder, DaoLog, etc.","Data Handling"
+"partial fix for listIterator.previous","Bug Fix/Error Handling"
+"minor fix","Bug Fix/Error Handling"
+"fixed IN","Bug Fix/Error Handling"
+"added javadocs and convenience for query builder","Structure/Documentation"
+"preview 3","Other"
+"renamed dao.test package","Structure/Documentation"
+"improved & extended performance tests","Testing"
+"added test sub packages","Testing"
+"performance work wip","Feature"
+"refactoring","Structure/Documentation"
+"lock optimization","Feature"
+"new performance figures","Feature"
+"getType, etc","Feature"
+"added  in(Collection)","Feature"
+"close cursor in tests","Testing"
+"preparing to-ones without fk properties (experimental)","Data Handling"
+"Keep code for generated entities","Data Handling"
+"check value type, orderDesc","Data Handling"
+"tested and fixed Date/boolean property values","Testing"
+"renamed DaoBase to DaoCore","Structure/Documentation"
+"added dummy ressources as a workaround for the git empty directory
+problem","Bug Fix/Error Handling"
+"(not)Null tests for query builder","Testing"
+"enabled findbugs, minor fixes","Bug Fix/Error Handling"
+"using Reference","Other"
+"prepared: bind to-one values without fk property","Data Handling"
+"updated build","Structure/Documentation"
+"testDeleteAll","Testing"
+"fixed order with multiple properties","Bug Fix/Error Handling"
+"testDeleteAll","Testing"
+"comment for not-null values","Structure/Documentation"
+"fixed testAssignPk for protobuf tests, new line","Testing"
+"kicked out Column again; using Property instead","Data Handling"
+"added useFkProperty flag to to-ones","Data Handling"
+"to-many skeleton","Data Handling"
+"first to-many working","Data Handling"
+"reset to-many, test refactoring","Data Handling"
+"new tests for resetting to-many relations","Testing"
+"added order for to-many","Data Handling"
+"Switched to ADT14","Structure/Documentation"
+"to-many with custom join properties and multiple join properties","Data Handling"
+"active entities","Data Handling"
+"per entity flag for keep section, global entityActive deafult flag,
+clean up, readme","Structure/Documentation"
+"added missing license header to test classes","Testing"
+"Added some license info and JavaDocs","Structure/Documentation"
+"JavaDocs, limited scope of DaoConfig","Structure/Documentation"
+"updated builds, example","Structure/Documentation"
+"readme for greenDAO","Structure/Documentation"
+"managing additional imports to fix imports with different package, fixed
+toMany problem in DAO template","Bug Fix/Error Handling"
+"V1.0.1","Structure/Documentation"
+"superclass and interfaces for entities","Feature"
+"added tests for tree-like entities","Testing"
+"Removed schema version from entities and DAOs","Data Handling"
+"query test package","Testing"
+"added DeleteQuery","Data Handling"
+"allow to pass App class for project specific unit tests","Testing"
+"better generics for test, still not perfect though","Testing"
+"fix for building multiple queries with one queryBuilder","Data Handling"
+"Added performance results for Android 4.0 plus a comparison to 2.3","Feature"
+"created src-test","Testing"
+"added bi-directional 1:N customer/order example","Data Handling"
+"added convenience methods to add relationships with a name, made Entity
+constructor package-visible, added JavaDocs","Structure/Documentation"
+"Removed schema version from JavaDoc of generated entities and DAOs","Structure/Documentation"
+"execute SQL script in TX","Data Handling"
+"Using a fixed Java 1.6 compiler level for Android projects","Structure/Documentation"
+"Added LIMIT and OFFSET support for Queries","Data Handling"
+"Additional docs and unit tests for query limit&offset","Testing"
+"qoute column names in where and order by clauses","Data Handling"
+"Feature list of 1.1 pre-release","Structure/Documentation"
+"use LOCALIZED collation for Strings in ORDER BY","Data Handling"
+"moved order test into separate class","Structure/Documentation"
+"added test for order with upper/lower case and umlauts","Testing"
+"added orderCustom","Feature"
+"added testOrderRaw","Feature"
+"default names for to-many relations end with "List" now","Data Handling"
+"Updated libs for example project","Structure/Documentation"
+"generated example code with current lib version","Structure/Documentation"
+"updated readme","Structure/Documentation"
+"updated copyright year for javadocs","Structure/Documentation"
+"5 test runs","Testing"
+"updated ormlite libs to 4.34-SNAPSHOT and performance test against it","Testing"
+"deprecated query: groupBy & having does not make sense for entities.
+Method will be removed","Bug Fix/Error Handling"
+"Don't assume that a Cursor has a CursorWindow (fix for Roboelectric)","Bug Fix/Error Handling"
+"Additional check that key can be acquired (issue #5)","Bug Fix/Error Handling"
+"updated readme for version 1.1.0 and 1.1.1","Structure/Documentation"
+"added NOT IN condition (#23)","Bug Fix/Error Handling"
+"preparing V1.1.1 release","Structure/Documentation"
+"print schema version before generating","Data Handling"
+"throw exception when trying to add relations to protobuf entities","Bug Fix/Error Handling"
+"new flag for skipping table creation & dropping","Data Handling"
+"removed unnecessary DAO import for non-active entities","Structure/Documentation"
+"fixed typo with ordinal","Structure/Documentation"
+"moved jar to libs (ADT 17)","Structure/Documentation"
+"added adt dependencies to .classpath","Structure/Documentation"
+"added galaxy nexus performance data","Other"
+"preparing jars for V1.1.2","Structure/Documentation"
+"V1.1.2 release notes added","Structure/Documentation"
+"renamed to QuerySpecialNamesTest (missing Test suffix)","Structure/Documentation"
+"Added 'order' to special names test","Testing"
+"changed order property to int","Structure/Documentation"
+"There might be other fields introduced by some tools, just ignore them
+(see issue #28)","Bug Fix/Error Handling"
+"Refelected Properties must be public also (issue #28)","Bug Fix/Error Handling"
+"optimized modifier checking for Properties","Data Handling"
+"added testWhereWithSpecialNamesWithValues","Testing"
+"make database accessible, refactoring of insert methods","Structure/Documentation"
+"added insertOrReplaceInTx and another updateInTx variation","Feature"
+"improved testInsertOrReplaceInTx","Testing"
+"prepared readme for next version (unreleased)","Structure/Documentation"
+"added CountQuery","Data Handling"
+"added logTableDump method","Feature"
+"Tests: added missing super.setUp and super.teardown, formatting","Testing"
+"testAssignPk only for Long PKs","Testing"
+"Test for String PK","Testing"
+"make DAO and DaoSession transient in entities","Data Handling"
+"Set Cp1252 encoding in project properties","Structure/Documentation"
+"updated readme: transient and string PKs","Structure/Documentation"
+"added AbstractDaoTestStringPk","Testing"
+"added callInTxNoException","Feature"
+"added deleteInTx to DAO, minor clean up","Feature"
+"added AUTOINCREMENT, added java docs for *Dao.Properties","Structure/Documentation"
+"minor rename to pkAutoincrement","Structure/Documentation"
+"prepared unit test generation for String PK entities","Testing"
+"idea for future use","Other"
+"fixed updateKeyAfterInsert for non-long PKs, force NOT NULL for String
+PK, added identity scope test for String PKs","Other"
+"added testInsertWithoutPK","Testing"
+"fixed templates for PK-less entities, test fix","Data Handling"
+"added SqliteMaster meta entity","Data Handling"
+"fixed INDEX creation, added IndexTest","Other"
+"updated readme for V1.2.0RC","Structure/Documentation"
+"consider ifNotExists for CREATE INDEX also","Data Handling"
+"preparing V1.2.0 release","Structure/Documentation"
+"fixed createEntityWithRandomPk: create collision free PKs","Data Handling"
+"check executeInsert for -1","Other"
+"added javaDoc for or() and and()","Structure/Documentation"
+"outlining some ideas for asynch operations","Other"
+"added properties to AsyncOperation","Feature"
+"TX merging and listeners","Other"
+"added async completion features","Feature"
+"start AsyncSession in DaoSession, first two async tests up and running","Testing"
+"added support for all operation types to AsyncOperationExecutor","Feature"
+"Added license headers to asnyc classes, added some async docs, minor
+code improvements","Structure/Documentation"
+"added enqueueEntityOperation helper methods","Data Handling"
+"added remaining entity methods to AsyncSession","Data Handling"
+"prepared async runInTx and callInTx","Structure/Documentation"
+"added queries to async system","Data Handling"
+"added DeleteByKey, DeleteAll, Load, LoadAll, Count, and Refresh to async
+operations","Data Handling"
+"added waitForCompletion methods to AsyncOperation, changed
+AsyncOperationExecutor.waitForCompletion methods not to throw
+InterruptedExecption","Bug Fix/Error Handling"
+"added AbstractAsyncTest","Testing"
+"updated README.md for V1.3.0 Preview (2012-??-??): New asynchronous API","Structure/Documentation"
+"added basic async tests like TX, exception, etc.","Testing"
+"added a couple of missing breaks","Bug Fix/Error Handling"
+"changed AsyncOperation.getResult semantics","Structure/Documentation"
+"moved async classes into async package","Structure/Documentation"
+"introduced AsyncDaoException","Bug Fix/Error Handling"
+"Ignore FindBugs: increment of volatile is fine here because we use a
+lock","Bug Fix/Error Handling"
+"listenerMainThread","Other"
+"first TX merging successful with test","Testing"
+"added AsyncOperation.sequenceNumber","Feature"
+"added waitForMergeMillis","Feature"
+"added java-formater.xml (Eclipse Code Formatter) so other committers can
+conform with greenDAO's code style","Feature"
+"added queryRawCreate returning a Query object","Data Handling"
+"added testLike","Testing"
+"Merge branch 'master' of ssh://gitolite@greencentral.de/AndroidDao","Git Operation"
+"dummy file to avoid errors after checkout (no res folder)","Bug Fix/Error Handling"
+"check value is not an array where a primitive value is required for
+condition","Other"
+"added deleteByKeyInTx","Other"
+"added DaoSessionConcurrentTest to verify deadlocks, fixed TX order in
+executeInsertInTx","Testing"
+"Do TX to acquire a connection before locking the stmt to avoid deadlocks","Bug Fix/Error Handling"
+"throw nice exception if entity is updated or deleted with null key","Bug Fix/Error Handling"
+"fixed potential deadlock in update/updateInTx","Bug Fix/Error Handling"
+"refactoring: TestThread and doTx","Structure/Documentation"
+"DaoSessionConcurrentTest refactoring and 3 separate concurrent threads","Structure/Documentation"
+"removed redundant identityScope key removal","Structure/Documentation"
+"fixed delete locking order to avoid potential deadlocks","Bug Fix/Error Handling"
+"fixed insertWithoutSettingPk locking","Bug Fix/Error Handling"
+"added insertOrReplace to DaoSessionConcurrentTest","Testing"
+"added testConcurrentQueryDuringTx: Query doesn't involve any statement
+locking currently, but just to stay on the safe side...","Testing"
+"prepared README.md for upcoming 1.3.0 release","Structure/Documentation"
+"added some changes of V1.3.0 to README.md","Structure/Documentation"
+"_testConcurrentLockAndQueryDuringTx: No connection for read can be
+acquired while TX is active; this will deadlock!","Other"
+"locking order for DeleteQuery","Data Handling"
+"added DaoSessionConcurrentWALTest","Testing"
+"prepared ThreadLocal for queries","Data Handling"
+"added forCurrentThread for queries, enforce thread check on queries,","Data Handling"
+"Added second thread tests to QueryThreadLocalTest","Testing"
+"added CountQueryThreadLocalTest and DeleteQueryThreadLocalTest","Testing"
+"Refactoring: move query classes in new query package","Structure/Documentation"
+"move IdentityScope related classes in their own package","Structure/Documentation"
+"fixed identityscope references, moved WhereCondition to query package","Structure/Documentation"
+"moved internally used classes into internal package","Structure/Documentation"
+"InternalDaoQueryInterface and InternalUnitTestDaoAccess","Other"
+"updated README.md to reflect refactorings","Structure/Documentation"
+"added version property to mybuild.xml","Structure/Documentation"
+"added version property to mybuild.xml (generator)","Structure/Documentation"
+"fixed locking for to-many","Bug Fix/Error Handling"
+"make to-one relations more thread safe","Other"
+"added build.gradle","Structure/Documentation"
+"prepared maven central upload with gradle","Structure/Documentation"
+"fixed javadoc problems","Bug Fix/Error Handling"
+"organized imports","Structure/Documentation"
+"set version to 1.3.0-beta-1","Structure/Documentation"
+"build.gradle for generator project","Structure/Documentation"
+"fixed build.gradle to include template files","Structure/Documentation"
+"runnable build.gradle for example generator project","Structure/Documentation"
+"dummy build.gradle for DaoExample","Structure/Documentation"
+"updated DaoExample to use V1.3.0","Structure/Documentation"
+"put greendao-1.3.0-beta-1.jar in libs for eclipse","Structure/Documentation"
+"updated freemarker to 2.3.19 for Eclipse","Structure/Documentation"
+"update year","Other"
+"settings.gradle for root dir, tests for DaoGenerator","Structure/Documentation"
+"settings.gradle for root dir","Structure/Documentation"
+"added .travis.yml","Other"
+"added empty build.gradle and use Java 6 for travis","Structure/Documentation"
+"build.gradle: We must check if authentication info is available","Structure/Documentation"
+"build.gradle: sign only if signing info is available","Structure/Documentation"
+"remove DaoExample because R missing from build","Structure/Documentation"
+"removed redundant != null","Structure/Documentation"
+"switched to gradle Eclipse plugin for generator projects","Structure/Documentation"
+"setting version to 1.3.0","Structure/Documentation"
+"setting version to 1.3.0, updated README.md","Structure/Documentation"
+"fixed dependencies to 1.3.0","Structure/Documentation"
+"added getSelectKeys to TableStatements","Data Handling"
+"Make DaoTest a gradle project, doesn't work with android build system
+0.3 yet","Structure/Documentation"
+"'provided' dependencies for main build.gradle","Structure/Documentation"
+"ADT 22","Structure/Documentation"
+"join drafting","Other"
+"export android lib in .classpath","Structure/Documentation"
+"added dontCreateApplicationDuringSetUp to DbTest","Testing"
+"initial content provider generation","Structure/Documentation"
+"added preferedRepo","Feature"
+"Fixed typo.","Other"
+"Merge pull request #95 from mharper/master
+
+Fixed typo.","Git Operation"
+"single entity per content provider for now","Data Handling"
+"Merge branch 'master' of ssh://github.com/greenrobot/greenDAO","Git Operation"
+"fixed combined where clauses for count queries","Data Handling"
+"don't care about groovy.compiler.level (eclipse setting)","Other"
+"Switched version to 1.3.2","Structure/Documentation"
+"1.3.3-SNAPSHOT: Remove table aliases, not supported for DELETE queries","Data Handling"
+"removed ThreadLocal for Query to fix leaks","Bug Fix/Error Handling"
+"introduced AbstractQueryData, renamed test","Other"
+"better generalization of AbstractQueryData","Structure/Documentation"
+"some clean up","Structure/Documentation"
+"DeleteQuery also uses QueryData now","Data Handling"
+"minor test improvement","Testing"
+"index bug fix within gc","Bug Fix/Error Handling"
+"added testLoadIdScope_load","Testing"
+"fixed a concurrency problem with attached entities (#101), added
+AnActiveEntityMultithreadingTest","Bug Fix/Error Handling"
+"V1.3.3 release","Structure/Documentation"
+"big test refactoring: don't use ApplicationTestCase as base class, which can be problematic when creating the application during setUp()","Testing"
+"ignore IntelliJ stuff","Other"
+"working gradle build for instTest project","Other"
+"v1.3.5","Structure/Documentation"
+"offer some convenience methods to create new Application objects in DbTest","Other"
+"set generator version to 1.3.1-SNAPSHOT","Structure/Documentation"
+"added V1.3.4 and V1.3.5 to changelog","Structure/Documentation"
+"V1.3.6","Structure/Documentation"
+"added getNotificationUri to comply with API level 19","Feature"
+"DeleteQuery: Don't use tableName here because it causes trouble when table name ends with tablePrefix.","Data Handling"
+"V1.3.7","Structure/Documentation"
+"fix schema version with 4 or more digits","Data Handling"
+"gradlew (1.12)","Structure/Documentation"
+"adjustments for android build system 0.10.2, trying android with travis","Structure/Documentation"
+"trying android with travis","Other"
+"travis: make gradlew executable","Other"
+"using androidTestCompile, extended .gitignore","Other"
+"travis: start emu","Other"
+"travis: added missing file wait_for_emulator","Bug Fix/Error Handling"
+"travis: fix","Bug Fix/Error Handling"
+"travis: +x for wait_for_emulator","Other"
+"travis: dumb terminal","Other"
+"travis: only oraclejdk7","Structure/Documentation"
+"Generator V1.3.1 release","Structure/Documentation"
+"travis: adjusted command order, added build state to README.md","Structure/Documentation"
+"link to travis","Other"
+"Rethrow initial exception in updateInTx if endTransaction also throws","Bug Fix/Error Handling"
+"updated README.md","Structure/Documentation"
+"Lock must be locked when entering LazyList.loadEntity","Other"
+"catch exceptions when ending merged transactions, added some JavaDocs","Other"
+"gradle updates","Structure/Documentation"
+"added FLAG_TRACK_CREATOR_STACKTRACE, sessionFlags","Other"
+"updated README.md","Structure/Documentation"
+"CRLF -> LF","Other"
+"updated generator dependencies, gradle 2.4","Structure/Documentation"
+"added outDirEntity to generator","Feature"
+"Merge branch 'master' into join","Git Operation"
+"extracted WhereCollector from QueryBuilder, Join constructor","Data Handling"
+"sketching JOIN API","Data Handling"
+"first working Join","Data Handling"
+"added SqlUtils.appendProperty, checkLog, testJoinSimpleParameterValue","Data Handling"
+"JOINs are not supported for DELETE queries, testJoinDelete, testJoinCount","Data Handling"
+"basic JavaDoc for joins","Structure/Documentation"
+"Query: formatting, javadoc","Structure/Documentation"
+"testJoinMixedParameterValues","Testing"
+"joins based on joins","Data Handling"
+"bye bye Eclipse","Structure/Documentation"
+"bye bye Eclipse formatting settings","Structure/Documentation"
+"CRLF -> LF, remaining files","Other"
+"make internal properties package private (#184)","Bug Fix/Error Handling"
+"Revert 'make internal properties package private (#184)'
+
+This reverts commit d467bf5be97801b45b53822b3f0be083940ed016.","Git Operation"
+"moved TestDaoGenerator into module of its own","Structure/Documentation"
+"quote columns in PropertyOrderList","Data Handling"
+"javadoc to mark internal property used by templates","Structure/Documentation"
+"setParameter for Date and Boolean values, fixes #58","Bug Fix/Error Handling"
+"typos","Other"
+"single-quote column for indexes and to-many order (#fixes 68)","Bug Fix/Error Handling"
+"place repository in root build.gradle","Structure/Documentation"
+"place repository in root build.gradle","Structure/Documentation"
+"throw if interface defined more than once (fixes #87)","Bug Fix/Error Handling"
+"always quote tables (fixes #97)","Bug Fix/Error Handling"
+"fix for implementsInterface","Bug Fix/Error Handling"
+"use double quote for table and property names in templates","Data Handling"
+"quick fix for CP compilation issues","Bug Fix/Error Handling"
+"fixed some typos, fixes #102","Bug Fix/Error Handling"
+"prepare model for to-many with join","Data Handling"
+"updated templates for to-many with join","Data Handling"
+"added testToManyWithJoin","Testing"
+"Add execute bit for Gradle wrapper.","Structure/Documentation"
+"Merge pull request #195 from johnjohndoe/file-permissions
+
+Add execute bit for Gradle wrapper.","Git Operation"
+"fix for LazyList.sublist (fixes #146)","Bug Fix/Error Handling"
+"typo","Other"
+"setting the base for custom property types based on converters","Other"
+"add additional imports for custom types and converters","Structure/Documentation"
+"use custom types in entity","Data Handling"
+"use custom types in dao, simplify dao with databaseValueExpression, using 1L and 0L for better readability","Data Handling"
+"use custom types in dao.readEntity, simplify dao with getEntityValueExpression, using 1L and 0L for better readability","Data Handling"
+"added some value tests for CustomTypeEntityTest","Testing"
+"added codeBefore* for properties","Feature"
+"new entity version quotes table name","Data Handling"
+"use codeBefore* in DateEntity","Data Handling"
+"set version to 2.0.0-SNAPSHOT, updated README.md","Structure/Documentation"
+"added addImport for entities","Other"
+"moved changelog to separate file","Structure/Documentation"
+"started feature overview","Structure/Documentation"
+"added 'Add greenDAO to your project' section","Other"
+"moved PropertyConverter into converter package","Structure/Documentation"
+"prepared IntegerListConverter","Feature"
+"Version 2.0.0","Structure/Documentation"
+"added AbstractQueryWithLimit, fixed some TODOs and typos","Other"
+"2.1.0-SNAPSHOT","Structure/Documentation"
+"first version of CursorQuery","Structure/Documentation"
+"fix javadoc","Structure/Documentation"
+"sketching a Database abstraction","Data Handling"
+"more Database abstraction","Data Handling"
+"more Database abstraction","Data Handling"
+"Database abstraction for templates","Data Handling"
+"SQLCipher database implementation","Data Handling"
+"fixes, all unit tests are green again","Other"
+"setting version 2.1.0-SNAPSHOT also for generator","Structure/Documentation"
+"gradle for ormlite perf test project","Testing"
+"Actually add dependencies for OrmLite perf test.","Testing"
+"Merge pull request #209 from greenrobot-team/fix-missing-dependencies
+
+Actually add dependencies for OrmLite perf test.","Git Operation"
+"Specify artifact ids in build.gradle files.
+
+- Remove settings.gradle files.","Structure/Documentation"
+"Update Android SDK build tools to 23.0.0.
+
+- https://developer.android.com/tools/revisions/build-tools.html
+- Also update Android Plugin for Gradle to 1.3.1.
+- http://tools.android.com/tech-docs/new-build-system","Structure/Documentation"
+"Disable sudo for travis, auto uses new container-based builders.","Structure/Documentation"
+"Fix Android tests failing due to timeouts.
+
+- http://stackoverflow.com/questions/28949722/android-tests-fail-on-travis-with-shellcommandunresponsiveexception","Other"
+"Merge pull request #210 from greenrobot-team/fix-project-import
+
+Fix project import","Git Operation"
+"Merge branch 'master' into DbAbstraction
+
+Conflicts:
+	DaoGenerator/build.gradle","Git Operation"
+"Make DaoExample a proper Android app project.
+
+- Use latest greenDao release 2.0.0.
+- Fix https://github.com/greenrobot/greenDAO/issues/155.","Bug Fix/Error Handling"
+"Merge pull request #212 from greenrobot-team/fix-example-app
+
+Fix example app","Git Operation"
+"Update ORMlite to 4.48.
+
+- http://ormlite.com/changelog.txt
+- Also add as a gradle dependecy, remove library jars.","Structure/Documentation"
+"Clean up ORMlite test config.","Structure/Documentation"
+"Add jcenter to global repositories.","Feature"
+"Add performance test for realm.
+
+- Add realm 0.82.1.
+- Still have to use old JUnit 3 ApplicationTestCase as there is no new equivalent for AndroidJUnitRunner :(","Testing"
+"Add property access test to greenDAO perf test.
+
+- Simply get every property of the entity under test. Logged as "access-all-1" and "access-all-2".","Testing"
+"Add BuildConfig flags for enabling perf tests, disabled by default.","Testing"
+"For completeness: access properties in ORMLite perf test.","Testing"
+"Set perf test batch size to 10.000, do 8 runs.","Testing"
+"Add perf test for ActiveAndroid.","Testing"
+"Properly call super setUp and tearDown test methods.","Testing"
+"Measure deletion time in third-party perf tests.","Testing"
+"Also run deleteAll after last run.","Other"
+"Add space before time unit.
+
+- Also add '(batch)' flag to load log output.
+- Fix realm delete log.","Other"
+"List count of entities for greendao access test.","Testing"
+"Move perf tests to their own directory.
+
+- Also clean up OrmLite test, restructure to recommended gradle folder hierarchy.","Structure/Documentation"
+"Merge pull request #226 from greenrobot-team/extend-performance-tests
+
+Extend performance tests","Git Operation"
+"Add Android support library repository to travis
+
+- Fixes build breakage after adding dependency to Android support library.","Other"
+"Merge pull request #227 from greenrobot-team/add-support-lib-travis
+
+Add Android support library repository to travis","Git Operation"
+"Fix codeBeforeSetter, added codeBeforeGetterAndSetter","Feature"
+"Merge branch 'master' of ssh://github.com/greenrobot/greenDAO","Git Operation"
+"fix async queries","Data Handling"
+"moving to standard src folders","Structure/Documentation"
+"adding robolectric tests","Testing"
+"Merge branch 'master' into DbAbstraction","Git Operation"
+"added getAllDaos to DaoSession","Other"
+"added changes until now for upcoming V2.1.0","Structure/Documentation"
+"added Parse perf test","Testing"
+"Set SDK and build tools in root gradle, update travis config.
+
+- Compile with SDK level 23.
+- Use build tools 23.0.1.","Structure/Documentation"
+"Fix case of DaoCore source file directory name.","Structure/Documentation"
+"Merge pull request #232 from greenrobot-team/set-sdk-in-root
+
+Set SDK level in root Gradle config, fix travis build.","Git Operation"
+"Comparison performance test for the Cupboard library.","Testing"
+"Don't run tests by default.","Testing"
+"Use spaces for indentation.","Structure/Documentation"
+"Simplify log output.","Structure/Documentation"
+"Use SDK level settings from root config.","Structure/Documentation"
+"Merge pull request #231 from greenrobot-team/erickok-cupboard-performance-test
+
+Cupboard performance test","Git Operation"
+"Make Parse test an instrumented test.
+
+- Also update parse-android to 1.10.1.","Testing"
+"Add Couchbase perf test.
+
+- Take this with a grain of salt, as Couchbase is a NoSQL (document-based) data store. All ops can only be one-by-one, no batching is supported.","Testing"
+"Add Firebase performance test.
+
+- Use firebase-client-android 2.3.1.","Testing"
+"Merge pull request #230 from greenrobot-team/cleanup-parse-test
+
+Make Parse test an instrumented test","Git Operation"
+"Merge pull request #234 from greenrobot-team/perf-test-couchbase
+
+Add Couchbase perf test","Git Operation"
+"Merge pull request #233 from greenrobot-team/perf-test-firebase
+
+Add Firebase performance test.","Git Operation"
+"Improve Cupboard test.
+
+- Shorten log tag.
+- Add proper start log.
+- Run delete within test.
+- Formatting.","Testing"
+"Add concept of indexed string entity query perf test.
+
+- Added for cupboard first.","Testing"
+"Extract string and index generator to common module.","Structure/Documentation"
+"Clean up PerformanceTestActiveAndroid.","Structure/Documentation"
+"Add indexed string test for Active Android.
+
+- Add dependency on Common module.
+- Update support-v4 to 23.0.1.
+- Do database setup within tests, tear down remains global.","Structure/Documentation"
+"Add tweaks from Active Android indexed test to cupboard test.
+
+- Create entities after database setup.
+- Add log output between steps.","Other"
+"Clean up OrmLite test.","Other"
+"Use provided OrmLiteSqliteOpenHelper, fix minimal entity test.","Other"
+"Add indexed string test for ORMLite.
+
+- Add dependency on Common module.","Testing"
+"Add IndexedStringEntity to dao test module.","Testing"
+"Add indexed string test for greenDAO.","Testing"
+"Actually query for strings in Active Android test.","Testing"
+"Add runs to greendao indexed test.","Testing"
+"Add runs to Active Android indexed test.","Testing"
+"Add runs to cupboard indexed test.","Testing"
+"Add runs to ORMLite indexed test.","Testing"
+"package rename to io.objectbox","Structure/Documentation"
+"move java tests to tests sub dir","Testing"
+"minor improvements to flatbuffers model, move java model classes with cp and sed","Feature"
+"fix imports for new model package","Structure/Documentation"
+"more flexible BoxStoreBuilder.java and android Context support","Other"
+"defaultStore in BoxStoreBuilder.java","Other"
+"move defaultStore in BoxStore.java","Structure/Documentation"
+"collect entity classes using builder","Data Handling"
+"renamed some VS stuff to ObjectBox, removed .gitignore for tests","Structure/Documentation"
+"load lib objectbox","Structure/Documentation"
+"minor","Other"
+"added property flag NON_PRIMITIVE_TYPE
+
+added Properties class
+
+give Cursors a Properties instance
+
+verify entity is know before returning a box
+
+prepared 2nd entity TestEntityMinimal.java for unit testing
+
+sharedReadTx to make txs across boxes work
+
+fix some test deps","Other"
+"Box: some JavaDocs, shortcut for null or empty collections","Other"
+"prep daocompat for upload","Structure/Documentation"
+"find scalars using a list","Feature"
+"Java: find string returns a list","Feature"
+"added find()s to Box","Feature"
+"various, e.g. running bulk perf test from example app","Testing"
+"perf test: added fixed byte array with length 6","Testing"
+"find string using property id","Data Handling"
+"add version","Structure/Documentation"
+"getting all entities in native, crashes at the moment (local reference table overflow (max=512)) and is slower on Desktop when deleting local refs
+
+Java_io_objectbox_Cursor_nativePutSimpleEntity
+
+Basic copy of query and builder API.
+
+Initial query implementation using objectbox find.
+
+Use find method overloads based on value type.
+
+Java_io_objectbox_Cursor_nativeFindScalarPropertyId","Other"
+"testUnalignedMemoryAccess","Testing"
+"CursorBytesTest.java: Sizes must be multiple of 4 (currently not enforced)","Testing"
+"fix some java tests: pad bytes to length 4","Testing"
+"moved objectbox-api to objectbox-java-api","Structure/Documentation"
+"prepared Query&Builder on the Java side","Data Handling"
+"fixes to build Query in Java","Data Handling"
+"added @Temporary to API","Other"
+"init Property IDs (for query builder)","Data Handling"
+"fixes to make Java Query work","Bug Fix/Error Handling"
+"count for Java Query","Data Handling"
+"!=, >, < for scalars","Feature"
+"== and != for String","Feature"
+"contains, startsWith, and endsWith for String","Feature"
+"java find with offset and limit","Other"
+"in and betwwen for Java QueryBuilder (FIXME DbException: invalid unordered_map<K, T> key)
+
+Java query builder: null/notNull && FP
+
+Fix TestEntityProperties types and all properties field.
+
+- Also populate simpleLong property in Query test.
+
+Support additional query conditions.
+
+Do not validate values for null/notNull operations.
+
+Actually copy values for in op.
+
+Add Float support to PropertyCondition greater/less ops.
+
+- They support Double, so they should support Float as well.
+
+rename WhereCondition to QueryCondition","Other"
+"fix tests using DummyProperties","Testing"
+"Add contains, starts/endsWith to Property class.
+
+- Replacement for like() from greenDAO.","Feature"
+"prep some PropertyConverter stuff to happen in C++","Feature"
+"fix","Other"
+"Generate converter info into Property Java class (0.9.1-SNAPSHOT)","Feature"
+"make Properties available to BoxStore, prep native registration","Feature"
+"fix JniPropertyConverter.javaClassName","Other"
+"added testBigResultList","Testing"
+"fix JavaDoc errors","Bug Fix/Error Handling"
+"make property flags uint and type ushort","Other"
+"added idAssignable flag","Other"
+"Put @Id(assignable = true) on Order","Other"
+"Need to retain Entity annotation for ProGuard. #25
+
+- With RetentionPolicy.SOURCE the annotation is already stripped by the compiler, before ProGuard gets a chance to transform the byte code. So set at least RetentionPolicy.CLASS.","Bug Fix/Error Handling"
+"added refId to @Entity and @Property","Data Handling"
+"add refId and id to model","Data Handling"
+"added id and refId to ModelBuilder","Data Handling"
+"ignore tests with size != modulo 4","Testing"
+"add indexId to model","Data Handling"
+"consider ids in generator","Other"
+"fixes for model IDs","Other"
+"add lastEntityId and lastIndexId to model","Data Handling"
+"lastEntityId lastIndexId in model builder, etc","Data Handling"
+"lastEntityId lastIndexId in generator, fix modelIndexId in ftl","Data Handling"
+"RetentionPolicy.CLASS for a couple more annotations","Other"
+"added lastPropertyId to model entity","Data Handling"
+"added lastEntityId to model builder and ftl","Data Handling"
+"generator fixes","Other"
+"test adjustments for recent schema sync changes (ref IDs etc.)","Testing"
+"added OrderFlags","Other"
+"QueryOrder: support for null flags (first, last, zero)","Data Handling"
+"removed NULLS_FIRST order flag, CASE_SENSITIVE replaces IGNORE_CASE_ASCII","Data Handling"
+"added order to QueryBuilder.java","Data Handling"
+"improved JavaDoc on queries","Structure/Documentation"
+"JNI call find without offset/limit if possible","Other"
+"StringOrder for string query conditions","Data Handling"
+"use collect400000 and collect430000 to consume non-primitive values first","Other"
+"collect002033 for FP intensive entities, added Char type to generator","Feature"
+"collect004000 for primitives only","Other"
+"properties to begin with lower char in accordance to JPA2","Other"
+"Store and verify id in generated Property","Data Handling"
+"createMinMaxVisitor with type trades to compile with VS, connected new query aggregates to java, remove too but still throws","Bug Fix/Error Handling"
+"Query.java: fix remove()","Data Handling"
+"add testFindKeysUnordered","Testing"
+"return long for native QueryBuilder methods","Data Handling"
+"basic setParameter for Java","Feature"
+"Port stringOrderCollation to QueryBuilder.
+
+- Though change signature to accept only new StringOrder constant instead of any SQLite collate string.
+
+Support setParameter in daocompat, properly rebuild query.
+
+- Support setParameter and undeprecate it.
+- The ObjectBox query is now (re)built when creating a new query or resetting it (for a new thread). QueryBuilder now only records desired conditions and orders. Previously would simply re-use the same ObjectBox query object built by QueryBuilder, which would obviously not be re-set to initial values.
+
+JNI/Java: setParameter for FP, between for FP
+
+Support double values for setParameter.
+
+- Also throw on unsupported parameter types.
+
+Support double values for BETWEEN op.
+
+- Add test.
+
+add :tests:test-proguard","Other"
+"@Retention(RetentionPolicy.CLASS) for all","Structure/Documentation"
+"make Query.setParameter return Query to make Query chainable","Data Handling"
+"0.9.3","Other"
+"JNI for new Store and Tx methods (renewal etc.)","Feature"
+"fix TransactionPerfTest","Testing"
+"preped Cursor.renew(tx) in Java","Other"
+"test for Cursor.renew(tx) in Java","Testing"
+"runInReadTx","Other"
+"testRunInReadTx_putFails","Testing"
+"recycle and renew box reader instead of sharing to avoid readers to hold on to their data","Feature"
+"added CrashReportLogger from Java side","Bug Fix/Error Handling"
+"fix tests the expect an ex type","Testing"
+"BoxStore check if it need to unpack native lib from classpath (Windows)","Structure/Documentation"
+"Update flatbuffers to 03ee3db2408e477137c83195e0e18c26f9d2ab25","Feature"
+"add native lib unpack logic for linux","Structure/Documentation"
+"embedd flatbuffers as source to fix dependency issue","Bug Fix/Error Handling"
+"minor","Other"
+"check for android native lib","Structure/Documentation"
+"relations: store target entity (WIP, not sure about using the name in the model)","Data Handling"
+"rename PropertyType_Reference to PropertyType_Reference","Structure/Documentation"
+"0.9.6-SNAPSHOT, VS updates, @Relation","Structure/Documentation"
+"typo","Other"
+"added DbDetachedException.java","Bug Fix/Error Handling"
+"setting some years to 2017","Other"
+"fix setting boxStore, to-one relations now work!","Bug Fix/Error Handling"
+"some fixes for relation","Data Handling"
+"prepared getBacklinkEntities to resolve to-many relations","Bug Fix/Error Handling"
+"fixes to make to-many relations work","Bug Fix/Error Handling"
+"added Box.attach for entities not originating from DB","Data Handling"
+"add Cursor.boxStoreForEntities etc.","Data Handling"
+"ToOne: Sketching a replacement for length generation of to-one getters","Data Handling"
+"use cursorConstructorCache for Transaction","Feature"
+"Box.getId, ReflectionCache","Data Handling"
+"make Property.id public final","Other"
+"prepare ToOne to be used in generated to-one getters etc.","Data Handling"
+"various improvements to ToOne","Feature"
+"fixes to make ToOne work","Bug Fix/Error Handling"
+"Copied entity annotation test to java-test","Testing"
+"0.9.7-SNAPSHOT","Structure/Documentation"
+"rename to findIdsUnordered","Data Handling"
+"added some putTestEntity methods to AbstractObjectBoxTest, rename to TestEntity_.java","Testing"
+"Query.findLazy() returns LazyList","Data Handling"
+"renaming refID to uid on Java side","Data Handling"
+"more renaming refId to uid on C++ side","Data Handling"
+"some more renaming refID to uid on Java side","Data Handling"
+"add LazyListTest to FunctionalTestSuite.java, move QueryTest.java","Testing"
+"use IdUid for in model for last*Ids, more UID checks, e.g. check incoming vs existing UIDs","Data Handling"
+"add missing IdUid.java","Other"
+"switched IdUid to struct","Feature"
+"adjust Java part to IdUid model changes","Other"
+"added indexUid to FlatProperty&Property, CURRENT_META_VERSION = 2, MODEL_VERSION = 2, extended Schema-Entity-Flat-Roundtrip to check property/index IDs&UIDs","Data Handling"
+"Query: support for boolean and Date types","Data Handling"
+"Java QueryBuilder.notIn","Data Handling"
+"set versions to 0.9.7-2017-02-09","Structure/Documentation"
+"using io.objectbox:objectbox-generator:0.9.7-RC, fixing generated stuff","Structure/Documentation"
+"added ObjectClassListener on Java side","Feature"
+"extended ObjectClassListenerTest","Testing"
+"added BoxStore.removeObjectClassListener()","Feature"
+"moved ModelUpdate, and ModelModifier away","Structure/Documentation"
+"changed listeners to Multiset","Feature"
+"some docs for async transactions","Structure/Documentation"
+"added close&finalize to Query","Data Handling"
+"'Observer'name more en vogue these days...","Other"
+"weak observers","Other"
+"common thread pool, etc.","Feature"
+"rename addObjectClassObserver to subscribe etc.","Structure/Documentation"
+"added QueryObserver.java","Data Handling"
+"AbstractObjectBoxTest: use IDs from TestEntity_","Testing"
+"General observers","Other"
+"Transformer test","Testing"
+"Scheduler test","Testing"
+"testTransformerWithScheduler","Testing"
+"remove obsolete ObjectClassObserver.java and Subscription (android)","Structure/Documentation"
+"Data prefix for Observer, Publisher, and Subscription classes","Other"
+"SubscriptionBuilder: renamed subscribe() to observer(), JavaDocs; tests for ErrorObserver","Other"
+"added basic JavaDocs for BoxStore, Box, SubscriptionBuilder","Structure/Documentation"
+"Make ObjectClassPublisher.java use one thread for observer notifications","Feature"
+"updated javadoc for subscribing observers (threading)","Structure/Documentation"
+"use generic Observer for Query","Data Handling"
+"archived: Query observer with Transformer (not weak!)","Other"
+"Revert 'archived: Query observer with Transformer (not weak!)'
+
+This reverts commit a52e340acdbb0759da50d071733e418945e008a4.","Git Operation"
+"Query uses SubscriptionBuilder via QueryPublisher","Data Handling"
+"testTranformer for Query","Testing"
+"call onError also for Observer exceptions","Bug Fix/Error Handling"
+"JavaDoc updates for Observer exceptions","Structure/Documentation"
+"Added JavaDoc to Query","Structure/Documentation"
+"renamed to DataTransformer.java, added JavaDoc","Structure/Documentation"
+"introduced DelegatingObserver to unwrap observers during removal, fixes a observer leak with wrapped observers","Bug Fix/Error Handling"
+"use DataPublisherUtils.removeObserverFromCopyOnWriteSet in QueryPublisher.java, too","Data Handling"
+"fixing weak observers","Bug Fix/Error Handling"
+"test tweek: allocating 16 MB chunks is faster than 64 & 128 (~0,3s instead of ~1s) and a bit faster than 8 and 32","Testing"
+"0.9.8-RC2: Query.publish()","Data Handling"
+"SubscriptionBuilder.single()","Feature"
+"QueryBuilder.or()","Data Handling"
+"Query observers get results immediately with subscription","Data Handling"
+"QueryBuilder.and()","Data Handling"
+"improved state checks for Query","Data Handling"
+"SubscriptionBuilder.onlyChanges()","Feature"
+"AndroidScheduler.java: static method instead of field, JavaDoc","Structure/Documentation"
+"some notes on weak references and stale query observers","Structure/Documentation"
+"0.9.8-RC5, testRelationToOneQuery, javaDocs","Testing"
+"javadoc","Structure/Documentation"
+"added testRunInReadTxAndThenPut (failing)","Testing"
+"fix relation test for android","Testing"
+"added MultithreadedRelationTest.java","Testing"
+"JniBasicsTest to identify ReferenceTable leak","Testing"
+"misc","Other"
+"Query.forEach (FIXME: make public after runInReadTx is fixed)","Data Handling"
+"testForEach","Testing"
+"tx is null despite check in constructor in some tests (called by finalizer):
+Null check avoids NPE in finalizer and seems to stabilize Android instrumentation perf tests.","Other"
+"Cursor calls nativeDestroy now also when tx is closed","Feature"
+"make testTxGC() run finalizers to clean up dangling TXs to avoid them surving the store closing","Testing"
+"Transaction.java: WARN_FINALIZER debug flag to see finalizers in action","Bug Fix/Error Handling"
+"AbstractObjectBoxTest.java: run finalizers to clean up before store closing","Testing"
+"close transactions in unit tests","Testing"
+"debug finalizer warning for Cursor","Bug Fix/Error Handling"
+"clean read-only cursor from box after read-only TX completes","Structure/Documentation"
+"make Query.forEach public","Other"
+"make handle package visible to avoid accessor creation","Structure/Documentation"
+"V0.9.9","Structure/Documentation"
+"api annotation changes for 0.9.10","Structure/Documentation"
+"Query: remove private from native methods because they are typically accessed in an anonymous class, which requires the compiler to generate an access method","Other"
+"remove getProperties call from QueryBuilder.java - does not seem to have an effect, but creates&releases a reader","Data Handling"
+"custom toString for Cursor.java and Transaction.java","Feature"
+"Java: keep thread local reader after TX was committed, debugTransactions flag","Other"
+"added IndexReaderRenewTest.java to verify today's changes","Testing"
+"added IndexReaderRenewTest to FunctionalTestSuite.java","Testing"
+"closeThreadResources() to free any cached resources tied to the calling thread (e.g. readers)","Feature"
+"added ObjectBoxThreadPool.java to release thread local resources, etc","Feature"
+"better error message for getBacklinkEntities (closes GitHub issue #41)","Bug Fix/Error Handling"
+"Java version: 0.9.10-2017-04-13","Structure/Documentation"
+"ModelRelation generation","Data Handling"
+"ToOne: remove SOURCE generics, add optional targetId property, added ToOneTest.java","Other"
+"added AbstractRelationTest, used now by ToOneTest","Testing"
+"Use IdSetter instead of dummy Cursor","Data Handling"
+"Use IdGetter instead of dummy Cursor","Data Handling"
+"de-activate Customer.java and Order.java in test","Testing"
+"updates to generated test classes","Testing"
+"sketching CursorFactory","Feature"
+"test fixes","Testing"
+"fixed a couple of warnings","Bug Fix/Error Handling"
+"started to use JSR-305 annotations","Structure/Documentation"
+"more JSR-305 annotations","Structure/Documentation"
+"updated flatbuffers to 340d1a3447cf821924aaaeefa5e6aef0fcdbf0c0","Other"
+"multiple refactorings: Cursor creation via factory, added RelationInfo, extended Properties class to be single source for entity info","Structure/Documentation"
+"renamed Properties to EntityInfo","Structure/Documentation"
+"regenerated test artifacts with current version","Testing"
+"refactoring: RelationInfo.java used EntityInfo","Structure/Documentation"
+"ToOne puts via cursor if necessary","Other"
+"ToOne fixes: isResolved(), cached target/id after put","Bug Fix/Error Handling"
+"ToOne: flag to avoid calls to {@link #getTargetId()}, which may involve expensive reflection","Other"
+"updated cursor gen","Structure/Documentation"
+"updated cursor gen","Structure/Documentation"
+"shorter @Generated (no more "hash = ")","Other"
+"removed @JoinEntity which does not make sense for ObjectBox","Data Handling"
+"JavaDoc covering special @Uid values","Structure/Documentation"
+"@NameInDb replaces attribute in @Property and @Entity","Data Handling"
+"minor docs, todos, v","Structure/Documentation"
+"fix testCloseThreadResources by using getReader()","Testing"
+"Move loadLibrary into NativeLibraryLoader to make BoxStore mockable","Structure/Documentation"
+"minor, added javadocs","Structure/Documentation"
+"added EntityInfo.getEntityId()","Data Handling"
+"first compilable ToMany","Data Handling"
+"improved ToMany.checkGetEntities()","Data Handling"
+"use ToMany in tests","Testing"
+"started ToMany.add methods, experimental ListFactory.java","Feature"
+"lazy ListFactory init","Feature"
+"ToMany puts added target entities","Data Handling"
+"ensure order of added entities to ToMany","Data Handling"
+"internalRequiresPutTarget determines entities to put (avoids getting cursors if not required)","Data Handling"
+"remove with remove from DB","Data Handling"
+"ToMany.removeFromTargetBox flag","Feature"
+"ToMany: add() removes entities from remove tracking, tests for remove","Testing"
+"ToMany.syncToTargetBox()","Other"
+"ToMany.sortById()","Other"
+"ToMany: clear all on reset(), JavaDoc","Other"
+"JavaDocs","Structure/Documentation"
+"added @Backlink","Feature"
+"for non-Android OS, prefer System.load over System.loadLibrary","Structure/Documentation"
+"throw to test sth in Jenkins","Testing"
+"temp code to debug Jenkins","Bug Fix/Error Handling"
+"revert debug code","Bug Fix/Error Handling"
+"FunctionalTestSuite.java: Duplicate for gradle","Testing"
+"added flags for entity meta data","Other"
+"prep Java test for non-arg constructor usage","Testing"
+"add NonArgConstructorTest to suite","Testing"
+"add NonArgConstructorTest to suite (Gradle)","Testing"
+"test nonArg constructor with more types","Testing"
+"API: @Entity(useNoArgConstructor=...)","Other"
+"minor JavaDoc","Structure/Documentation"
+"start of objectbox-kotlin","Structure/Documentation"
+"move kotlin extentions into kotlin sub package","Structure/Documentation"
+"make ToOne and ToMany serializable","Data Handling"
+"shutdown thread pool when closing BoxStore","Feature"
+"minor: suppress warning","Bug Fix/Error Handling"
+"dump thread stacks if pool does not terminate promptly","Feature"
+"testCloseBulk to check on Linux","Testing"
+"testCloseBulk to check on Linux, now with 2 TXs","Testing"
+"removed testCloseBulk again; no flaws discovered","Testing"
+"allow setting max readers C++ & JNI","Other"
+"simplify test","Testing"
+"javadocs for BoxStoreBuilder","Structure/Documentation"
+"minor","Other"
+"BoxStoreBuilder.maxReaders, DbMaxReadersExceededException.java","Bug Fix/Error Handling"
+"fix: DbMaxReadersExceededException needs error code constructor","Bug Fix/Error Handling"
+"Jenkinsfile: enable extensive-tests for Java tests","Testing"
+"property: added virtual flag and virtualTarget","Feature"
+"minor improvements for ToOne","Feature"
+"ModelBuilder: allow passing virtualTarget","Feature"
+"ModelBuilder: allow passing virtualTarget 2","Feature"
+"temp debug log for setResolvedTarget","Bug Fix/Error Handling"
+"debugRelations flag","Bug Fix/Error Handling"
+"prevent two BoxStores from being opened for the same directory","Other"
+"better to explicitly close store before building new one","Feature"
+"added Box.get(Iterable) and .getMap(Iterable)","Feature"
+"updated CHANGELOG.md, typo","Structure/Documentation"
+"add Box.get(long[] ids)","Feature"
+"Replaced some greenrobot references with ObjectBox","Structure/Documentation"
+"testCallInTxAsync_Error","Testing"
+"testRunInTx_PutAfterRemoveAll","Testing"
+"inValues method alias for Kotlin","Feature"
+"model support for Relation","Data Handling"
+"prep RelationInfo for relationId","Data Handling"
+"some prep ToMany.java for standalone relations","Data Handling"
+"some more prep for ToMany.java for standalone relations","Data Handling"
+"prep standalone relation modifications","Data Handling"
+"prep standalone relation loading","Data Handling"
+"ModelBuilder.java: add relations","Data Handling"
+"relation fixes","Data Handling"
+"fix EntityBuilder.relation model building","Data Handling"
+"adjustments to getting relations (Java)","Data Handling"
+"ToMany.java: Do not use Iterator with remove because not all List Types support it (e.g. CopyOnWriteArrayList)","Other"
+"added stand alone relation tests","Testing"
+"API_ added @TargetIdProperty, deprecated old annotations","Structure/Documentation"
+"testToOneBulk and testToManyBulk","Testing"
+"some renames, added ToManyGetter","Structure/Documentation"
+"use To[Many|One]Getters in RelationInfo.java","Data Handling"
+"make ToManyGetter return List","Other"
+"added store.callInReadTx()","Feature"
+"Query: eager relations","Data Handling"
+"JavaDocs for QueryBuilder.eager(...)","Structure/Documentation"
+"change RelationInfo signature","Structure/Documentation"
+"BreakForEach for Query.forEach()","Data Handling"
+"added query filtering","Data Handling"
+"add javadoc-style","Structure/Documentation"
+"add .gitignore","Structure/Documentation"
+"add gradle files","Structure/Documentation"
+"add Jenkinsfile","Structure/Documentation"
+"add gradle files for tests","Structure/Documentation"
+"for linux64, add native dependency","Structure/Documentation"
+"fix version for native dependency","Structure/Documentation"
