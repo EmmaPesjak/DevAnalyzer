@@ -1,5 +1,6 @@
 from models.batch_analyzer import BatchAnalyzer
 from models.transformer_analyzer import TransformerAnalyzer
+from models.bert_commit_analyzer import BertCommitAnalyzer
 import time
 
 
@@ -20,6 +21,7 @@ class MainController:
         self.view.set_on_input_change(self.retrieve_url)
         self.analyzer = BatchAnalyzer()
         self.transformer_analyzer = TransformerAnalyzer()
+        self.bert_commit_analyzer = BertCommitAnalyzer()
 
 
     def retrieve_url(self, new_url):
@@ -51,6 +53,7 @@ class MainController:
             if self.main_model.write_to_file():
                 all_commits = self.main_model.get_all_authors_and_their_commits()
                 self.analyzer.analyze_commits(all_commits)
+                self.test_bert_model(all_commits)
                 # self.transformer_analyzer.analyze_commits(self.main_model.get_auths_commits_and_files())
                 # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
@@ -65,3 +68,9 @@ class MainController:
         end_time = time.time()  # Stop timing
         duration = end_time - self.start_time  # Calculate duration
         print(f"Total time taken: {duration} seconds")
+
+
+    def test_bert_model(self, all_commits):
+        self.bert_commit_analyzer.analyze_commits(all_commits)
+        # for commits in all_commits:
+        #     self.bert_commit_analyzer.analyze_commits(commits)
