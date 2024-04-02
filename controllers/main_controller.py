@@ -72,5 +72,44 @@ class MainController:
 
     def test_bert_model(self, all_commits):
         self.bert_commit_analyzer.analyze_commits(all_commits)
-        # for commits in all_commits:
-        #     self.bert_commit_analyzer.analyze_commits(commits)
+        file_data = self.read_file_data()
+        top_10_per_user = file_data["top_10_per_user"]
+
+        final_summary = self.generate_file_summary(top_10_per_user)
+        print(final_summary)
+
+    def generate_file_summary(self, top_10_per_user):
+        summaries = []
+        for author, files in top_10_per_user.items():
+            # Start the summary for this author
+            summary = f"{author} has primarily contributed to the following files: "
+            # Sort the files based on the number of contributions, descending
+            sorted_files = sorted(files.items(), key=lambda x: x[1], reverse=True)
+
+            # Generate a list of file names and their contribution count
+            file_summaries = [f"{file} ({count} changes)" for file, count in sorted_files]
+
+            # Join the file summaries into a single string with proper punctuation
+            summary += ", ".join(file_summaries[:-1]) + ", and " + file_summaries[-1] + ".\n"
+
+            # Add this author's summary to the overall list
+            summaries.append(summary)
+
+        # Join all author summaries into one large summary text
+        final_summary = " ".join(summaries)
+        return final_summary
+
+    def read_file_data(self):
+        """
+        Read data from a file and return it.
+        """
+        filename = "support//repo_stats.py"
+        local_variables = {}
+        with open(filename, 'r', encoding="utf-8") as file:
+            file_content = file.read()
+            # Execute the file content in an empty global namespace and capture the local variables
+            exec(file_content, {}, local_variables)
+            return local_variables
+
+
+
