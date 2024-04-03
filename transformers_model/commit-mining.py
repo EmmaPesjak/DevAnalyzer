@@ -17,6 +17,7 @@ def download_commit_messages(repo_url):
     output_directory = "commit_messages"
     os.makedirs(output_directory, exist_ok=True)
     output_file_path = os.path.join(output_directory, f"{repo_name}_commit_messages.txt")
+    readme_file_path = os.path.join(output_directory, f"{repo_name}_readme.txt")
 
     # Open the output file
     with open(output_file_path, 'w', encoding='utf-8') as file:
@@ -25,6 +26,15 @@ def download_commit_messages(repo_url):
             # Write each commit message to the file
             file.write(f"\"{commit.msg}\",\"\"\n")
 
+            for modified_file in commit.modified_files:
+                if modified_file.filename.lower() == "readme.md":
+                    readme_content = modified_file.source_code
+
+    with open(readme_file_path, 'w', encoding='utf-8') as file:
+        if readme_content is not None:
+            file.write(readme_content)
+        else:
+            file.write("No readme content.")
 
 # Loop through the repository URLs
 for repo_url in repositories:

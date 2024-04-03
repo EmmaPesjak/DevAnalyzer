@@ -2450,10 +2450,8 @@ https://github.com/pxb1988/dex2jar/issues/495",""
 fix https://github.com/pxb1988/dex2jar/issues/477",""
 "fix Method code to large (#513)
 
-* fix Method code to large
-
-
-
+* fix Method code to large
+
 * format",""
 "cherry-pick form
 
@@ -2495,32 +2493,19 @@ fixes https://github.com/pxb1988/dex2jar/issues/455",""
 https://github.com/pxb1988/dex2jar/issues/477",""
 "Update ASM to 9.5, drop AsmBridge (#591)
 
-* Update ASM to 9.5, drop AsmBridge
-
-
-
-asm may introduce incompatible between versions, the `api` pass to ClassVisitor() is for compatible.
-
-i believe keep the `api` separately is better than global constant. as we can upgrade asm without touching/review all dex2jar codes.
-
-
-
-AsmBridge is a tricky to 'Method Code too large', drop it.
-
-
-
-cherry-pick 600f04ade396e51087041d3d3d23487ce7238866 from https://github.com/ThexXTURBOXx/dex2jar
-
-
-
-* upgrade to new asm api
-
-
-
----------
-
-
-
+* Update ASM to 9.5, drop AsmBridge
+
+asm may introduce incompatible between versions, the `api` pass to ClassVisitor() is for compatible.
+i believe keep the `api` separately is better than global constant. as we can upgrade asm without touching/review all dex2jar codes.
+
+AsmBridge is a tricky to 'Method Code too large', drop it.
+
+cherry-pick 600f04ade396e51087041d3d3d23487ce7238866 from https://github.com/ThexXTURBOXx/dex2jar
+
+* upgrade to new asm api
+
+---------
+
 Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 "Better warning
 
@@ -2537,18 +2522,12 @@ Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 "support dex 039 and 040",""
 "Merge pull request #592 from pxb1988/dex040
 
-* support dex039 & dex040
-
-
-
-support read/write/smali/baksmali dex039.
-
-
-
-support const-mothod-type and const-method-handler, syntax is same as google's smali fork. (google 's smali 3.0.3 can't assemble the two instruction back to dex)
-
-
-
+* support dex039 & dex040
+
+support read/write/smali/baksmali dex039.
+
+support const-mothod-type and const-method-handler, syntax is same as google's smali fork. (google 's smali 3.0.3 can't assemble the two instruction back to dex)
+
 dex040 support space and other unicode in SimpleName, d2j-smali will escape space char to unicode.",""
 "support dex 038",""
 "Merge pull request #593 from pxb1988/dex038
@@ -2566,18 +2545,12 @@ support dex 038",""
 #	dex-translator/src/main/java/com/googlecode/d2j/dex/Dex2Asm.java",""
 "Extract Hex class resource logic to a separate method (#20)
 
-* feat: Extract Hex class resource logic to a separate method
-
-
-
-Sorry for the weird commit message, I couldn't find a way to word it better. Anyways..
-
-
-
-This commit extracts the `getResourceAsStream` call to a separate, protected method so it can be overrided, and we can provide the Hex class from a different source.
-
-
-
+* feat: Extract Hex class resource logic to a separate method
+
+Sorry for the weird commit message, I couldn't find a way to word it better. Anyways..
+
+This commit extracts the `getResourceAsStream` call to a separate, protected method so it can be overrided, and we can provide the Hex class from a different source.
+
 * fix: Check if Hex class stream is null",""
 "fix typos of hex strings decoding",""
 "Merge pull request #594 from pxb1988/improve-handling-large-arrays
@@ -2585,32 +2558,21 @@ This commit extracts the `getResourceAsStream` call to a separate, protected met
 Improve handling large arrays",""
 "Fix issues with J2IRConverter (#595)
 
-* Fix issues with J2IRConverter
-
-
-
-cherry-pick 09273cdb367bacfe8ad8cf32c4f34da2c881566b
-
-
-
----------
-
-
-
+* Fix issues with J2IRConverter
+
+cherry-pick 09273cdb367bacfe8ad8cf32c4f34da2c881566b
+
+---------
+
 Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 "typo similar with ffa0574dff776404d4fa4368057c72f610521a5c (#596)",""
 "update github actions (#597)
 
-* Update GitHub Actions
-
-
-
-
-
----------
-
-
-
+* Update GitHub Actions
+
+
+---------
+
 Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 "Add serialVersionUIDs
 
@@ -2645,49 +2607,29 @@ Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 Apply miscellaneous fixes",""
 "bring back asm bridge (#601)
 
-* revert AsmBridge
-
-
-
-* Update dependencies
-
-
-
-* Apply miscellaneous fixes
-
-
-
-* Reformat code
-
-
-
-* Reformat
-
-
-
-* Reformat code based on CheckStyle
-
-
-
-* clean up
-
-
-
----------
-
-
-
+* revert AsmBridge
+
+* Update dependencies
+
+* Apply miscellaneous fixes
+
+* Reformat code
+
+* Reformat
+
+* Reformat code based on CheckStyle
+
+* clean up
+
+---------
+
 Co-authored-by: Nico Mexis <nico.mexis@kabelmail.de>",""
 "remove hidden access flags (#600)
 
-* remove hidden access flags
-
-
-
-cherry-pick f6dc51e578c1304b3a0c5b9d6ff32f13ecf3651f
-
-
-
+* remove hidden access flags
+
+cherry-pick f6dc51e578c1304b3a0c5b9d6ff32f13ecf3651f
+
 * move removeHiddenAccess to Dex2Asm",""
 "Fix bug Nico found randomly
 
