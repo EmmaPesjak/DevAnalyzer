@@ -1,0 +1,37 @@
+Perfective:
+Non-functional (design, performance improvements,
+moving entities, code clean up, improving)
+
+Corrective:
+Bugs, faults, defects, errors
+
+Adaptive:
+Functional, test, features
+
+Administrative:
+Structure, documentation
+
+Other
+
+
+
+
+"Perfective
+This activity refers to changes that do not reflect the functional behavior of a software. It includes design, performance improvements and
+other non functional requirements. These activities aim at improving
+program structure (e.g., renaming or moving entities, pushing down
+attributes, code clean up, etc.) and system’s efficiency (e.g., improving
+algorithms, choosing more efficient data structures or library routines,
+and operating system tuning)." OBS DETTA ÄR DIREKT CITERAT FRÅN RODIS ARTIKEL
+
+"3.1.1. Corrective
+This is a corrective activity that includes fixing all types of possible
+problems (e.g., bugs, faults, defects, etc.). A bug is an error in the
+program, that causes the program to behave not as it was intended
+by the developer. Bugs can be classified into major or minor bugs
+according to their severity and their impact on the system. OBS DETTA ÄR DIREKT CITERAT FRÅN RODIS ARTIKEL
+3.1.2. Adaptive
+It is a functional activity where changes are made to adapt the
+software to new environments, platforms and software dependencies.
+Sometimes, adaptive changes reflect organizational policies or rules as
+well." OBS DETTA ÄR DIREKT CITERAT FRÅN RODIS ARTIKEL
