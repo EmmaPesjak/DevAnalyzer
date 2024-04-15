@@ -1,6 +1,6 @@
 message,label
 "initial commit","Administrative"
-"Added DaoBase Project","Administrative"
+"Added DaoBase Project","Administrative"s
 "stripped down because of AbstractDao","Administrative"
 "renamed table to entity","Perfective"
 "renamed column to property","Perfective"
