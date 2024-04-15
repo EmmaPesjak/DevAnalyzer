@@ -112,7 +112,7 @@ Compilation errors are fixed","Other"
 "Merge pull request #28 from t2y/master
 
 Updated policy files from red5.jar to red5-server.jar and red5-service.jar","Other"
-"Modified pom","Administrative"
+"Modified pom","Perfective"
 "Added check for denied connection in the request message task","Adaptive"
 "Modified rtmp handling for ping messages so that they are not queued","Perfective"
 "Modified handling of received messages to possibly prevent rejects","Perfective"
@@ -136,7 +136,7 @@ prevent receive queue filling up.","Adaptive"
 "Adding a space after if statements","Adaptive"
 "Create red5_codeformat_eclipse.xml
 
-Eclipse formatting config.","Administrative"
+Eclipse formatting config.","Adaptive"
 "Create red5_codetemplate.xml
 
 Eclipse code template","Administrative"
@@ -161,17 +161,17 @@ Updated copyright","Administrative"
 "Merge pull request #41 from solomax/master
 
 Tomcat is updated to the latest version 7.0.57","Other"
-"Updated pom","Administrative"
+"Updated pom","Perfective"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Added snapshot entry","Adaptive"
-"Updated pom","Administrative"
+"Updated pom","Perfective"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Updated artifact section","Perfective"
 "Update README.md","Administrative"
 "Added repos to pom to resolve missing libs","Corrective"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Added sonatype repos to fix jenkins","Corrective"
-"Updated pom","Administrative"
+"Updated pom","Perfective"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Added description from old site","Administrative"
 "Added link for prev releases","Other"
@@ -179,7 +179,7 @@ Tomcat is updated to the latest version 7.0.57","Other"
 "Added demos. Updated tomcatplugin","Other"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Updated links","Other"
-"Updated pom for 1.0.4 release","Administrative"
+"Updated pom for 1.0.4 release","Perfective"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Modified pom to prevent assembly from being deployed to nexus","Corrective"
 "Fixed and cleaned up assembly creation","Perfective"
@@ -203,7 +203,7 @@ Tomcat is updated to the latest version 7.0.57","Other"
 	This change is for red5-eclipse-plugin","Perfective"
 "Updated copyright and url","Administrative"
 "Updated version for release","Administrative"
-"Updated websocket plugin","Administrative"
+"Updated websocket plugin","Perfective"
 "Javadoc fixes","Administrative"
 "Added 1.0.5 release","Adaptive"
 "Added windows installer link","Adaptive"
@@ -243,7 +243,7 @@ Changed scope of connection task executors","Other"
 Removes Google Code link","Other"
 "Updated jdoc links","Administrative"
 "Minor change to assembly","Perfective"
-"Updated tomcat plugin and added embed el impl","Administrative"
+"Updated tomcat plugin and added embed el impl","Perfective"
 "Updated spring schemas to use generic >2.0 version which supports version 3+","Administrative"
 "Updated version","Administrative"
 "Updated dep versions","Administrative"
@@ -281,7 +281,7 @@ Quartz version is updated","Other"
 "Modified assembly to prevent -server suffix in tarball and zip","Perfective"
 "Updated tomcat to 8.0.28","Administrative"
 "Fix for issue #121","Corrective"
-"Updated pom for mina version range","Administrative"
+"Updated pom for mina version range","Perfective"
 "commons-collections version is bumped
 
 to have the latest security fix","Administrative"
@@ -290,7 +290,7 @@ to have the latest security fix","Administrative"
 commons-collections version is bumped","Other"
 "Updated deps","Perfective"
 "Updated Tomcat to 8.0.29. Updated Tomcat plugin to fix concurrent loading of the apps on startup. Fix other small items and formatting.","Perfective"
-"Updated pom","Administrative"
+"Updated pom","Perfective"
 "Updated to tomcat to 8.0.30 with a fix for relative redirection.","Corrective"
 "Cleaned up formatting. Updated websocket plugin","Perfective"
 "Added the chat room","Adaptive"
@@ -298,3 +298,362 @@ commons-collections version is bumped","Other"
 "Merge branch 'master' of github.com:Red5/red5-server","Other"
 "Adjusted launch scripts","Perfective"
 "Fixing squid:S2259: Null pointers should not be dereferenced","Corrective"
+"Fixing squid:S2583: Conditions should not unconditionally evaluate to 'TRUE' or to 'FALSE'
+Fixing squid:S2095:  Resources should be closed","Corrective"
+"spring version is updated","Administrative"
+"Merge pull request #136 from solomax/patch-8
+
+spring version is updated","Other"
+"Merge pull request #135 from DevFactory/Null-pointers-should-not-be-dereferenced
+
+Fixing squid:S2259: Null pointers should not be dereferenced","Other"
+"Reverted changes to FilePersistence since it was a false positive","Perfective"
+"Fixing squid:S1444 :"public static" fields should be constant","Corrective"
+"Fixing squid:S2275: Printf-style format strings should not lead to unexpected behavior at runtime","Corrective"
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit","Other"
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit","Other"
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit","Other"
+"Debugging handshake, fixed key hashing error","Corrective"
+"Continued debugging of server side of the handshake","Corrective"
+"Updated deps and more handshake work","Perfective"
+"Clients can connect, but there is still something wrong somewhere","Corrective"
+"Fixing squid:S2583: Conditions should not unconditionally evaluate to 'TRUE' or to 'FALSE' - Used try-with-resources for better code readability","Corrective"
+"Merge pull request #139 from DevFactory/Printf-style-format-strings-should-not-lead-to-une
+
+Fixing squid:S2275: Printf-style format strings should not lead to unexpected behavior at runtime","Other"
+"Merge pull request #137 from DevFactory/Conditions-should-not-evaluate-to-true-fix-1
+
+Fixing squid:S2583: Conditions should not unconditionally evaluate to 'TRUE' or to 'FALSE'","Other"
+"Merge pull request #141 from DevFactory/public-static-fields-should-be-constant
+
+Fixing squid:S1444 :'public static' fields should be constant","Other"
+"Working on handshake","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed an issue related to a PR that was merged","Corrective"
+"Dependencies were cleaned up","Perfective"
+"Merge pull request #143 from solomax/master
+
+Dependencies were cleaned up","Other"
+"Inbound handshake is fixed","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"RTMP handshake is fixed","Corrective"
+"Trying out a cname file for trac links","Adaptive"
+"Fixed rtmps (native)","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Logback is updated to be more compact","Perfective"
+"Merge pull request #144 from solomax/master
+
+Logback is updated to be more compact","Other"
+"Performed some clean up and refactoring. Disabled sysout4log.","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Attempting to fix hanging when rtmpt connects","Corrective"
+"Update Readme.md","Administrative"
+"Fixed MP4 issue with start frame","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Changed pom so tomcat-api is compile scope instead of provided","Perfective"
+"Fixes and mods for rtmpt connect. Added maven plugin versions back into pom. Fixed indentation in xml. Modified appadapter to use semaphore instead of sync","Perfective"
+"Moved connected state processing to end of handshake state to catch and process extra bytes (connect message)","Perfective"
+"Modified while debugging AMF decoding","Corrective"
+"Eclipse html warnings are fixed","Corrective"
+"Maven warnings 'The assembly descriptor contains a filesystem-root relative reference, which is not cross platform compatible' are fixed","Corrective"
+"Merge pull request #148 from solomax/master
+
+Minor fixes","Other"
+"Debugging decode of packets. Fixed javadoc","Corrective"
+"Updated websocket plugin","Perfective"
+"maven-compiler-plugin version is updated","Other"
+"Merge pull request #150 from solomax/patch-10
+
+maven-compiler-plugin version is updated","Other"
+"Added missing plugin","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Added contributing doc and eclipse formatter. Updated readme.","Administrative"
+"Removed build props. Updated tomcat to 8.0.32","Perfective"
+"Fixed tomcat issue caused by upgrade to 8.0.32","Corrective"
+"Updated chat demo","Perfective"
+"Added travis CI file","Adaptive"
+"Updated test logging","Perfective"
+"Removed the open jdks because the fail on getHostname","Corrective"
+"Added button for TravisCI","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed button for TravisCI","Corrective"
+"Added templates","Adaptive"
+"Updated to use parent pom","Perfective"
+"squid:S1185 - Overriding methods should do more than simply call the same method in the super class","Corrective"
+"Merge pull request #160 from georgekankava/release/overriding-methods-should-do-more-than-simply-call-the-same-method-in-the-super-class-fix-1
+
+squid:S1185 - Overriding methods should do more than simply call the same method in the super class","Other"
+"squid:CommentedOutCodeLine - Sections of code should not be 'commented out'","Corrective"
+"Merge pull request #162 from georgekankava/release/sections-of-code-should-not-be-ommented-out-fix-1
+
+squid:CommentedOutCodeLine - Sections of code should not be commented out","Other"
+"squid:S2293 - The diamond operator ('<>') should be used","Corrective"
+"Merge pull request #163 from georgekankava/release/the-diamond-operator-should-be-used-fix-1
+
+squid:S2293 - The diamond operator ('<>') should be used","Other"
+"Removed javadoc css","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"duplicate inclusion of maven-jar-plugin is removed","Perfective"
+"Deprecated calls and unused import are removed","Perfective"
+"squid:S2293 - The diamond operator ('<>') should be used","Corrective"
+"Multiple code improvements: squid:S00105, squid:S1854","Perfective"
+"Merge pull request #167 from georgekankava/staging/the-diamond-operator-should-be-used-fix-1
+
+squid:S2293 - The diamond operator ('<>') should be used","Other"
+"Merge pull request #166 from georgekankava/release/multiple-code-improvements-fix-1
+
+Multiple code improvements: squid:S00105, squid:S1854","Other"
+"Merge pull request #165 from solomax/master
+
+Deprecated calls and unused import are removed","Other"
+"Merge pull request #164 from solomax/patch-11
+
+duplicate inclusion of maven-jar-plugin is removed","Other"
+"Multiple code improvements - squid:S1171, squid:S134, squid:S1066","Perfective"
+"Merge pull request #168 from DevFactory/release/multiple-code-improvements-fix-2
+
+Multiple code improvements - squid:S1171, squid:S134, squid:S1066","Other"
+"Library versions are updated","Perfective"
+"Merge pull request #169 from solomax/patch-12
+
+Library versions are updated","Other"
+"Minor mods","Perfective"
+"Fixed conflicts","Corrective"
+"Added our base maven repo so the parent pom may be located","Adaptive"
+"Set to M6 and added handling for fragmented handshake","Adaptive"
+"Removed scripting support, it will live elsewhere","Perfective"
+"Commit for new tag","Adaptive"
+"Commit for M8 tag","Adaptive"
+"Releases and maven details","Other"
+"Incremented milestone to M9","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Commit for 1.0.7-M10","Other"
+"Working on handshake issue with ffmpeg 3","Corrective"
+"Working on ffmpeg handshake","Adaptive"
+"Added flag to allow unvalidated connections","Adaptive"
+"Fixed allowing unvalidated handshake connection handling","Corrective"
+"1.0.7 snapshot for pre-release testing","Other"
+"Updated tomcat to 8.0.33","Other"
+"Removed xsd versions and extraneous init-method attribute","Perfective"
+"Updated websocket","Perfective"
+"redundant white-spaces clean-up","Perfective"
+"Merge pull request #177 from solomax/patch-13
+
+redundant white-spaces clean-up","Other"
+"Updated WS plugin","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updated configs","Perfective"
+"Implemented scope security handlers","Adaptive"
+"Updated version for release","Other"
+"Added links to plugins tomcat, websocket","Adaptive"
+"Updated readme for latest release","Administrative"
+"Formatting fix","Perfective"
+"Added new way to shutdown the server","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed assembly to include red5-service artifacts","Perfective"
+"Adjusted the startup/shutdown scripts","Perfective"
+"Fixed updated poms","Perfective"
+"Removed servlet api jar from assembly","Perfective"
+"Updates for logging","Perfective"
+"Update for M2","Perfective"
+"Update README.md","Administrative"
+"Added more excludes for assembly","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed installer app config to point to new app location on github for issue #180","Corrective"
+"Updated startup scripts to include a native path component","Perfective"
+"Removed exception thrown on RTMPS tunnel attempt on native connector","Corrective"
+"Debugging 'best' RTMPS connections from FlashPlayer","Corrective"
+"Updated version","Perfective"
+"Fixed jar / javadoc attachment issue","Corrective"
+"Added shutdownDelay property","Adaptive"
+"Added property for shutdown delay","Adaptive"
+"Update for milestone","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updated to websocket 1.6","Perfective"
+"Updated pom","Perfective"
+"Added fmsVersion log output at debug level","Adaptive"
+"Debugging playback and shared objects","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Refactoring for stability and message handling","Perfective"
+"Updated Milestone link","Perfective"
+"Ordering mod","Perfective"
+"context is fixed
+
+... so default tomcat plugins works as expected
+
+comments are removed","Corrective"
+"Merge pull request #193 from solomax/patch-15
+
+context is fixed","Other"
+"Added shields.io badge","Adaptive"
+"Update for 1.0.8-M6","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Removed adobe links causing stupid console errors in browsers","Corrective"
+"Added metadata tests","Adaptive"
+"Refactored AMF decoding","Perfective"
+"Update README.md","Administrative"
+"Added pre/post processor code","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Setting the keep-alive to unlimited reduces rtmpt disconnection rates.","Perfective"
+"Fixed writer processor spring bean configure mismatch with multiple processors","Corrective"
+"Merge pull request #200 from menelaosbgr/feature/unlimitedKeepAlive
+
+Setting the keep-alive to unlimited reduces rtmpt disconnection rates.","Other"
+"Changed tomcat plugin to 1.14","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"maxKeepAliveRequests and keepAliveTimout are unified
+
+whitespaces are normilized","Perfective"
+"AES_256 ciphers are removed","Perfective"
+"Merge pull request #201 from solomax/master
+
+Config fixes","Other"
+"Ready for 1.0.8-M9 tag","Other"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updating for milestone 1.0.8-M10","Perfective"
+"Added spring webmvc jar dep","Adaptive"
+"Parent and tomcatplugin versions are updated","Perfective"
+"Update for 1.0.8-M11. Minor mod to playstatus in PlayEngine'","Perfective"
+"Merge pull request #204 from solomax/patch-16
+
+Parent and tomcatplugin versions are updated","Other"
+"Added FileProvider test","Adaptive"
+"Added CORS lib and implemented in web.xml for vod/live apps; no server code mods","Adaptive"
+"Updates for 1.0.8-M13","Perfective"
+"Added force option to bash shutdown script","Adaptive"
+"Quartz dependencies are cleaned up","Perfective"
+"Merge pull request #214 from solomax/patch-17
+
+Quartz dependencies are cleaned up","Other"
+"Added video for demo app","Adaptive"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed shutdown server bug when jee server doesnt exist","Corrective"
+"Tomcat plugin version is updated","Perfective"
+"Added oflaDemo. Updated travis to jdk8 only","Adaptive"
+"Merge pull request #216 from solomax/master
+
+Tomcat plugin version is updated","Other"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updated assembly. Added oflaDemo to assembly","Perfective"
+"Updated demo","Perfective"
+"Added 1.0.8","Adaptive"
+"Fixed a heading","Perfective"
+"Mods for oom","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Update to 1.0.9-SNAPSHOT","Perfective"
+"Updating for next snapshot","Perfective"
+"Updated to websocket 1.8","Perfective"
+"Commit for 1.0.9-M1 tag","Other"
+"Fixed dependency on websocket preventing build; dep is only needed for assembly profile","Corrective"
+"Fixed line endings in jee xml","Corrective"
+"Fixed line endings in props file","Corrective"
+"Removed keystoreType param","Perfective"
+"Update for 1.0.9-M2","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Update CNAME","Perfective"
+"Connection fixes","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updated pom","Perfective"
+"Removed timestamp manipulation in rtmpdecoder. Commit for M4 tag","Perfective"
+"Added Guardians of the Galaxy 2 trailer","Adaptive"
+"Added property change events for CBS. Update for 1.0.9-M5 tag","Adaptive"
+"Fixed MP4/M4A readers and added eclusion for older isoparser used in Tika","Corrective"
+"Updates for 1.0.9-M7","Perfective"
+"Updates for 1.0.9-M8","Perfective"
+"Removed delta time reset in rtmpdecoder. Tagging for 1.0.9-M9 release","Perfective"
+"Update for tag 1.0.9-M10","Perfective"
+"Commit for release","Other"
+"Commit for release tag with updated version","Perfective"
+"Updated releases","Perfective"
+"cors-filter version is updated","Perfective"
+"Fix for recording avc/aac with queue","Corrective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Merge pull request #232 from solomax/patch-19
+
+cors-filter version is updated","Other"
+"Fix for flv append and refactoring of flv recording","Perfective"
+"Fixed appending for flv. Refactored lots of recording releated code","Perfective"
+"Fixed handling for null broadcast scope on unregister","Corrective"
+"Fixed media copy routines","Corrective"
+"Update to ETH address","Perfective"
+"Update CNAME","Perfective"
+"Commit for 1.0.10-M5","Other"
+"Update for M6 tag","Perfective"
+"Update for 1.0.10-M7 tag","Perfective"
+"Updates for 1.0.10-M8","Perfective"
+"Update to milestone 9","Perfective"
+"Update CNAME","Perfective"
+"Tagging 1.0.10-M10","Other"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"java options clean-up
+
+`-XX:+UseParNewGC` is removed in java11
+
+Additionally according to https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html
+
+It is automatically enabled if `-XX:+UseConcMarkSweepGC`","Perfective"
+"java options clean-up
+
+`-XX:+UseParNewGC` is removed in java11
+
+Additionally according to https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html
+
+It is automatically enabled if `-XX:+UseConcMarkSweepGC`","Perfective"
+"Merge pull request #265 from solomax/patch-21
+
+java options clean-up","Other"
+"Merge pull request #264 from solomax/patch-20
+
+java options clean-up","Other"
+"Updated for release","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updated releases","Perfective"
+"Pulling updates","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updates for 1.1.0","Perfective"
+"Update README.md","Administrative"
+"Shared Object work for better concurrency","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Added Scope unit tests and switch internal children to new concurrent collection base","Adaptive"
+"Excluded service jar from plugins","Perfective"
+"Update README.md","Administrative"
+"Create FUNDING.yml","Adaptive"
+"Updates for JDK11","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updates for new version 1.2.1 with JDK11 support","Perfective"
+"Updated for 1.2.2","Perfective"
+"Update README.md","Administrative"
+"Commit for version 1.2.3","Other"
+"Fix liveWaitSupport bug when play a non-exist stream.
+
+Fix bug when liveWaitSupport is set to true and play a stream it does not exist.","Corrective"
+"Merge pull request #290 from ipliu/master
+
+Fix liveWaitSupport bug when play a non-exist stream.","Other"
+"Local update","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updates for jdk11","Perfective"
+"Updated scripts for jdk11","Perfective"
+"Added note for xerces as not needed for jdk11","Administrative"
+"Pom update","Perfective"
+"Extracted encrypted writer","Perfective"
+"Update red5.properties
+
+propose just making the following changes for better performance; at this point the server shouldn't be run on an instance that can't at least support these values
+
+http.max_threads=2000
+
+http.acceptor_thread_count=100
+
+http.processor_cache=200","Perfective"
+"Updated binding to be loopback only","Perfective"
+"Commit for updates","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Fixed binding to loopback and parsing of incoming client socket for validation","Corrective"
+"Refactored so accept is inside while loop","Perfective"
+"Merge pull request #315 from beetlejesss/patch-1
+
+Update red5.properties","Other"
+"Local update","Perfective"
+"Merge branch 'master' of github.com:Red5/red5-server","Other"
+"Updates for 1.2.9","Perfective"
