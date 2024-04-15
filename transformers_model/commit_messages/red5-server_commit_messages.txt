@@ -1,0 +1,793 @@
+"Initial commit",""
+"Added stack overflow link",""
+"First commit",""
+"Added more info",""
+"Fixed",""
+"Fixed pom and warservlet",""
+"Small mod to pom",""
+"Added ignore for EOFEx in shutdown",""
+"added the demos note",""
+"Modified quartz scheduler to use newest spring factory beans",""
+"Merge branch 'master' of https://github.com/Red5/red5-server",""
+"Changed factory beans to prototype",""
+"Updated QuartzSchedulingServiceJob to use BeanWrapper property",""
+"Fixed job detail casting bug",""
+"Fixed trigger casting bug",""
+"Debugging job trigger issues",""
+"Debugging quartz integration",""
+"Switched back to old quartz builder pattern",""
+"Added saving of job/trigger keys for schedule once jobs",""
+"Removed unneeded appcontext from scheduler",""
+"Updated readme",""
+"Minor mod",""
+"Fixed some minor bugs",""
+"Added try catch to find issue that sometimes occurs on shared objects",""
+"Fixed major issue with the connection checker; it was clearing the write queue for no good reason",""
+"Updated to 1.0.2-M1",""
+"Small format mod",""
+"Modified rtmp data chunker to send while chunking. Added mod to prevent re-entrant close on RTMPConnection.",""
+"Small plugin mod",""
+"Externalized rtmp message queue cap. Added catches to SO scope methods",""
+"Added deadlock guard for rtmp processing to eliminate rejected tasks and prematurly disconnected connections.",""
+"Updated copyright year",""
+"Last mods for 1.0.2 release",""
+"Update README.md",""
+"Moved changelog from svn",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Update README.md",""
+"Updated assembly to prevent jenkins error. Modified javadoc section of pom.",""
+"Started 1.0.3-SNAPSHOT. Modified output pipe and channel handling to prevent write loop on viewer exit.",""
+"Replaced tomcat plugin with new update. Modified playengine to close if output pipe is missing",""
+"Applied patch from Octavian Naicu for recording over low bandwidth connections",""
+"Added detection of java debug wire protocol. Added code to disable rtmp connection deadlock when using jdwp. Fixed some javadoc warnings",""
+"Updated pom to use io snapshot",""
+"Small mod",""
+"red5-io version is updated",""
+"Merge pull request #9 from solomax/patch-1
+
+red5-io version is updated",""
+"Build warnings are fixed",""
+"Refactored native rtmps handling to resemble that which is working with wss implementation",""
+"Merge pull request #10 from solomax/patch-2
+
+Build warnings are fixed",""
+"Fixed https",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fix problem caused by race condition in scope creation
+
+Now the scope is set whether or not the scope creation is successful.
+This ensures that if two connections try to create the same scope at
+the same time, both will end up with the right scope.",""
+"Merge pull request #15 from mdalepiane/patch_scopes
+
+Fix problem caused by race condition in scope creation",""
+"Updated deps",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Removed redundant io classes",""
+"Latest build",""
+"Updated tomcat and added websocket plugin",""
+"Updated configs and assembly xml",""
+"Update README.md
+
+Added previous releases",""
+"Fix concurrence problem on BroadcastScope creation
+
+Without the synchronization multiple BroadcastScopes might be created with the
+same name. This causes problems to clients connected to all but one of them.",""
+"Merge pull request #17 from mdalepiane/patch_broadcastScope
+
+Fix concurrence problem on BroadcastScope creation",""
+"Updated build name/number. Updated bouncycastle rev.",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated to include subreddit",""
+"Fix for issue #19",""
+"Removed old commented-out semphore",""
+"Library versions are updated",""
+"Merge pull request #20 from solomax/patch-3
+
+Library versions are updated. Looks good, thanks Maxim",""
+"Deprecated API removed",""
+"Deprecated API removed",""
+"Compilation warnings are eliminated",""
+"Compilation warnings are eliminated",""
+"Compilation warnings are eliminated",""
+"Deprecated API removed",""
+"Deprecated API removed",""
+"Merge pull request #1 from solomax/patch-1
+
+Deprecated API removed",""
+"Merge pull request #22 from solomax/master
+
+Thanks for taking care of that Maxim",""
+"Compilation error fixed",""
+"Compilation error fixed",""
+"Merge pull request #23 from solomax/patch-2
+
+Compilation errors are fixed",""
+"Added chat classes",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added jar for the chat demo",""
+"Updated props to help with recording gaps",""
+"Updated policy files from red5.jar to red5-server.jar and red5-service.jar",""
+"Merge pull request #28 from t2y/master
+
+Updated policy files from red5.jar to red5-server.jar and red5-service.jar",""
+"Modified pom",""
+"Added check for denied connection in the request message task",""
+"Modified rtmp handling for ping messages so that they are not queued",""
+"Modified handling of received messages to possibly prevent rejects",""
+"Removed denied conn check in message recv task. Changed handling of disconnected connection requests in RTMPT",""
+"Fixed connection reject issue in rtmpt. Refactored received message task.",""
+"Fixing the deadlock guard implementation, it was referencing wrong
+thread.",""
+"Implemented a way to disable the guard by setting the maxWaitTimeout to
+0.",""
+"Audio packet dropping
+
+Implemented an option that allow you to drop audio packets in order to
+prevent receive queue filling up.",""
+"- add more information on logging for rtmp connection
+ - add more info on keep alive ping",""
+"Merge pull request #32 from bigbluebutton/change-keepalive
+
+ - add more information on logging for rtmp connection",""
+"Adding parameters to RTMPT that was missing after Paul's refactor.",""
+"Implemented log level check before each log call (for debug and trace)",""
+"Adding a space after if statements",""
+"Create red5_codeformat_eclipse.xml
+
+Eclipse formatting config.",""
+"Create red5_codetemplate.xml
+
+Eclipse code template",""
+"Update red5_codetemplate.xml
+
+Updated copyright",""
+"Fixed OutOfMemoryError and lost data in FileConsumer",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixes for OOM in FileConsumer. Also adjusted logging to mostly trace level.",""
+"Updated version info",""
+"Added build server link",""
+"Fixed appStop issue 36",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added header for Releases",""
+"Moved server common classes to red5-server-common repo",""
+"Updated formatting xml",""
+"Fixes for issue 39",""
+"Minor mods, moved some tests",""
+"Cleaned up pom, added profiles, added sonatype deploy stuff",""
+"Added release plugin",""
+"Tomcat is updated to the latest version 7.0.57",""
+"Merge pull request #41 from solomax/master
+
+Tomcat is updated to the latest version 7.0.57",""
+"Updated pom",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added snapshot entry",""
+"Updated pom",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated artifact section",""
+"Update README.md",""
+"Added repos to pom to resolve missing libs",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added sonatype repos to fix jenkins",""
+"Updated pom",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added description from old site",""
+"Added link for prev releases",""
+"Version update",""
+"Added demos. Updated tomcatplugin",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated links",""
+"Updated pom for 1.0.4 release",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Modified pom to prevent assembly from being deployed to nexus",""
+"Fixed and cleaned up assembly creation",""
+"Cleaned up links and added 1.0.4 Release",""
+"Updated version",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated versions. Modified registration of client broadcast stream within broadcast scope.",""
+"Cleared up "support" via links",""
+"Replaced embedded tomcat logging with slf friendly version",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added correct and forked tomcat juli logger",""
+"allow for building to custom directory and output a custom filename 'mvn -Dmaven.test.skip=true -Dbuild.dir=target-custom -DfinalName=mycustom-red5-1.0.5'",""
+"Merge branch 'master' of https://github.com/Red5/red5-server",""
+"Moved websocket props to red5.props file",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added supporters",""
+"Migrated most of the tests to red5-tests repo",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Quartz version is updated",""
+"Change the red5-server-common.jar from lib to Red5 basic path.
+	This change is for red5-eclipse-plugin",""
+"Updated copyright and url",""
+"Updated version for release",""
+"Updated websocket plugin",""
+"Javadoc fixes",""
+"Added 1.0.5 release",""
+"Added windows installer link",""
+"Pointed release for tar/zip to release link",""
+"Added executable entry for compile plugin to respect java-option pointing to a specific javac path",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Merge remote-tracking branch 'red5/master'",""
+"org.apache.httpcomponents.http* version is updated; deprecated code is removed",""
+"Merge pull request #52 from solomax/master
+
+Quartz version is updated",""
+"Merge pull request #53 from wmz7year/change_server_common_jar_path
+
+	Change the red5-server-common.jar from lib to Red5 basic path.",""
+"commons-lang3 is updated to the most recent version",""
+"Merge pull request #77 from solomax/patch-3
+
+commons-lang3 is updated to the most recent version",""
+"Version update to 1.0.6 Snapshot and modification of RTMPS handling to allow protocol and cipher suite config",""
+"Merge fix",""
+"Updated websocket and tomcat plugin. Modified RTMPS Mina handler",""
+"Moved stuff around and refactored RTMPS",""
+"Mods for RTMPS debugging",""
+"Updated to show 1.0.6-SNAPSHOT",""
+"Tomcat8 support is added",""
+"Merge pull request #97 from solomax/master
+
+Tomcat8 support is added",""
+"Added el-api for jsp EL support",""
+"Removes Google Code link",""
+"changed scope for executor from prototype to singleton: thread pools shared by all connections",""
+"Merge pull request #104 from maritelle/connection-task-executors
+
+Changed scope of connection task executors",""
+"Merge pull request #99 from esasse/patch-1
+
+Removes Google Code link",""
+"Updated jdoc links",""
+"Minor change to assembly",""
+"Updated tomcat plugin and added embed el impl",""
+"Updated spring schemas to use generic >2.0 version which supports version 3+",""
+"Updated version",""
+"Updated dep versions",""
+"Updated release",""
+"Servlet-api matching with tomcat is used, empty 'tomcat.8080' is not created, code clean-up",""
+"Merge pull request #112 from solomax/master
+
+Servlet-api matching with tomcat is used, empty 'tomcat.8080' is not …",""
+"Updated version",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Moved and refactored war deployer service, now its in tomcat plugin",""
+"Hardcoded tomcat version is replaced with variable",""
+"Fixed circular dep in jee-container.xml",""
+"Merge pull request #113 from solomax/patch-4
+
+Hardcoded tomcat version is replaced with variable",""
+"Added configuration for rtmp connection tweaks",""
+"redundant jboss block is removed",""
+"Merge pull request #114 from solomax/patch-5
+
+redundant jboss block is removed",""
+"Removed dead links for released artifacts
+
+Mega cleared our folder and red5.org lost the older files due to a hard drive crash",""
+"Fixed remote connection to use new stream ids",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added removal of star prefix on mp4 requests",""
+"Quartz version is updated",""
+"Merge pull request #116 from solomax/patch-6
+
+Quartz version is updated",""
+"Modified pom adding profile for milestone assembly",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added milestone build instruction; removed demos text",""
+"Modified assembly to prevent -server suffix in tarball and zip",""
+"Updated tomcat to 8.0.28",""
+"Fix for issue #121",""
+"Updated pom for mina version range",""
+"commons-collections version is bumped
+
+to have the latest security fix",""
+"Merge pull request #124 from solomax/patch-7
+
+commons-collections version is bumped",""
+"Updated deps",""
+"Updated Tomcat to 8.0.29. Updated Tomcat plugin to fix concurrent loading of the apps on startup. Fix other small items and formatting.",""
+"Updated pom",""
+"Updated to tomcat to 8.0.30 with a fix for relative redirection.",""
+"Cleaned up formatting. Updated websocket plugin",""
+"Added the chat room",""
+"Debugging RTMPS; Refactored connection handling. Updated copyright year.",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Adjusted launch scripts",""
+"Fixing squid:S2259: Null pointers should not be dereferenced",""
+"Fixing squid:S2583: Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"
+Fixing squid:S2095:  Resources should be closed",""
+"spring version is updated",""
+"Merge pull request #136 from solomax/patch-8
+
+spring version is updated",""
+"Merge pull request #135 from DevFactory/Null-pointers-should-not-be-dereferenced
+
+Fixing squid:S2259: Null pointers should not be dereferenced",""
+"Reverted changes to FilePersistence since it was a false positive",""
+"Fixing squid:S1444 :"public static" fields should be constant",""
+"Fixing squid:S2275: Printf-style format strings should not lead to unexpected behavior at runtime",""
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit",""
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit",""
+"Comitting broken handshake to allow assistance from other dev. Again HANDSHAKE is BROKEN, do not use this commit",""
+"Debugging handshake, fixed key hashing error",""
+"Continued debugging of server side of the handshake",""
+"Updated deps and more handshake work",""
+"Clients can connect, but there is still something wrong somewhere",""
+"Fixing squid:S2583: Conditions should not unconditionally evaluate to "TRUE" or to "FALSE" - Used try-with-resources for better code readability",""
+"Merge pull request #139 from DevFactory/Printf-style-format-strings-should-not-lead-to-une
+
+Fixing squid:S2275: Printf-style format strings should not lead to unexpected behavior at runtime",""
+"Merge pull request #137 from DevFactory/Conditions-should-not-evaluate-to-true-fix-1
+
+Fixing squid:S2583: Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"",""
+"Merge pull request #141 from DevFactory/public-static-fields-should-be-constant
+
+Fixing squid:S1444 :"public static" fields should be constant",""
+"Working on handshake",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed an issue related to a PR that was merged",""
+"Dependencies were cleaned up",""
+"Merge pull request #143 from solomax/master
+
+Dependencies were cleaned up",""
+"Inbound handshake is fixed",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"RTMP handshake is fixed",""
+"Trying out a cname file for trac links",""
+"Fixed rtmps (native)",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Logback is updated to be more compact",""
+"Merge pull request #144 from solomax/master
+
+Logback is updated to be more compact",""
+"Performed some clean up and refactoring. Disabled sysout4log.",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Attempting to fix hanging when rtmpt connects",""
+"Update Readme.md",""
+"Fixed MP4 issue with start frame",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Changed pom so tomcat-api is compile scope instead of provided",""
+"Fixes and mods for rtmpt connect. Added maven plugin versions back into pom. Fixed indentation in xml. Modified appadapter to use semaphore instead of sync",""
+"Moved connected state processing to end of handshake state to catch and process extra bytes (connect message)",""
+"Modified while debugging AMF decoding",""
+"Eclipse html warnings are fixed",""
+"Maven warnings 'The assembly descriptor contains a filesystem-root relative reference, which is not cross platform compatible' are fixed",""
+"Merge pull request #148 from solomax/master
+
+Minor fixes",""
+"Debugging decode of packets. Fixed javadoc",""
+"Updated websocket plugin",""
+"maven-compiler-plugin version is updated",""
+"Merge pull request #150 from solomax/patch-10
+
+maven-compiler-plugin version is updated",""
+"Added missing plugin",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added contributing doc and eclipse formatter. Updated readme.",""
+"Removed build props. Updated tomcat to 8.0.32",""
+"Fixed tomcat issue caused by upgrade to 8.0.32",""
+"Updated chat demo",""
+"Added travis CI file",""
+"Updated test logging",""
+"Removed the open jdks because the fail on getHostname",""
+"Added button for TravisCI",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed button for TravisCI",""
+"Added templates",""
+"Updated to use parent pom",""
+"squid:S1185 - Overriding methods should do more than simply call the same method in the super class",""
+"Merge pull request #160 from georgekankava/release/overriding-methods-should-do-more-than-simply-call-the-same-method-in-the-super-class-fix-1
+
+squid:S1185 - Overriding methods should do more than simply call the same method in the super class",""
+"squid:CommentedOutCodeLine - Sections of code should not be "commented out"",""
+"Merge pull request #162 from georgekankava/release/sections-of-code-should-not-be-ommented-out-fix-1
+
+squid:CommentedOutCodeLine - Sections of code should not be commented out",""
+"squid:S2293 - The diamond operator ("<>") should be used",""
+"Merge pull request #163 from georgekankava/release/the-diamond-operator-should-be-used-fix-1
+
+squid:S2293 - The diamond operator ("<>") should be used",""
+"Removed javadoc css",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"duplicate inclusion of maven-jar-plugin is removed",""
+"Deprecated calls and unused import are removed",""
+"squid:S2293 - The diamond operator ("<>") should be used",""
+"Multiple code improvements: squid:S00105, squid:S1854",""
+"Merge pull request #167 from georgekankava/staging/the-diamond-operator-should-be-used-fix-1
+
+squid:S2293 - The diamond operator ("<>") should be used",""
+"Merge pull request #166 from georgekankava/release/multiple-code-improvements-fix-1
+
+Multiple code improvements: squid:S00105, squid:S1854",""
+"Merge pull request #165 from solomax/master
+
+Deprecated calls and unused import are removed",""
+"Merge pull request #164 from solomax/patch-11
+
+duplicate inclusion of maven-jar-plugin is removed",""
+"Multiple code improvements - squid:S1171, squid:S134, squid:S1066",""
+"Merge pull request #168 from DevFactory/release/multiple-code-improvements-fix-2
+
+Multiple code improvements - squid:S1171, squid:S134, squid:S1066",""
+"Library versions are updated",""
+"Merge pull request #169 from solomax/patch-12
+
+Library versions are updated",""
+"Minor mods",""
+"Fixed conflicts",""
+"Added our base maven repo so the parent pom may be located",""
+"Set to M6 and added handling for fragmented handshake",""
+"Removed scripting support, it will live elsewhere",""
+"Commit for new tag",""
+"Commit for M8 tag",""
+"Releases and maven details",""
+"Incremented milestone to M9",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Commit for 1.0.7-M10",""
+"Working on handshake issue with ffmpeg 3",""
+"Working on ffmpeg handshake",""
+"Added flag to allow unvalidated connections",""
+"Fixed allowing unvalidated handshake connection handling",""
+"1.0.7 snapshot for pre-release testing",""
+"Updated tomcat to 8.0.33",""
+"Removed xsd versions and extraneous init-method attribute",""
+"Updated websocket",""
+"redundant white-spaces clean-up",""
+"Merge pull request #177 from solomax/patch-13
+
+redundant white-spaces clean-up",""
+"Updated WS plugin",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated configs",""
+"Implemented scope security handlers",""
+"Updated version for release",""
+"Added links to plugins tomcat, websocket",""
+"Updated readme for latest release",""
+"Formatting fix",""
+"Added new way to shutdown the server",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed assembly to include red5-service artifacts",""
+"Adjusted the startup/shutdown scripts",""
+"Fixed updated poms",""
+"Removed servlet api jar from assembly",""
+"Updates for logging",""
+"Update for M2",""
+"Update README.md",""
+"Added more excludes for assembly",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed installer app config to point to new app location on github for issue #180",""
+"Updated startup scripts to include a native path component",""
+"Removed exception thrown on RTMPS tunnel attempt on native connector",""
+"Debugging "best" RTMPS connections from FlashPlayer",""
+"Updated version",""
+"Fixed jar / javadoc attachment issue",""
+"Added shutdownDelay property",""
+"Added property for shutdown delay",""
+"Update for milestone",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated to websocket 1.6",""
+"Updated pom",""
+"Added fmsVersion log output at debug level",""
+"Debugging playback and shared objects",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Refactoring for stability and message handling",""
+"Updated Milestone link",""
+"Ordering mod",""
+"context is fixed
+
+... so default tomcat plugins works as expected
+comments are removed",""
+"Merge pull request #193 from solomax/patch-15
+
+context is fixed",""
+"Added shields.io badge",""
+"Update for 1.0.8-M6",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Removed adobe links causing stupid console errors in browsers",""
+"Added metadata tests",""
+"Refactored AMF decoding",""
+"Update README.md",""
+"Added pre/post processor code",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Setting the keep-alive to unlimited reduces rtmpt disconnection rates.",""
+"Fixed writer processor spring bean configure mismatch with multiple processors",""
+"Merge pull request #200 from menelaosbgr/feature/unlimitedKeepAlive
+
+Setting the keep-alive to unlimited reduces rtmpt disconnection rates.",""
+"Changed tomcat plugin to 1.14",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"maxKeepAliveRequests and keepAliveTimout are unified
+
+whitespaces are normilized",""
+"AES_256 ciphers are removed",""
+"Merge pull request #201 from solomax/master
+
+Config fixes",""
+"Ready for 1.0.8-M9 tag",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updating for milestone 1.0.8-M10",""
+"Added spring webmvc jar dep",""
+"Parent and tomcatplugin versions are updated",""
+"Update for 1.0.8-M11. Minor mod to playstatus in PlayEngine'",""
+"Merge pull request #204 from solomax/patch-16
+
+Parent and tomcatplugin versions are updated",""
+"Added FileProvider test",""
+"Added CORS lib and implemented in web.xml for vod/live apps; no server code mods",""
+"Updates for 1.0.8-M13",""
+"Added force option to bash shutdown script",""
+"Quartz dependencies are cleaned up",""
+"Merge pull request #214 from solomax/patch-17
+
+Quartz dependencies are cleaned up",""
+"Added video for demo app",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed shutdown server bug when jee server doesnt exist",""
+"Tomcat plugin version is updated",""
+"Added oflaDemo. Updated travis to jdk8 only",""
+"Merge pull request #216 from solomax/master
+
+Tomcat plugin version is updated",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated assembly. Added oflaDemo to assembly",""
+"Updated demo",""
+"Added 1.0.8",""
+"Fixed a heading",""
+"Mods for oom",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Update to 1.0.9-SNAPSHOT",""
+"Updating for next snapshot",""
+"Updated to websocket 1.8",""
+"Commit for 1.0.9-M1 tag",""
+"Fixed dependency on websocket preventing build; dep is only needed for assembly profile",""
+"Fixed line endings in jee xml",""
+"Fixed line endings in props file",""
+"Removed keystoreType param",""
+"Update for 1.0.9-M2",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Update CNAME",""
+"Connection fixes",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated pom",""
+"Removed timestamp manipulation in rtmpdecoder. Commit for M4 tag",""
+"Added Guardians of the Galaxy 2 trailer",""
+"Added property change events for CBS. Update for 1.0.9-M5 tag",""
+"Fixed MP4/M4A readers and added eclusion for older isoparser used in Tika",""
+"Updates for 1.0.9-M7",""
+"Updates for 1.0.9-M8",""
+"Removed delta time reset in rtmpdecoder. Tagging for 1.0.9-M9 release",""
+"Update for tag 1.0.9-M10",""
+"Commit for release",""
+"Commit for release tag with updated version",""
+"Updated releases",""
+"cors-filter version is updated",""
+"Fix for recording avc/aac with queue",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Merge pull request #232 from solomax/patch-19
+
+cors-filter version is updated",""
+"Fix for flv append and refactoring of flv recording",""
+"Fixed appending for flv. Refactored lots of recording releated code",""
+"Fixed handling for null broadcast scope on unregister",""
+"Fixed media copy routines",""
+"Update to ETH address",""
+"Update CNAME",""
+"Commit for 1.0.10-M5",""
+"Update for M6 tag",""
+"Update for 1.0.10-M7 tag",""
+"Updates for 1.0.10-M8",""
+"Update to milestone 9",""
+"Update CNAME",""
+"Tagging 1.0.10-M10",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"java options clean-up
+
+`-XX:+UseParNewGC` is removed in java11
+Additionally according to https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html
+It is automatically enabled if `-XX:+UseConcMarkSweepGC`",""
+"java options clean-up
+
+`-XX:+UseParNewGC` is removed in java11
+Additionally according to https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html
+It is automatically enabled if `-XX:+UseConcMarkSweepGC`",""
+"Merge pull request #265 from solomax/patch-21
+
+java options clean-up",""
+"Merge pull request #264 from solomax/patch-20
+
+java options clean-up",""
+"Updated for release",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updated releases",""
+"Pulling updates",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updates for 1.1.0",""
+"Update README.md",""
+"Shared Object work for better concurrency",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Added Scope unit tests and switch internal children to new concurrent collection base",""
+"Excluded service jar from plugins",""
+"Update README.md",""
+"Create FUNDING.yml",""
+"Updates for JDK11",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updates for new version 1.2.1 with JDK11 support",""
+"Updated for 1.2.2",""
+"Update README.md",""
+"Commit for version 1.2.3",""
+"Fix liveWaitSupport bug when play a non-exist stream.
+
+Fix bug when liveWaitSupport is set to true and play a stream it does not exist.",""
+"Merge pull request #290 from ipliu/master
+
+Fix liveWaitSupport bug when play a non-exist stream.",""
+"Local update",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updates for jdk11",""
+"Updated scripts for jdk11",""
+"Added note for xerces as not needed for jdk11",""
+"Pom update",""
+"Extracted encrypted writer",""
+"Update red5.properties
+
+propose just making the following changes for better performance; at this point the server shouldn't be run on an instance that can't at least support these values
+http.max_threads=2000
+http.acceptor_thread_count=100
+http.processor_cache=200",""
+"Updated binding to be loopback only",""
+"Commit for updates",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed binding to loopback and parsing of incoming client socket for validation",""
+"Refactored so accept is inside while loop",""
+"Merge pull request #315 from beetlejesss/patch-1
+
+Update red5.properties",""
+"Local update",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Updates for 1.2.9",""
+"Updates for 1.2.10",""
+"Added supporters",""
+"Cleaned up view",""
+"Update README.md",""
+"Update README.md",""
+"Local update",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Update for 1.2.12 tag",""
+"Updating for 1.2.13",""
+"Updated for alias support in 1.2.16",""
+"Updates for property listening on connections; version bump 1.2.17",""
+"separate configuration for maxReadBufferSize, bump version to 1.2.18",""
+"Fixes for RTMPE; added new shared buffer for ingest",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"add missing bean accessors in RTMPMinaTransport",""
+"Local update",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Bumped version to 1.2.20; includes fixes for RTMP/E",""
+"StreamService updates",""
+"Consolidated project under server repo within modules. Tomcat plugin is pulled directly back into red5-server itself as well",""
+"Cleared a couple warnings. Added querystring capture onto the connection at publish and play",""
+"Updated internal version fields and changed logging in StreamService",""
+"Updated commons-io to 2.11.0 due to threat analysis report",""
+"Delete .travis.yml",""
+"Update README.md",""
+"Updated version to 1.2.23. Fixes for scope lookup and rtmpe playback",""
+"Merge branch 'master' of github.com:Red5/red5-server",""
+"Fixed broadcast scope lookups",""
+"Merge pull request #323 from Red5/epic/GROGU
+
+Fixed broadcast scope lookups",""
+"Adjusted loud logger in IO",""
+"Updated formatter plugin. Added hashCode/equals to WS classes",""
+"Updated releases",""
+"Updated gson to 2.8.9",""
+"New version 1.2.26; fixes mostly around WebSocket handling",""
+"New version 1.2.27. Fixes for WebSockets open/close processes",""
+"Reworking WS handling; lots of debug logging",""
+"Added sync around ws session blocks to prevent full-text errors",""
+"Address ws session id conversion to use as a hash code",""
+"Fixed WsSession registration/dereg in container/endpoint",""
+"Bumped version to 1.2.28. Added adapter method to allow scoped streams to be pulled easier",""
+"Additional clean up and weakrefs added for WebSockets",""
+"Removed the WS threadlocal usage",""
+"Added comparable to WebSocketConnection and removed extra contains check for scope add/remove",""
+"Removed WS connections atomic read/write counters using only local instance updating instead",""
+"Implemented internal ws conn pinger on a single thread",""
+"Version update to 1.2.29",""
+"Disabled AMF gateway servlet in root/web.xml",""
+"Versioned 1.2.30 includes dev392 fix for rtmp retransmission error",""
+"Moved most of the AMF remoting and servlets to its own module",""
+"Updated IScopeListener for basic scopes; added adapter to simplify use",""
+"Commented out remoting beans",""
+"Bumped main-line to 1.3.0",""
+"Fixed leaks in WebSocketScopes and JDKSchedulingService",""
+"WebSocket fixes for NPE and clean up",""
+"Fix for PlayEngine from Andy S",""
+"Added read timeout for websockets",""
+"Updated as 1.3.3 fixed ws read time checking",""
+"Removed ws read timeout; added ws lifecycle to listener",""
+"Added ws manager remove conn call",""
+"Addressed timestamp rollover/range issue",""
+"Version update to 1.3.7",""
+"Minor logic update; doc updates",""
+"Added to ignores",""
+"Moved some classes from common to server to support WS lifecycle callbacks",""
+"Websocket async handler added for timeout",""
+"Fixed ws session props call",""
+"Moved echo test; fixed up WS close for async",""
+"Version 1.3.10",""
+"Updated to 1.3.11. Added close for ws timeout",""
+"Updated solely for Spring workaround; versioned 1.3.12",""
+"Possible fix for ObjectMap arrival at createStream instead of Number",""
+"Bumped version to 1.3.13",""
+"Consolidated logger for AttributeStore impls. Added rtc and http to IConnection encodings. Added deleteStream protection against non-publisher. Removed extra WS timeout logic",""
+"Updated logging for WS timeout async when session not open",""
+"Updated tomcat to 8.5.87",""
+"Allowance to stop websocket pinger by config.",""
+"Added logging for createStream with map tracking",""
+"Updated version to 1.3.17. Added extended header fix from Andy; unit test fails with buffer underrun",""
+"Added med-int (3b) size check",""
+"Refactoring decode packet and header",""
+"Javadoc add",""
+"Worked out buffer underflow fixes.",""
+"Removed info logger.",""
+"Formatting...",""
+"Merge pull request #338 from Red5/bug/R5SI-786
+
+Bug/r5 si 786",""
+"Updated for clearing connections from client as needed to prevent ghost disconnected entries",""
+"Versioned to 1.3.19; Refactored connection creation and management",""
+"Version 1.3.20. Fix for StreamService not closing playback streams",""
+"Bump version to 1.3.21",""
+"Update red5.sh",""
+"Update Tomcat to 8.5.95; implemented new getLock in WsRemoteEndpointImplBase. Bumped version to 1.3.22",""
+"Add get/set for WebSocket user props via javax API to skip need for dep/import in projects",""
+"Merge pull request #340 from arvind-das/master
+
+Update red5.sh",""
+"Remove extraneous loops and recursion where possible when locating methods in services or handlers; update tika to last 1.x version",""
+"Add publisher load test",""
+"Add random removals and keep successful publish list",""
+"Rework how RTMPClient private stream data is accessed by stream id",""
+"Replace Number with int for PrivateNetstreamData in client. Update to 1.3.26",""
+"Fix SO scope relection calls; refactored more reflection use",""
+"Remove cors and rtmpt from apps",""
+"Enable unit tests; Add reflection utils test",""
+"Add and update for reflection testing",""
+"Add and update for reflection testing",""
+"Set test skip enabled, remove surefire",""
+"Disable some tests per module, focused on server tests right now",""
+"Update plugin versions to latest",""
+"Fixes scheduled job executing only once.",""
+"Merge pull request #343 from Red5/bug/RED5DEV-1074
+
+Fixes scheduled job executing only once.",""
+"Fix and refactor for ReflectionUtils",""
+"Modify urls using archive.org",""
+"Refactored exterialize and amf in/out handling",""
+"Fix issue with conversion of ImmutableCollections type",""
+"Add and update of hashCode/equals for events",""
+"Refactor to resolve remaining issues found in Pro version",""
+"Update dependencies based on SBOM report",""
+"Update version. Fix RTMP deadlock. Refactor WebsocketConnection write",""
+"Refactor RTMP event logic to ensure ordered processing with minimal locking",""
+"Add suppress warnings annotation",""
+"Externalize max_poll_time for RTMPConnection",""
+"Adjustment of javadoc settings",""
+"Update version to 1.3.29. Refactor RTMP packet handling, remove extra threading, move handler into callable.",""
+"Reduce rtmp max poll time",""
+"Refactor codecs, logger, and rtmp client executor. Update spring",""
+"Update Red5 version to 1.3.31; lifecycle refactor",""
+"Delete io/src/test/resources/fixtures/stray.flv",""
+"Update Red5 to use JCodec; refactor io/media file handling",""
+"Add new files and classes for video processing",""
+"Remove ffmpeg binary accidentally added",""
+"Review webm",""
+"Move rtmp test to server module. Reorder rtmp handler for notify which may be invoke type",""
+"Refactor RTMPProtocolDecoder to favor fill packet vs tiny chunk size if available bytes",""
+"Revert packet decode for min/max chunk size",""
+"Update version to 1.3.33 with new Bouncy Castle 1.77",""
+"Refactor for ordered loading and prevention of tomcat loading before ready",""
