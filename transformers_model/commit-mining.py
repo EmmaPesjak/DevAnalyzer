@@ -5,9 +5,7 @@ import os
 repositories = [
     #"https://github.com/greenrobot/greendao",
     #"https://github.com/objectbox/objectbox-java",
-    #"https://github.com/SPLWare/esProc",
-    "https://github.com/Red5/red5-server",
-    "https://github.com/torakiki/pdfsam"
+    "https://github.com/Red5/red5-server"
 ]
 
 
