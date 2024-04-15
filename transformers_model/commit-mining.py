@@ -3,17 +3,16 @@ import os
 
 # List of repository URLs
 repositories = [
-    "https://github.com/greenrobot/greendao",
-    "https://github.com/pxb1988/dex2jar",
-    "https://github.com/objectbox/objectbox-java",
-    "https://github.com/EmmaPesjak/DevAnalyzer"
+    #"https://github.com/greenrobot/greendao",
+    #"https://github.com/objectbox/objectbox-java",
+    "https://github.com/Red5/red5-server"
 ]
 
 
 def download_commit_messages(repo_url):
     # Extract the repository name from the URL to use as the filename
     repo_name = repo_url.split('/')[-1]
-    # Specify the directory where you want to save the files
+    # Specify the directory where to save the files
     output_directory = "commit_messages"
     os.makedirs(output_directory, exist_ok=True)
     output_file_path = os.path.join(output_directory, f"{repo_name}_commit_messages.txt")
