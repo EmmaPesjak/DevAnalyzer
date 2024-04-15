@@ -589,28 +589,6 @@ Add Firebase performance test.","Other"
 
 - Added for cupboard first.","Adaptive"
 "Extract string and index generator to common module.","Perfective"
-"Clean up PerformanceTestActiveAndroid.","Perfective"
-"Add indexed string test for Active Android.
-
-- Add dependency on Common module.
-- Update support-v4 to 23.0.1.
-- Do database setup within tests, tear down remains global.","Adaptive"
-"Add tweaks from Active Android indexed test to cupboard test.
-
-- Create entities after database setup.
-- Add log output between steps.","Adaptive"
-"Clean up OrmLite test.","Perfective"
-"Use provided OrmLiteSqliteOpenHelper, fix minimal entity test.","Perfective"
-"Add indexed string test for ORMLite.
-
-- Add dependency on Common module.","Adaptive"
-"Add IndexedStringEntity to dao test module.","Adaptive"
-"Add indexed string test for greenDAO.","Adaptive"
-"Actually query for strings in Active Android test.","Adaptive"
-"Add runs to greendao indexed test.","Adaptive"
-"Add runs to Active Android indexed test.","Adaptive"
-"Add runs to cupboard indexed test.","Adaptive"
-"Add runs to ORMLite indexed test.","Adaptive"
 "package rename to io.objectbox","Perfective"
 "move java tests to tests sub dir","Perfective"
 "minor improvements to flatbuffers model, move java model classes with cp and sed","Perfective"
