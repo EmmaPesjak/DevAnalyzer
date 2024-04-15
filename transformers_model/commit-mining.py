@@ -3,8 +3,8 @@ import os
 
 # List of repository URLs
 repositories = [
-    #"https://github.com/greenrobot/greendao",
-    #"https://github.com/objectbox/objectbox-java",
+    "https://github.com/greenrobot/greendao",
+    "https://github.com/objectbox/objectbox-java",
     "https://github.com/Red5/red5-server"
 ]
 
@@ -18,6 +18,16 @@ def download_commit_messages(repo_url):
     output_file_path = os.path.join(output_directory, f"{repo_name}_commit_messages.txt")
     readme_file_path = os.path.join(output_directory, f"{repo_name}_readme.txt")
 
+    output_directory_files = "file_paths"
+    os.makedirs(output_directory_files, exist_ok=True)
+    file_paths = os.path.join(output_directory_files, f"{repo_name}_files.txt")
+
+    # Set to store unique file paths
+    unique_file_paths = set()
+
+    # Initialize README content
+    readme_content = None
+
     # Open the output file
     with open(output_file_path, 'w', encoding='utf-8') as file:
         # Iterate through all commits of the repository
@@ -25,7 +35,9 @@ def download_commit_messages(repo_url):
             # Write each commit message to the file
             file.write(f"\"{commit.msg}\",\"\"\n")
 
+            # Collect unique file paths
             for modified_file in commit.modified_files:
+                unique_file_paths.add(modified_file.new_path)
                 if modified_file.filename.lower() == "readme.md":
                     readme_content = modified_file.source_code
 
@@ -34,6 +46,12 @@ def download_commit_messages(repo_url):
             file.write(readme_content)
         else:
             file.write("No readme content.")
+
+    # Write unique file paths to file
+    with open(file_paths, 'w', encoding='utf-8') as file:
+        for path in unique_file_paths:
+            if path is not None:  # Ensure there are no None entries
+                file.write(f"\"{path}\",\"\"\n")
 
 # Loop through the repository URLs
 for repo_url in repositories:
