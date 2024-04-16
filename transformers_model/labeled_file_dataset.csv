@@ -1,0 +1,4 @@
+message,label
+"src\main\java\org\red5\server\stream\message\RTMPMessage.java","Backend"
+"server\src\main\server\conf\red5.properties","Configuration"
+"src\test\resources\scripts\shell-tools.sh","Resources"
