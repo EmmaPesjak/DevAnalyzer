@@ -56,9 +56,8 @@ model.to(device)
 # Dataset splitting. The dataset is divided into training (50%), validation (25%), and testing (25%)
 # sets based on the message column.
 SIZE = df_org.shape[0]
-# since the "Documentation" category has so few
 # Separate exactly two 'Documentation' items
-docs_test = df_org[df_org['labels'] == 5].sample(n=2)
+docs_test = df_org[df_org['labels'] == 4].sample(n=2)
 remaining_items = df_org.drop(docs_test.index)
 
 # Calculate sizes and split indices
@@ -137,7 +136,6 @@ training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written.
     output_dir='./results',
     do_train=True,
-    do_eval=True,
     #  The number of epochs, defaults to 3.0
     num_train_epochs=3,
     per_device_train_batch_size=16,
@@ -145,10 +143,6 @@ training_args = TrainingArguments(
     # Number of steps used for a linear warmup
     warmup_steps=100,
     weight_decay=0.01,
-    logging_strategy='steps',
-    # TensorBoard log directory
-    logging_dir='./multi-class-logs',
-    logging_steps=50,
     evaluation_strategy="steps",
     eval_steps=50,
     save_strategy="steps",
