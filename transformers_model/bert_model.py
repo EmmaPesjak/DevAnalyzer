@@ -56,24 +56,31 @@ model.to(device)
 # Dataset splitting. The dataset is divided into training (50%), validation (25%), and testing (25%)
 # sets based on the message column.
 SIZE = df_org.shape[0]
-train_texts = list(df_org.message[:SIZE // 2])
-val_texts = list(df_org.message[SIZE // 2:(3 * SIZE) // 4])
-test_texts = list(df_org.message[(3 * SIZE) // 4:])
-train_labels = list(df_org.labels[:SIZE // 2])
-val_labels = list(df_org.labels[SIZE // 2:(3 * SIZE) // 4])
-test_labels = list(df_org.labels[(3 * SIZE) // 4:])
+
+split_index = int(SIZE * 0.8) # Splitting the data into 80% training and 20% testing
+train_texts = list(df_org.message[:split_index])
+test_texts = list(df_org.message[split_index:])
+train_labels = list(df_org.labels[:split_index])
+test_labels = list(df_org.labels[split_index:])
+
+# train_texts = list(df_org.message[:SIZE // 2])
+# val_texts = list(df_org.message[SIZE // 2:(3 * SIZE) // 4])
+# test_texts = list(df_org.message[(3 * SIZE) // 4:])
+# train_labels = list(df_org.labels[:SIZE // 2])
+# val_labels = list(df_org.labels[SIZE // 2:(3 * SIZE) // 4])
+# test_labels = list(df_org.labels[(3 * SIZE) // 4:])
 
 # The training, validation, and test text data are tokenized using the previously initialized tokenizer.
 # truncation=True ensures texts longer than the maximum allowed sequence length are truncated,
 # and padding=True pads shorter sequences to the maximum length. This standardizes the input size for BERT.
 train_encodings = tokenizer(train_texts, truncation=True, padding=True)
-val_encodings = tokenizer(val_texts, truncation=True, padding=True)
+#val_encodings = tokenizer(val_texts, truncation=True, padding=True)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True)
 
 # Custom DataLoader objects are created for each dataset split. These DataLoaders are responsible for
 # batching the data and making it iterable for the training loop.
 train_dataloader = DataLoader(train_encodings, train_labels)
-val_dataloader = DataLoader(val_encodings, val_labels)
+#val_dataloader = DataLoader(val_encodings, val_labels)
 test_dataset = DataLoader(test_encodings, test_labels)
 
 
@@ -124,25 +131,19 @@ training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written.
     output_dir='./results',
     do_train=True,
-    do_eval=True,
     #  The number of epochs, defaults to 3.0
     num_train_epochs=3,
-    per_device_train_batch_size=16,
+    per_device_train_batch_size=32,
     per_device_eval_batch_size=32,
     # Number of steps used for a linear warmup
     warmup_steps=100,
     weight_decay=0.01,
-    logging_strategy='steps',
-    # TensorBoard log directory
-    logging_dir='./multi-class-logs',
-    logging_steps=50,
-    evaluation_strategy="steps",
-    eval_steps=50,
-    save_strategy="steps",
+    save_strategy="epoch",
+    evaluation_strategy="epoch",
+    learning_rate=2e-5,
     fp16=False,
     load_best_model_at_end=True
 )
-
 # The Trainer class encapsulates the training loop, automatically handling the training,
 # evaluation, and prediction loops.
 trainer = Trainer(
@@ -151,7 +152,7 @@ trainer = Trainer(
     # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
-    eval_dataset=val_dataloader,
+    #eval_dataset=val_dataloader,
     compute_metrics=compute_metrics
 )
 
@@ -163,16 +164,16 @@ train_results = trainer.evaluate(eval_dataset=train_dataloader)
 print("Training Set Results:", train_results)
 
 # Evaluate the model on the validation dataset.
-val_results = trainer.evaluate(eval_dataset=val_dataloader)
-print("Validation Set Results:", val_results)
+# val_results = trainer.evaluate(eval_dataset=val_dataloader)
+# print("Validation Set Results:", val_results)
 
 # Optionally, evaluate the model on the test dataset.
 test_results = trainer.evaluate(eval_dataset=test_dataset)
 print("Test Set Results:", test_results)
 
 # Print eval results.
-q = [train_results, val_results, test_results]
-print(pd.DataFrame(q, index=["train", "val", "test"]).iloc[:, :5])
+q = [train_results, test_results]
+print(pd.DataFrame(q, index=["train", "test"]).iloc[:, :5])
 
 # Save the model and tokenizer.
 model_path = "./results/trained_model"
