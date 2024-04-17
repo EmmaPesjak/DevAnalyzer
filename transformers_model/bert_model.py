@@ -131,16 +131,21 @@ training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written.
     output_dir='./results',
     do_train=True,
+    do_eval=True,
     #  The number of epochs, defaults to 3.0
     num_train_epochs=3,
-    per_device_train_batch_size=32,
+    per_device_train_batch_size=16,
     per_device_eval_batch_size=32,
     # Number of steps used for a linear warmup
     warmup_steps=100,
     weight_decay=0.01,
-    save_strategy="epoch",
-    evaluation_strategy="epoch",
-    learning_rate=2e-5,
+    logging_strategy='steps',
+    # TensorBoard log directory
+    logging_dir='./multi-class-logs',
+    logging_steps=50,
+    evaluation_strategy="steps",
+    eval_steps=50,
+    save_strategy="steps",
     fp16=False,
     load_best_model_at_end=True
 )
@@ -152,7 +157,7 @@ trainer = Trainer(
     # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
-    #eval_dataset=val_dataloader,
+    eval_dataset=train_dataloader,
     compute_metrics=compute_metrics
 )
 
