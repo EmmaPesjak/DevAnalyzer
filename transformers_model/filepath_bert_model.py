@@ -56,24 +56,37 @@ model.to(device)
 # Dataset splitting. The dataset is divided into training (50%), validation (25%), and testing (25%)
 # sets based on the message column.
 SIZE = df_org.shape[0]
-train_texts = list(df_org.message[:SIZE // 2])
-val_texts = list(df_org.message[SIZE // 2:(3 * SIZE) // 4])
-test_texts = list(df_org.message[(3 * SIZE) // 4:])
-train_labels = list(df_org.labels[:SIZE // 2])
-val_labels = list(df_org.labels[SIZE // 2:(3 * SIZE) // 4])
-test_labels = list(df_org.labels[(3 * SIZE) // 4:])
+# since the "Documentation" category has so few
+# Separate exactly two 'Documentation' items
+docs_test = df_org[df_org['labels'] == 5].sample(n=2)
+remaining_items = df_org.drop(docs_test.index)
 
+# Calculate sizes and split indices
+remaining_size = remaining_items.shape[0]
+total_size = df_org.shape[0]
+test_size_needed = int(total_size * 0.2) - docs_test.shape[0]
+split_index = int(remaining_size * 0.8) if test_size_needed <= int(remaining_size * 0.2) else remaining_size - test_size_needed
+
+# Split remaining data
+train_texts = list(remaining_items.message[:split_index])
+train_labels = list(remaining_items.labels[:split_index])
+test_texts = list(remaining_items.message[split_index:])
+test_labels = list(remaining_items.labels[split_index:])
+
+# Add 'Documentation' items to test set
+test_texts.extend(list(docs_test.message))
+test_labels.extend(list(docs_test.labels))
 # The training, validation, and test text data are tokenized using the previously initialized tokenizer.
 # truncation=True ensures texts longer than the maximum allowed sequence length are truncated,
 # and padding=True pads shorter sequences to the maximum length. This standardizes the input size for BERT.
 train_encodings = tokenizer(train_texts, truncation=True, padding=True)
-val_encodings = tokenizer(val_texts, truncation=True, padding=True)
+#val_encodings = tokenizer(val_texts, truncation=True, padding=True)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True)
 
 # Custom DataLoader objects are created for each dataset split. These DataLoaders are responsible for
 # batching the data and making it iterable for the training loop.
 train_dataloader = DataLoader(train_encodings, train_labels)
-val_dataloader = DataLoader(val_encodings, val_labels)
+#val_dataloader = DataLoader(val_encodings, val_labels)
 test_dataset = DataLoader(test_encodings, test_labels)
 
 
@@ -151,7 +164,7 @@ trainer = Trainer(
     # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
-    eval_dataset=val_dataloader,
+    eval_dataset=train_dataloader,
     compute_metrics=compute_metrics
 )
 
@@ -163,16 +176,16 @@ train_results = trainer.evaluate(eval_dataset=train_dataloader)
 print("Training Set Results:", train_results)
 
 # Evaluate the model on the validation dataset.
-val_results = trainer.evaluate(eval_dataset=val_dataloader)
-print("Validation Set Results:", val_results)
+# val_results = trainer.evaluate(eval_dataset=val_dataloader)
+# print("Validation Set Results:", val_results)
 
 # Optionally, evaluate the model on the test dataset.
 test_results = trainer.evaluate(eval_dataset=test_dataset)
 print("Test Set Results:", test_results)
 
 # Print eval results.
-q = [train_results, val_results, test_results]
-print(pd.DataFrame(q, index=["train", "val", "test"]).iloc[:, :5])
+q = [train_results, test_results]
+print(pd.DataFrame(q, index=["train", "test"]).iloc[:, :5])
 
 # Save the model and tokenizer.
 model_path = "./results/trained_label_model"
