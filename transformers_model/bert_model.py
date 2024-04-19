@@ -1,9 +1,11 @@
 import pandas as pd
-from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast
+from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast, AutoModel
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
 from transformers_model.data_loader import DataLoader
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
@@ -49,6 +51,9 @@ tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=51
 # corresponding to the classes of our dataset.
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
                                                       label2id=label2id)
+# tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
+# model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
+
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
 # This is critical for efficient training, especially with large models like BERT.
 model.to(device)
@@ -131,7 +136,6 @@ training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written.
     output_dir='./results',
     do_train=True,
-    do_eval=True,
     #  The number of epochs, defaults to 3.0
     num_train_epochs=3,
     per_device_train_batch_size=16,
@@ -139,10 +143,6 @@ training_args = TrainingArguments(
     # Number of steps used for a linear warmup
     warmup_steps=100,
     weight_decay=0.01,
-    logging_strategy='steps',
-    # TensorBoard log directory
-    logging_dir='./multi-class-logs',
-    logging_steps=50,
     evaluation_strategy="steps",
     eval_steps=50,
     save_strategy="steps",
@@ -157,7 +157,7 @@ trainer = Trainer(
     # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
-    eval_dataset=train_dataloader,
+    eval_dataset=test_dataset,
     compute_metrics=compute_metrics
 )
 
