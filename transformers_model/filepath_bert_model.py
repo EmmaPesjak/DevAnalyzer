@@ -158,7 +158,7 @@ trainer = Trainer(
     # The training arguments that we defined above.
     args=training_args,
     train_dataset=train_dataloader,
-    eval_dataset=train_dataloader,
+    eval_dataset=test_dataset,
     compute_metrics=compute_metrics
 )
 
