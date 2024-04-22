@@ -9,19 +9,8 @@
 "renamed some VS stuff to ObjectBox, removed .gitignore for tests","Perfective"
 "load lib objectbox","Other"
 "minor","Other"
-"added property flag NON_PRIMITIVE_TYPE
-
-added Properties class
-
-give Cursors a Properties instance
-
-verify entity is know before returning a box
-
-prepared 2nd entity TestEntityMinimal.java for unit testing
-
-sharedReadTx to make txs across boxes work
-
-fix some test deps","Adaptive"
+"added property flag NON_PRIMITIVE_TYPE. added Properties class. give Cursors a Properties instance. verify entity is know before returning a box. prepared 2nd entity TestEntityMinimal.java for unit testing","Adaptive"
+"sharedReadTx to make txs across boxes work. fix some test deps","Corrective"
 "Box: some JavaDocs, shortcut for null or empty collections","Administrative"
 "prep daocompat for upload","Adaptive"
 "find scalars using a list","Adaptive"
@@ -31,23 +20,12 @@ fix some test deps","Adaptive"
 "perf test: added fixed byte array with length 6","Adaptive"
 "find string using property id","Adaptive"
 "add version","Other"
-"getting all entities in native, crashes at the moment (local reference table overflow (max=512)) and is slower on Desktop when deleting local refs
-
-Java_io_objectbox_Cursor_nativePutSimpleEntity
-
-Basic copy of query and builder API.
-
-Initial query implementation using objectbox find.
-
-Use find method overloads based on value type.
-
-Java_io_objectbox_Cursor_nativeFindScalarPropertyId","Other"
 "testUnalignedMemoryAccess","Adaptive"
 "CursorBytesTest.java: Sizes must be multiple of 4 (currently not enforced)","Adaptive"
-"fix some java tests: pad bytes to length 4","Adaptive"
+"fix some java tests: pad bytes to length 4","Perfective"
 "moved objectbox-api to objectbox-java-api","Perfective"
 "prepared Query&Builder on the Java side","Adaptive"
-"fixes to build Query in Java","Adaptive"
+"fixes to build Query in Java","Perfective"
 "added @Temporary to API","Adaptive"
 "init Property IDs (for query builder)","Adaptive"
 "fixes to make Java Query work","Corrective"
@@ -56,53 +34,31 @@ Java_io_objectbox_Cursor_nativeFindScalarPropertyId","Other"
 "== and != for String","Adaptive"
 "contains, startsWith, and endsWith for String","Adaptive"
 "java find with offset and limit","Adaptive"
-"in and betwwen for Java QueryBuilder (FIXME DbException: invalid unordered_map<K, T> key)
-
-Java query builder: null/notNull && FP
-
-Fix TestEntityProperties types and all properties field.
-
-- Also populate simpleLong property in Query test.
-
-Support additional query conditions.
-
-Do not validate values for null/notNull operations.
-
-Actually copy values for in op.
-
-Add Float support to PropertyCondition greater/less ops.
-
-- They support Double, so they should support Float as well.
-
-rename WhereCondition to QueryCondition","Corrective"
-"fix tests using DummyProperties","Adaptive"
-"Add contains, starts/endsWith to Property class.
-
-- Replacement for like() from greenDAO.","Adaptive"
+"in and betwwen for Java QueryBuilder (FIXME DbException: invalid unordered_map<K, T> key). Java query builder: null/notNull && FP. Fix TestEntityProperties types and all properties field. - Also populate simpleLong property in Query test. Support additional query conditions. Do not validate values for null/notNull operations. Actually copy values for in op. Add Float support to PropertyCondition greater/less ops. - They support Double, so they should support Float as well. rename WhereCondition to QueryCondition","Corrective"
+"fix tests using DummyProperties","Corrective"
+"Add contains, starts/endsWith to Property class.","Adaptive"
+"- Replacement for like() from greenDAO.","Perfective"
 "prep some PropertyConverter stuff to happen in C++","Adaptive"
 "fix","Corrective"
 "Generate converter info into Property Java class (0.9.1-SNAPSHOT)","Adaptive"
-"make Properties available to BoxStore, prep native registration","Adaptive"
+"make Properties available to BoxStore, prep native registration","Perfective"
 "fix JniPropertyConverter.javaClassName","Corrective"
 "added testBigResultList","Adaptive"
-"fix JavaDoc errors","Corrective"
 "make property flags uint and type ushort","Adaptive"
 "added idAssignable flag","Adaptive"
 "Put @Id(assignable = true) on Order","Adaptive"
-"Need to retain Entity annotation for ProGuard. #25
-
-- With RetentionPolicy.SOURCE the annotation is already stripped by the compiler, before ProGuard gets a chance to transform the byte code. So set at least RetentionPolicy.CLASS.","Corrective"
+"Need to retain Entity annotation for ProGuard. #25 - With RetentionPolicy.SOURCE the annotation is already stripped by the compiler, before ProGuard gets a chance to transform the byte code. So set at least RetentionPolicy.CLASS.","Corrective"
 "added refId to @Entity and @Property","Adaptive"
 "add refId and id to model","Adaptive"
 "added id and refId to ModelBuilder","Adaptive"
-"ignore tests with size != modulo 4","Adaptive"
+"ignore tests with size != modulo 4","Perfective"
 "add indexId to model","Adaptive"
-"consider ids in generator","Other"
+"consider ids in generator","Adaptive"
 "fixes for model IDs","Corrective"
 "add lastEntityId and lastIndexId to model","Adaptive"
 "lastEntityId lastIndexId in model builder, etc","Adaptive"
 "lastEntityId lastIndexId in generator, fix modelIndexId in ftl","Adaptive"
-"RetentionPolicy.CLASS for a couple more annotations","Other"
+"RetentionPolicy.CLASS for a couple more annotations","Adaptive"
 "added lastPropertyId to model entity","Adaptive"
 "added lastEntityId to model builder and ftl","Adaptive"
 "generator fixes","Corrective"
@@ -112,7 +68,7 @@ rename WhereCondition to QueryCondition","Corrective"
 "removed NULLS_FIRST order flag, CASE_SENSITIVE replaces IGNORE_CASE_ASCII","Perfective"
 "added order to QueryBuilder.java","Adaptive"
 "improved JavaDoc on queries","Administrative"
-"JNI call find without offset/limit if possible","Other"
+"JNI call find without offset/limit if possible","Adaptive"
 "StringOrder for string query conditions","Adaptive"
 "use collect400000 and collect430000 to consume non-primitive values first","Adaptive"
 "collect002033 for FP intensive entities, added Char type to generator","Adaptive"
@@ -124,27 +80,7 @@ rename WhereCondition to QueryCondition","Corrective"
 "add testFindKeysUnordered","Adaptive"
 "return long for native QueryBuilder methods","Adaptive"
 "basic setParameter for Java","Adaptive"
-"Port stringOrderCollation to QueryBuilder.
-
-- Though change signature to accept only new StringOrder constant instead of any SQLite collate string.
-
-Support setParameter in daocompat, properly rebuild query.
-
-- Support setParameter and undeprecate it.
-- The ObjectBox query is now (re)built when creating a new query or resetting it (for a new thread). QueryBuilder now only records desired conditions and orders. Previously would simply re-use the same ObjectBox query object built by QueryBuilder, which would obviously not be re-set to initial values.
-
-JNI/Java: setParameter for FP, between for FP
-
-Support double values for setParameter.
-
-- Also throw on unsupported parameter types.
-
-Support double values for BETWEEN op.
-
-- Add test.
-
-add :tests:test-proguard","Adaptive"
-"@Retention(RetentionPolicy.CLASS) for all","Other"
+"Port stringOrderCollation to QueryBuilder. - Though change signature to accept only new StringOrder constant instead of any SQLite collate string. Support setParameter in daocompat, properly rebuild query. - Support setParameter and undeprecate it. - The ObjectBox query is now (re)built when creating a new query or resetting it (for a new thread). QueryBuilder now only records desired conditions and orders. Previously would simply re-use the same ObjectBox query object built by QueryBuilder, which would obviously not be re-set to initial values. JNI/Java: setParameter for FP, between for FP Support double values for setParameter. - Also throw on unsupported parameter types. Support double values for BETWEEN op. - Add test. add :tests:test-proguard","Adaptive"
 "make Query.setParameter return Query to make Query chainable","Perfective"
 "0.9.3","Other"
 "JNI for new Store and Tx methods (renewal etc.)","Adaptive"
@@ -156,17 +92,16 @@ add :tests:test-proguard","Adaptive"
 "recycle and renew box reader instead of sharing to avoid readers to hold on to their data","Perfective"
 "added CrashReportLogger from Java side","Corrective"
 "fix tests the expect an ex type","Adaptive"
-"BoxStore check if it need to unpack native lib from classpath (Windows)","Other"
 "Update flatbuffers to 03ee3db2408e477137c83195e0e18c26f9d2ab25","Perfective"
 "add native lib unpack logic for linux","Adaptive"
 "embedd flatbuffers as source to fix dependency issue","Corrective"
 "minor","Other"
-"check for android native lib","Other"
+"check for android native lib","Perfective"
 "relations: store target entity (WIP, not sure about using the name in the model)","Adaptive"
 "rename PropertyType_Reference to PropertyType_Reference","Perfective"
 "0.9.6-SNAPSHOT, VS updates, @Relation","Perfective"
 "typo","Other"
-"added DbDetachedException.java","Corrective"
+"added DbDetachedException.java","Adaptive"
 "setting some years to 2017","Other"
 "fix setting boxStore, to-one relations now work!","Corrective"
 "some fixes for relation","Corrective"
@@ -189,9 +124,10 @@ add :tests:test-proguard","Adaptive"
 "renaming refID to uid on Java side","Perfective"
 "more renaming refId to uid on C++ side","Perfective"
 "some more renaming refID to uid on Java side","Perfective"
-"add LazyListTest to FunctionalTestSuite.java, move QueryTest.java","Adaptive"
+"add LazyListTest to FunctionalTestSuite.java","Adaptive"
+"move QueryTest.java","Perfective"
 "use IdUid for in model for last*Ids, more UID checks, e.g. check incoming vs existing UIDs","Adaptive"
-"add missing IdUid.java","Adaptive"
+"add missing IdUid.java","Perfective"
 "switched IdUid to struct","Perfective"
 "adjust Java part to IdUid model changes","Perfective"
 "added indexUid to FlatProperty&Property, CURRENT_META_VERSION = 2, MODEL_VERSION = 2, extended Schema-Entity-Flat-Roundtrip to check property/index IDs&UIDs","Adaptive"
@@ -217,22 +153,21 @@ add :tests:test-proguard","Adaptive"
 "Scheduler test","Adaptive"
 "testTransformerWithScheduler","Adaptive"
 "remove obsolete ObjectClassObserver.java and Subscription (android)","Perfective"
-"Data prefix for Observer, Publisher, and Subscription classes","Other"
+"Data prefix for Observer, Publisher, and Subscription classes","Adaptive"
 "SubscriptionBuilder: renamed subscribe() to observer(), JavaDocs; tests for ErrorObserver","Perfective"
 "added basic JavaDocs for BoxStore, Box, SubscriptionBuilder","Administrative"
 "Make ObjectClassPublisher.java use one thread for observer notifications","Perfective"
 "updated javadoc for subscribing observers (threading)","Administrative"
 "use generic Observer for Query","Adaptive"
 "archived: Query observer with Transformer (not weak!)","Perfective"
-"Revert 'archived: Query observer with Transformer (not weak!)'
-
-This reverts commit a52e340acdbb0759da50d071733e418945e008a4.","Other"
+"Revert 'archived: Query observer with Transformer (not weak!)' This reverts commit a52e340acdbb0759da50d071733e418945e008a4.","Other"
 "Query uses SubscriptionBuilder via QueryPublisher","Adaptive"
 "testTranformer for Query","Adaptive"
 "call onError also for Observer exceptions","Corrective"
 "JavaDoc updates for Observer exceptions","Administrative"
 "Added JavaDoc to Query","Administrative"
-"renamed to DataTransformer.java, added JavaDoc","Perfective"
+"renamed to DataTransformer.java","Perfective"
+"added JavaDoc","Administrative"
 "introduced DelegatingObserver to unwrap observers during removal, fixes a observer leak with wrapped observers","Corrective"
 "use DataPublisherUtils.removeObserverFromCopyOnWriteSet in QueryPublisher.java, too","Adaptive"
 "fixing weak observers","Corrective"
@@ -244,19 +179,20 @@ This reverts commit a52e340acdbb0759da50d071733e418945e008a4.","Other"
 "QueryBuilder.and()","Adaptive"
 "improved state checks for Query","Perfective"
 "SubscriptionBuilder.onlyChanges()","Adaptive"
-"AndroidScheduler.java: static method instead of field, JavaDoc","Perfective"
+"AndroidScheduler.java: static method instead of field","Perfective"
+"JavaDoc","Administrative"
 "some notes on weak references and stale query observers","Administrative"
-"0.9.8-RC5, testRelationToOneQuery, javaDocs","Adaptive"
+"0.9.8-RC5, testRelationToOneQuery","Adaptive"
+"javaDocs","Administrative"
 "javadoc","Administrative"
 "added testRunInReadTxAndThenPut (failing)","Adaptive"
 "fix relation test for android","Corrective"
 "added MultithreadedRelationTest.java","Adaptive"
 "JniBasicsTest to identify ReferenceTable leak","Corrective"
 "misc","Other"
-"Query.forEach (FIXME: make public after runInReadTx is fixed)","Adaptive"
+"Query.forEach (FIXME: make public after runInReadTx is fixed)","Corrective"
 "testForEach","Adaptive"
-"tx is null despite check in constructor in some tests (called by finalizer):
-Null check avoids NPE in finalizer and seems to stabilize Android instrumentation perf tests.","Corrective"
+"tx is null despite check in constructor in some tests (called by finalizer): Null check avoids NPE in finalizer and seems to stabilize Android instrumentation perf tests.","Corrective"
 "Cursor calls nativeDestroy now also when tx is closed","Perfective"
 "make testTxGC() run finalizers to clean up dangling TXs to avoid them surving the store closing","Perfective"
 "Transaction.java: WARN_FINALIZER debug flag to see finalizers in action","Corrective"
@@ -293,12 +229,9 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "updated flatbuffers to 340d1a3447cf821924aaaeefa5e6aef0fcdbf0c0","Perfective"
 "multiple refactorings: Cursor creation via factory, added RelationInfo, extended Properties class to be single source for entity info","Perfective"
 "renamed Properties to EntityInfo","Perfective"
-"regenerated test artifacts with current version","Adaptive"
 "refactoring: RelationInfo.java used EntityInfo","Perfective"
-"ToOne puts via cursor if necessary","Other"
 "ToOne fixes: isResolved(), cached target/id after put","Corrective"
 "ToOne: flag to avoid calls to {@link #getTargetId()}, which may involve expensive reflection","Other"
-"updated cursor gen","Perfective"
 "updated cursor gen","Perfective"
 "shorter @Generated (no more "hash = ")","Perfective"
 "removed @JoinEntity which does not make sense for ObjectBox","Perfective"
@@ -322,7 +255,8 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "ToMany: add() removes entities from remove tracking, tests for remove","Adaptive"
 "ToMany.syncToTargetBox()","Adaptive"
 "ToMany.sortById()","Adaptive"
-"ToMany: clear all on reset(), JavaDoc","Perfective"
+"ToMany: clear all on reset()","Adaptive"
+"JavaDoc","Administrative"
 "JavaDocs","Administrative"
 "added @Backlink","Adaptive"
 "for non-Android OS, prefer System.load over System.loadLibrary","Perfective"
@@ -356,7 +290,6 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "property: added virtual flag and virtualTarget","Adaptive"
 "minor improvements for ToOne","Perfective"
 "ModelBuilder: allow passing virtualTarget","Adaptive"
-"ModelBuilder: allow passing virtualTarget 2","Adaptive"
 "temp debug log for setResolvedTarget","Corrective"
 "debugRelations flag","Corrective"
 "prevent two BoxStores from being opened for the same directory","Corrective"
@@ -382,7 +315,8 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "added stand alone relation tests","Adaptive"
 "API_ added @TargetIdProperty, deprecated old annotations","Adaptive"
 "testToOneBulk and testToManyBulk","Adaptive"
-"some renames, added ToManyGetter","Perfective"
+"some renames","Perfective"
+"added ToManyGetter","Adaptive"
 "use To[Many|One]Getters in RelationInfo.java","Adaptive"
 "make ToManyGetter return List","Perfective"
 "added store.callInReadTx()","Adaptive"
@@ -394,20 +328,17 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "add javadoc-style","Administrative"
 "add .gitignore","Administrative"
 "add gradle files","Administrative"
-"add Jenkinsfile","Administrative"
 "add gradle files for tests","Adaptive"
 "for linux64, add native dependency","Adaptive"
 "fix version for native dependency","Corrective"
 "fix","Corrective"
 "fix copyright headers","Perfective"
 "Java V1.0.0-2017-09-02","Other"
-"enable source artifacts","Other"
 "added LICENSE.txt","Administrative"
 "first README.txt","Administrative"
 "V1.0.0","Other"
 "added GitHub issue template","Adaptive"
 "1.0.1-SNAPSHOT","Other"
-"relation constructor should fail fast for null values to track down non-standard initialization (e.g. JSON libs)","Other"
 "improved github issue template","Perfective"
 "BoxStore.java: V1.0.1-2017-09-10","Other"
 "dropAllData() is not implemented on native side; remove public for now","Perfective"
@@ -440,15 +371,14 @@ Null check avoids NPE in finalizer and seems to stabilize Android instrumentatio
 "Box: remove find methods except with Property param, adjust tests","Perfective"
 "using flatbuffers-java:1.7.2 from maven repo, removing embedded sources","Perfective"
 "Help people with floating point equality","Other"
-"DataSubscriptionList: add clears canceled state, java docs","Adaptive"
+"DataSubscriptionList: add clears canceled state","Adaptive"
+"java docs","Administrative"
 "deprecated Cursor.lookupKeyUsingIndex","Perfective"
 "Gradle: Drop FunctionalTestSuite, instead add main source set to tests.","Perfective"
 "Drop unused Android Gradle plugin dependency.","Perfective"
 "QueryTest: expand testBuildTwice to call other builder methods.","Perfective"
 "added observer method with DataSubscriptionList param","Adaptive"
-"Revert 'Gradle: Drop FunctionalTestSuite, instead add main source set to tests.'
-
-This reverts commit 38e8214","Other"
+"Revert 'Gradle: Drop FunctionalTestSuite, instead add main source set to tests.' This reverts commit 38e8214","Other"
 "minor","Other"
 "QueryBuilder: always verify handle before using it","Adaptive"
 "Gradle 4.3","Other"
@@ -460,12 +390,12 @@ This reverts commit 38e8214","Other"
 "1.2.1-SNAPSHOT","Other"
 "kotlin_version = '1.1.51'","Other"
 "pass canonical instead of absolute path","Perfective"
-"BoxStore.getVersion(): "1.2.1-2017-11-09"","Adaptive"
-"move OrderFlags into query package","Adaptive"
+"BoxStore.getVersion(): '1.2.1-2017-11-09'","Adaptive"
+"move OrderFlags into query package","Perfective"
 "Add generated DebugFlags","Adaptive"
 "LOG_TRANSACTIONS_READ and LOG_TRANSACTIONS_WRITE","Adaptive"
 "use new debug flags","Adaptive"
-"fix return type of nativeSetDebugFlags","Corrective"
+"fix return type of nativeSetDebugFlags","Perfective"
 "1.2.1","Other"
 "only apply debugFlags if != 0","Corrective"
 "fix previous commit","Corrective"
@@ -483,14 +413,14 @@ This reverts commit 38e8214","Other"
 "build.gradle: enable test logging","Adaptive"
 "added test-with-asan.sh","Adaptive"
 "added test-with-asan.sh: allow arguments to be forwarded to gradle","Adaptive"
-"Jenkinsfile: use test-with-asan.sh","Other"
+"Jenkinsfile: use test-with-asan.sh","Adaptive"
 "set BoxStore version to 1.2.2-2017-11-21","Perfective"
 "1.2.2-RC","Other"
 "Jenkinsfile: disable testing with asan for now","Perfective"
 "Jenkinsfile: disable test collection temporarily","Perfective"
 "back to 1.3.0-SNAPSHOT","Perfective"
-"reworked deleteAllFiles: fail fast, throw NPE for null param, safer concurrency
-added JavaDocs","Corrective"
+"reworked deleteAllFiles: fail fast, throw NPE for null param, safer concurrency","Corrective"
+"added JavaDocs","Administrative"
 "added link to BoxStore.diagnose() for DbMaxReadersExceededException","Adaptive"
 "new static deleteAllFiles methods","Adaptive"
 "tests for deleteAllFiles","Adaptive"
@@ -525,7 +455,8 @@ added JavaDocs","Corrective"
 "1.3.2 for README.md","Administrative"
 "JavaDocs, minor","Administrative"
 "1.3.3-SNAPSHOT","Other"
-"renamed to queryAttempts, etc., JavaDocs","Perfective"
+"renamed to queryAttempts, etc.","Perfective"
+"JavaDocs","Administrative"
 "minor","Other"
 "1.3.3","Other"
 "added DebugFlags.LOG_QUERY_PARAMETERS","Adaptive"
