@@ -8,7 +8,7 @@ def get_label_list_from_csv(csv_file_path, label_column_name):
 
 
 # Example usage
-csv_file_path = 'labeled_file_dataset.csv'
-label_column_name = 'label'  # Adjust this if your column name is different
+csv_file_path = 'labeled_dataset.csv'
+label_column_name = 'label'
 label_list = get_label_list_from_csv(csv_file_path, label_column_name)
 print(label_list)
