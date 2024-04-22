@@ -53,7 +53,7 @@ def evaluate(model, test_loader, criterion):
             predictions = torch.argmax(outputs, dim=1)
             total_acc += (predictions == labels).sum().item()
 
-    print(f'Test loss: {total_loss/len(test_loader)} Test acc: {total_acc/len(test_set)*100}%')
+    # print(f'Test loss: {total_loss/len(test_loader)} Test acc: {total_acc/len(test_set)*100}%')
 
 
 def validate_model(model, loader, device):

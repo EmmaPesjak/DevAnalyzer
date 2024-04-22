@@ -7,6 +7,41 @@ from transformers_model.data_loader import DataLoader
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
+# FROM PETER
+# # X = commit messages
+# # y = lables
+#
+# # Constants for the experiment
+# num_splits = 15
+# test_size = 0.2
+# seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 777, 222]
+#
+# # Lists to store loss scores from each split
+# loss_scores = []
+#
+# # Loop through multiple splits and train the model
+# for seed_value in seed_values:
+#     # So here you either tokenize the input before or after th split
+#     X_train, X_test, Y_train, Y_test = train_test_split(embedding, label, test_size=test_size, random_state=seed_value)
+#
+#     # Add YOUR code here
+#
+#     loss_score = model(pred, Y_test)
+#
+#     # Append the correlation score to the list
+#     loss_scores.append(loss_score)
+#     print(loss_score)
+#
+# # Calculate the average loss score and standard deviation
+# average_loss_score = np.mean(loss_scores)
+# std_deviation = np.std(loss_scores)
+# print("Average Loss Score :", average_loss_score)
+# print("Standard Deviation:", std_deviation)
+
+
+
+
+
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
 device = 'cuda' if cuda.is_available() else 'cpu'
