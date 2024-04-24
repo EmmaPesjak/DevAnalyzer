@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import shutil
 import os
+import shutil
+import os
 
 
 def clear_directory(path):
@@ -72,6 +74,8 @@ seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 7
 loss_scores = []
 results = []
 
+results = []
+
 
 def compute_metrics(pred):
     """
@@ -112,6 +116,7 @@ def compute_metrics(pred):
     }
 
 
+
 # Loop through multiple splits and train the model
 for i, seed_value in enumerate(seed_values):
     # Define unique output directory for each split
@@ -139,9 +144,8 @@ for i, seed_value in enumerate(seed_values):
         per_device_eval_batch_size=32,
         warmup_steps=100,
         weight_decay=0.01,
-        evaluation_strategy="steps",
-        eval_steps=50,
-        save_strategy="steps",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         fp16=False,
         load_best_model_at_end=True
     )
