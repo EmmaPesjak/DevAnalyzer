@@ -6,7 +6,7 @@ from transformers import pipeline
 class BertFilepathAnalyzer:
 
     def __init__(self):
-        model_path = Path(__file__).parent.parent / "transformers_model/results/trained_label_model"
+        model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/trained_filepath_model"
 
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_path)

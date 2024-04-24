@@ -43,7 +43,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 device = 'cuda' if cuda.is_available() else 'cpu'
 
 # Load the dataset using Pandas DataFrame, contains the data that will be used for training the model.
-df_org = pd.read_csv("labeled_dataset.csv")
+df_org = pd.read_csv("labeled_message_dataset.csv")
 # Shuffle the dataset to ensure that the training process doesn't get biased by the order of the data.
 # The random_state is set to a fixed value to ensure that the shuffling is reproducible.
 df_org = df_org.sample(frac=1.0, random_state=42)
@@ -165,7 +165,7 @@ def compute_metrics(pred):
 # model's performance on the training, validation, and test datasets.
 training_args = TrainingArguments(
     # The output directory where the model predictions and checkpoints will be written.
-    output_dir='./results',
+    output_dir='./results/messages',
     do_train=True,
     #  The number of epochs, defaults to 3.0
     num_train_epochs=5,
@@ -212,6 +212,6 @@ q = [train_results, test_results]
 print(pd.DataFrame(q, index=["train", "test"]).iloc[:, :5])
 
 # Save the model and tokenizer.
-model_path = "./results/trained_model"
+model_path = "./results/messages/trained_message_model"
 trainer.save_model(model_path)
 tokenizer.save_pretrained(model_path)

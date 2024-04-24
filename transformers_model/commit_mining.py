@@ -1,5 +1,8 @@
 from pydriller import Repository
 import os
+"""
+Helper script for mining label data.
+"""
 
 # List of repository URLs
 repositories = [

@@ -1,6 +1,6 @@
 from models.batch_analyzer import BatchAnalyzer
 from models.transformer_analyzer import TransformerAnalyzer
-from models.bert_commit_analyzer import BertCommitAnalyzer
+from models.bert_message_analyzer import BertMessageAnalyzer
 import time
 
 
@@ -21,7 +21,7 @@ class MainController:
         self.view.set_on_input_change(self.retrieve_url)
         self.analyzer = BatchAnalyzer()
         self.transformer_analyzer = TransformerAnalyzer()
-        self.bert_commit_analyzer = BertCommitAnalyzer()
+        self.bert_commit_analyzer = BertMessageAnalyzer()
 
 
     def retrieve_url(self, new_url):
