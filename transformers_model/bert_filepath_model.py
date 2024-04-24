@@ -6,7 +6,14 @@ from torch import cuda
 from transformers_model.data_loader import DataLoader
 from sklearn.model_selection import train_test_split
 import numpy as np
+import shutil
+import os
 
+
+def clear_directory(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    os.makedirs(path)
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
@@ -63,6 +70,8 @@ seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 7
 
 # Lists to store loss scores from each split
 loss_scores = []
+results = []
+
 
 def compute_metrics(pred):
     """
@@ -102,8 +111,13 @@ def compute_metrics(pred):
         'Recall': recall
     }
 
+
 # Loop through multiple splits and train the model
-for seed_value in seed_values:
+for i, seed_value in enumerate(seed_values):
+    # Define unique output directory for each split
+    output_dir = f'./results/filepaths/split_{i}'
+    clear_directory(output_dir)
+
     # Split the data
     train_texts, test_texts, train_labels, test_labels = train_test_split(df_org['message'], df_org['labels'],
                                                                           test_size=test_size, random_state=seed_value)
@@ -118,16 +132,15 @@ for seed_value in seed_values:
 
     # Define training arguments and create Trainer
     training_args = TrainingArguments(
-        output_dir='./results/filepaths',
+        output_dir=output_dir,
         do_train=True,
-        num_train_epochs=5,
+        num_train_epochs=2,
         per_device_train_batch_size=16,
         per_device_eval_batch_size=32,
         warmup_steps=100,
         weight_decay=0.01,
-        evaluation_strategy="steps",
-        eval_steps=50,
-        save_strategy="steps",
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
         fp16=False,
         load_best_model_at_end=True
     )
@@ -141,6 +154,22 @@ for seed_value in seed_values:
 
     # Train and evaluate the model
     trainer.train()
+
+    eval_results = trainer.evaluate()
+    print("Evaluation results:", eval_results)
+
+    # Store results along with identifying information
+    results.append({
+        'split_index': i,
+        'seed_value': seed_value,
+        'loss': eval_results['eval_loss'],
+        'accuracy': eval_results.get('eval_Accuracy'),
+        'f1': eval_results.get('eval_F1'),
+        'precision': eval_results.get('eval_Precision'),
+        'recall': eval_results.get('eval_Recall')
+    })
+    print(f"Results for split {i}: {eval_results}")
+
     test_results = trainer.evaluate(eval_dataset=test_dataset)
 
     # Store and print the loss score
@@ -153,7 +182,25 @@ average_loss_score = np.mean(loss_scores)
 std_deviation = np.std(loss_scores)
 print("Average Loss Score:", average_loss_score)
 print("Standard Deviation:", std_deviation)
-#
-#
 
+# The best split is the model to load when actually using it??
+# Convert list of results to a DataFrame for easier analysis
+df_results = pd.DataFrame(results)
 
+# Find the best split based on a specific metric, e.g., lowest loss
+best_by_loss = df_results.loc[df_results['loss'].idxmin()]
+print("Best split by loss:", best_by_loss)
+
+# Check if 'accuracy' column exists and contains non-null values
+if 'accuracy' in df_results and df_results['accuracy'].notna().any():
+    best_by_accuracy = df_results.loc[df_results['accuracy'].idxmax()]
+    print("Best split by accuracy:", best_by_accuracy)
+else:
+    print("No valid accuracy data available.")
+
+# Check if all required metrics are available before sorting
+if df_results[['accuracy', 'f1', 'loss']].notnull().all().all():
+    best_overall = df_results.sort_values(by=['accuracy', 'f1', 'loss'], ascending=[False, False, True]).iloc[0]
+    print("Best overall split:", best_overall)
+else:
+    print("Cannot determine best overall split due to missing data.")
