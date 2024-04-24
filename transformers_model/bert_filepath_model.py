@@ -188,6 +188,33 @@ print("Standard Deviation:", std_deviation)
 # Convert list of results to a DataFrame for easier analysis
 df_results = pd.DataFrame(results)
 
+# Compute average metrics if they exist and are not all None
+if 'accuracy' in df_results.columns and df_results['accuracy'].notna().any():
+    average_accuracy = df_results['accuracy'].mean()
+    print("Average Accuracy:", average_accuracy)
+else:
+    print("Accuracy data unavailable.")
+
+if 'f1' in df_results.columns and df_results['f1'].notna().any():
+    average_f1 = df_results['f1'].mean()
+    print("Average F1 Score:", average_f1)
+else:
+    print("F1 Score data unavailable.")
+
+if 'precision' in df_results.columns and df_results['precision'].notna().any():
+    average_precision = df_results['precision'].mean()
+    print("Average Precision:", average_precision)
+else:
+    print("Precision data unavailable.")
+
+if 'recall' in df_results.columns and df_results['recall'].notna().any():
+    average_recall = df_results['recall'].mean()
+    print("Average Recall:", average_recall)
+else:
+    print("Recall data unavailable.")
+
+print("-------------------------")
+
 # Find the best split based on a specific metric, e.g., lowest loss
 best_by_loss = df_results.loc[df_results['loss'].idxmin()]
 print("Best split by loss:", best_by_loss)
