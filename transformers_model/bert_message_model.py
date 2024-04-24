@@ -168,7 +168,7 @@ training_args = TrainingArguments(
     output_dir='./results/messages',
     do_train=True,
     #  The number of epochs, defaults to 3.0
-    num_train_epochs=4,
+    num_train_epochs=5,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=32,
     # Number of steps used for a linear warmup
