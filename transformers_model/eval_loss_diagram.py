@@ -1,4 +1,9 @@
+import matplotlib
+matplotlib.use('TkAgg')  # Or use 'Qt5Agg', 'Agg', etc.
 import matplotlib.pyplot as plt
+"""
+Helper script for displaying evaluation data for trained models.
+"""
 
 # Sample data: evaluation losses for each epoch
 eval_losses = [1.33, 0.75, 0.47, 0.36, 0.33, 0.32, 0.31, 0.31]

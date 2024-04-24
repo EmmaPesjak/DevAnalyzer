@@ -6,6 +6,8 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import classification_report, f1_score
 
+""" NOT WORKING NOT SURE IF NEEDED """
+
 
 class CustomDataset(Dataset):
     """ Custom Dataset for loading data """
@@ -93,9 +95,9 @@ def validate_model(model, loader, device):
 
 if __name__ == "__main__":
     # path_to_model = './results/trained_label_model'
-    # csv_file_path = 'labeled_file_dataset.csv'
+    # csv_file_path = 'labeled_filepath_dataset.csv'
     path_to_model = './results/trained_model'
-    csv_file_path = 'labeled_dataset.csv'
+    csv_file_path = 'labeled_message_dataset.csv'
     computing_device = 'cuda' if torch.cuda.is_available() else 'cpu'
     # labels = ['Configuration', 'Documentation', 'Resources', 'Source Code', 'Tests']
     labels = ['Adaptive', 'Administrative', 'Corrective', 'Other', 'Perfective']
@@ -186,7 +188,7 @@ if __name__ == "__main__":
 #
 # if __name__ == "__main__":
 #     model_path = './results/trained_label_model'
-#     test_data_path = 'labeled_file_dataset.csv'
+#     test_data_path = 'labeled_filepath_dataset.csv'
 #     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 #     label_list = ['Configuration', 'Documentation', 'Resources', 'Source Code', 'Tests']
 #     label_dict = {label: i for i, label in enumerate(label_list)}
@@ -276,7 +278,7 @@ if __name__ == "__main__":
 # #
 # # if __name__ == "__main__":
 # #     model_path = './results/trained_label_model'
-# #     test_data_path = 'labeled_file_dataset.csv'
+# #     test_data_path = 'labeled_filepath_dataset.csv'
 # #     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # #     label_list = ['Configuration', 'Documentation', 'Resources', 'Source Code', 'Tests']
 # #     label_dict = {label: i for i, label in enumerate(label_list)}

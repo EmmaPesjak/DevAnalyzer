@@ -2,10 +2,11 @@ from transformers import BertTokenizerFast, BertForSequenceClassification, pipel
 from pathlib import Path
 from transformers import pipeline
 
-class BertCommitAnalyzer:
+
+class BertMessageAnalyzer:
 
     def __init__(self):
-        model_path = Path(__file__).parent.parent / "transformers_model/results/trained_model"
+        model_path = Path(__file__).parent.parent / "transformers_model/results/messages/trained_message_model"
 
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         print("Done with loading the model.")
