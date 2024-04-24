@@ -4,38 +4,8 @@ from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
 from transformers_model.data_loader import DataLoader
-
-# FROM PETER
-# # X = commit messages
-# # y = lables
-#
-# # Constants for the experiment
-# num_splits = 15
-# test_size = 0.2
-# seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 777, 222]
-#
-# # Lists to store loss scores from each split
-# loss_scores = []
-#
-# # Loop through multiple splits and train the model
-# for seed_value in seed_values:
-#     # So here you either tokenize the input before or after th split
-#     X_train, X_test, Y_train, Y_test = train_test_split(embedding, label, test_size=test_size, random_state=seed_value)
-#
-#     # Add YOUR code here
-#
-#     loss_score = model(pred, Y_test)
-#
-#     # Append the correlation score to the list
-#     loss_scores.append(loss_score)
-#     print(loss_score)
-#
-# # Calculate the average loss score and standard deviation
-# average_loss_score = np.mean(loss_scores)
-# std_deviation = np.std(loss_scores)
-# print("Average Loss Score :", average_loss_score)
-# print("Standard Deviation:", std_deviation)
-
+from sklearn.model_selection import train_test_split
+import numpy as np
 
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
@@ -86,41 +56,13 @@ model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_l
 # This is critical for efficient training, especially with large models like BERT.
 model.to(device)
 
-# Dataset splitting. The dataset is divided into training (50%), validation (25%), and testing (25%)
-# sets based on the message column.
-SIZE = df_org.shape[0]
-# Separate exactly two 'Documentation' items
-docs_test = df_org[df_org['labels'] == 4].sample(n=2)
-remaining_items = df_org.drop(docs_test.index)
+# Constants for the experiment
+num_splits = 15
+test_size = 0.2
+seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 777, 222]
 
-# Calculate sizes and split indices
-remaining_size = remaining_items.shape[0]
-total_size = df_org.shape[0]
-test_size_needed = int(total_size * 0.2) - docs_test.shape[0]
-split_index = int(remaining_size * 0.8) if test_size_needed <= int(remaining_size * 0.2) else remaining_size - test_size_needed
-
-# Split remaining data
-train_texts = list(remaining_items.message[:split_index])
-train_labels = list(remaining_items.labels[:split_index])
-test_texts = list(remaining_items.message[split_index:])
-test_labels = list(remaining_items.labels[split_index:])
-
-# Add 'Documentation' items to test set
-test_texts.extend(list(docs_test.message))
-test_labels.extend(list(docs_test.labels))
-# The training, validation, and test text data are tokenized using the previously initialized tokenizer.
-# truncation=True ensures texts longer than the maximum allowed sequence length are truncated,
-# and padding=True pads shorter sequences to the maximum length. This standardizes the input size for BERT.
-train_encodings = tokenizer(train_texts, truncation=True, padding=True)
-#val_encodings = tokenizer(val_texts, truncation=True, padding=True)
-test_encodings = tokenizer(test_texts, truncation=True, padding=True)
-
-# Custom DataLoader objects are created for each dataset split. These DataLoaders are responsible for
-# batching the data and making it iterable for the training loop.
-train_dataloader = DataLoader(train_encodings, train_labels)
-#val_dataloader = DataLoader(val_encodings, val_labels)
-test_dataset = DataLoader(test_encodings, test_labels)
-
+# Lists to store loss scores from each split
+loss_scores = []
 
 def compute_metrics(pred):
     """
@@ -160,61 +102,58 @@ def compute_metrics(pred):
         'Recall': recall
     }
 
+# Loop through multiple splits and train the model
+for seed_value in seed_values:
+    # Split the data
+    train_texts, test_texts, train_labels, test_labels = train_test_split(df_org['message'], df_org['labels'],
+                                                                          test_size=test_size, random_state=seed_value)
 
-# This portion of code configures and initiates the training process for the machine learning model
-# using the Hugging Face Transformers library, specifically using the Trainer class. The process involves
-# setting training arguments, initializing the Trainer, training the model, and then evaluating the
-# model's performance on the training, validation, and test datasets.
-training_args = TrainingArguments(
-    # The output directory where the model predictions and checkpoints will be written.
-    output_dir='./results/filepaths',
-    do_train=True,
-    #  The number of epochs, defaults to 3.0
-    num_train_epochs=3,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=32,
-    # Number of steps used for a linear warmup
-    warmup_steps=100,
-    weight_decay=0.01,
-    evaluation_strategy="steps",
-    eval_steps=50,
-    save_strategy="steps",
-    fp16=False,
-    load_best_model_at_end=True
-)
+    # Tokenize data
+    train_encodings = tokenizer(list(train_texts), truncation=True, padding=True)
+    test_encodings = tokenizer(list(test_texts), truncation=True, padding=True)
 
-# The Trainer class encapsulates the training loop, automatically handling the training,
-# evaluation, and prediction loops.
-trainer = Trainer(
-    # The pre-trained model that will be fine-tuned.
-    model=model,
-    # The training arguments that we defined above.
-    args=training_args,
-    train_dataset=train_dataloader,
-    eval_dataset=test_dataset,
-    compute_metrics=compute_metrics
-)
+    # Create data loaders
+    train_dataloader = DataLoader(train_encodings, list(train_labels))
+    test_dataset = DataLoader(test_encodings, list(test_labels))
 
-# Start the training process.
-trainer.train()
+    # Define training arguments and create Trainer
+    training_args = TrainingArguments(
+        output_dir='./results/filepaths',
+        do_train=True,
+        num_train_epochs=5,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=32,
+        warmup_steps=100,
+        weight_decay=0.01,
+        evaluation_strategy="steps",
+        eval_steps=50,
+        save_strategy="steps",
+        fp16=False,
+        load_best_model_at_end=True
+    )
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_dataloader,
+        eval_dataset=test_dataset,
+        compute_metrics=compute_metrics
+    )
 
-# Evaluate the model on the training dataset.
-train_results = trainer.evaluate(eval_dataset=train_dataloader)
-print("Training Set Results:", train_results)
+    # Train and evaluate the model
+    trainer.train()
+    test_results = trainer.evaluate(eval_dataset=test_dataset)
 
-# Evaluate the model on the validation dataset.
-# val_results = trainer.evaluate(eval_dataset=val_dataloader)
-# print("Validation Set Results:", val_results)
+    # Store and print the loss score
+    loss_score = test_results['eval_loss']  # Adjust according to actual output
+    loss_scores.append(loss_score)
+    print(loss_score)
 
-# Optionally, evaluate the model on the test dataset.
-test_results = trainer.evaluate(eval_dataset=test_dataset)
-print("Test Set Results:", test_results)
+# Calculate the average loss score and standard deviation
+average_loss_score = np.mean(loss_scores)
+std_deviation = np.std(loss_scores)
+print("Average Loss Score:", average_loss_score)
+print("Standard Deviation:", std_deviation)
+#
+#
 
-# Print eval results.
-q = [train_results, test_results]
-print(pd.DataFrame(q, index=["train", "test"]).iloc[:, :5])
 
-# Save the model and tokenizer.
-model_path = "./results/filepaths/trained_filepath_model"
-trainer.save_model(model_path)
-tokenizer.save_pretrained(model_path)
