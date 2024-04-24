@@ -38,10 +38,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 # print("Average Loss Score :", average_loss_score)
 # print("Standard Deviation:", std_deviation)
 
-
-
-
-
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
 device = 'cuda' if cuda.is_available() else 'cpu'
@@ -79,12 +75,12 @@ df_org["labels"] = df_org.label.map(lambda x: label2id[x.strip()])
 print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize=True) * 100}")
 
 # The tokenizer converts text into tokens that the BERT model can understand.
-tokenizer = BertTokenizerFast.from_pretrained("bert-base-cased", max_length=512)
+tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=512)
 # A BERT model specifically for sequence classification is initialized with the same bert-base-uncased
 # pre-trained weights. It's configured for the number of unique labels in our dataset and is informed
 # about the label mappings (id2label and label2id). This allows the model to output predictions
 # corresponding to the classes of our dataset.
-model = BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=NUM_LABELS, id2label=id2label,
+model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
                                                       label2id=label2id)
 # tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
 # model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
@@ -172,7 +168,7 @@ training_args = TrainingArguments(
     output_dir='./results',
     do_train=True,
     #  The number of epochs, defaults to 3.0
-    num_train_epochs=3,
+    num_train_epochs=5,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=32,
     # Number of steps used for a linear warmup
