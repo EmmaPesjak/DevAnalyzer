@@ -6,7 +6,7 @@ Helper script for displaying evaluation data for trained models.
 """
 
 # Sample data: evaluation losses for each epoch
-eval_losses = [1.33, 0.75, 0.47, 0.36, 0.33, 0.32, 0.31, 0.31]
+eval_losses = [0.73, 0.25, 0.16, 0.07, 0.08, 0.08, 0.08, 0.08]
 epochs = [0.67, 1.33, 2.00, 2.67, 3.33, 4.00, 4.67, 5.00]
 
 # Create a plot
