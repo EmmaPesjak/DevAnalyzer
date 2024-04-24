@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 matplotlib.use('agg')
@@ -28,6 +29,8 @@ class DataVisualizer:
             return self._create_pie_figure(data, *args, **kwargs)
         elif figure_type == 'line':
             return self._create_line_figure(data, **kwargs)
+        elif figure_type == 'spider':
+            return self._create_spider_chart(data, *args, **kwargs)
         else:
             raise ValueError(f"Unsupported figure type: {figure_type}")
 
@@ -95,4 +98,28 @@ class DataVisualizer:
         ax.set_xticks(range(len(data)))
         ax.set_xticklabels(data.keys(), rotation=45, ha="right")
         plt.subplots_adjust(bottom=0.16)
+        return fig, ax
+
+    @staticmethod
+    def _create_spider_chart(data, title="Spider Chart"):
+        """
+        Creates a spider chart (radar chart).
+        :param data: A dictionary where each key is a category with its corresponding value.
+        :param title: The title of the chart.
+        :return: A matplotlib figure and axes.
+        """
+        labels = list(data.keys())
+        values = list(data.values())
+        values += values[:1]  # Repeat the first value to close the circle
+
+        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+        angles += angles[:1]  # Repeat the first angle to close the circle
+
+        fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+        ax.fill(angles, values, "#158274", alpha=0.1)
+        ax.plot(angles, values, "#3FA27B")
+        ax.set_xticks(angles[:-1])
+        ax.set_xticklabels(labels)
+
+        ax.set_title(title, position=(0.5, 1.1), ha='center')
         return fig, ax
