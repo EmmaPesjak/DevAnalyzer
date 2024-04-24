@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('TkAgg')  # Or use 'Qt5Agg', 'Agg', etc.
 import matplotlib.pyplot as plt
 
 # Sample data: evaluation losses for each epoch
