@@ -1,5 +1,3 @@
-import pandas as pd
-from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
@@ -8,6 +6,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import shutil
 import os
+import pandas as pd
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 def clear_directory(path):
@@ -53,15 +53,15 @@ df_org["labels"] = df_org.label.map(lambda x: label2id[x.strip()])
 print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize=True) * 100}")
 
 # The tokenizer converts text into tokens that the BERT model can understand.
-tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=512)
+# tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=512)
 # A BERT model specifically for sequence classification is initialized with the same bert-base-uncased
 # pre-trained weights. It's configured for the number of unique labels in our dataset and is informed
 # about the label mappings (id2label and label2id). This allows the model to output predictions
 # corresponding to the classes of our dataset.
-model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
-                                                      label2id=label2id)
-# tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
-# model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
+# model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
+#                                                       label2id=label2id)
+tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
+model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
 
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
 # This is critical for efficient training, especially with large models like BERT.
@@ -75,7 +75,6 @@ seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 7
 # Lists to store loss scores from each split
 loss_scores = []
 results = []
-
 
 
 def compute_metrics(pred):
