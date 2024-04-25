@@ -134,7 +134,7 @@ for i, seed_value in enumerate(seed_values):
     training_args = TrainingArguments(
         output_dir=output_dir,
         do_train=True,
-        num_train_epochs=5,
+        num_train_epochs=3,
         per_device_train_batch_size=16,
         per_device_eval_batch_size=32,
         warmup_steps=100,
