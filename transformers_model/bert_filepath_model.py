@@ -8,8 +8,6 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import shutil
 import os
-import shutil
-import os
 
 
 def clear_directory(path):
@@ -72,8 +70,6 @@ seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 7
 
 # Lists to store loss scores from each split
 loss_scores = []
-results = []
-
 results = []
 
 
