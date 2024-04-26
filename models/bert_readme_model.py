@@ -53,7 +53,7 @@ def summarize_text(text, segment_length=1024, summary_max_length=150, summary_mi
 
 
 # readme_content = ""
-file_path = '../transformers_model/commit_messages/red5-server_readme.txt'
+file_path = '../transformers_model/readmes/red5-server_readme.txt'
 
 with open(file_path, 'r', encoding='utf-8') as file:
     readme_content = file.read()
