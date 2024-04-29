@@ -71,6 +71,10 @@ print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize
 tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
 model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
 
+# Update the configuration with label2id and id2label
+model.config.label2id = label2id
+model.config.id2label = id2label
+
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
 # This is critical for efficient training, especially with large models like BERT.
 model.to(device)

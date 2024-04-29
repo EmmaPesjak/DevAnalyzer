@@ -68,6 +68,11 @@ tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=51
 # corresponding to the classes of our dataset.
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
                                                       label2id=label2id)
+
+# Update the configuration with label2id and id2label
+model.config.label2id = label2id
+model.config.id2label = id2label
+
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
 # This is critical for efficient training, especially with large models like BERT.
 model.to(device)

@@ -139,19 +139,21 @@ class DBHandler:
 
     def get_all_authors_and_their_commits(self):
         """
-        Retrieves all authors along with their commits from the database.
-        :return: Dictionary with author and their commits.
+        Retrieves all authors along with their commits and the file paths of the changed files from the database.
+        :return: Dictionary with author as key, and each value being a list of tuples (commit message, list of file paths).
         """
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # Execute SQL query to retrieve author details and their commits
+        # Execute SQL query to retrieve author details, their commits, and associated file changes
         cursor.execute('''
-                SELECT a.name, c.message
+                SELECT a.name, c.message, GROUP_CONCAT(cf.file_path) AS files
                 FROM authors a
                 JOIN commits c ON a.id = c.author_id
-                ORDER BY a.name;
+                LEFT JOIN commit_files cf ON c.id = cf.commit_id
+                GROUP BY c.id
+                ORDER BY a.name, c.date;
             ''')
 
         # Fetch the results
@@ -162,14 +164,16 @@ class DBHandler:
 
         # Organize the results into a structured format
         # Here we create a dictionary where each key is an author's name,
-        # and the value is a list of commit messages.
-        authors_commits = {}
-        for name, message in results:
-            if name not in authors_commits:
-                authors_commits[name] = []
-            authors_commits[name].append(message)
+        # and the value is a list of tuples (commit message, [list of file paths]).
+        authors_commits_files = {}
+        for name, message, files in results:
+            if name not in authors_commits_files:
+                authors_commits_files[name] = []
+            # Split the concatenated file paths back into a list
+            file_list = files.split(',') if files else []
+            authors_commits_files[name].append((message, file_list))
 
-        return authors_commits
+        return authors_commits_files
 
     def get_top_10_changed_files(self):
         """
