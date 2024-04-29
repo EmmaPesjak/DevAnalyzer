@@ -1,20 +1,16 @@
-from transformers import BertTokenizerFast, BertForSequenceClassification, pipeline
 from pathlib import Path
 from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 class BertMessageAnalyzer:
 
     def __init__(self):
-        model_path = Path(__file__).parent.parent / "transformers_model/results/messages/trained_message_model"
+        model_path = Path(__file__).parent.parent / "transformers_model/results/messages/split_14"
 
-        self.model = BertForSequenceClassification.from_pretrained(model_path)
-        print("Done with loading the model.")
-        self.tokenizer = BertTokenizerFast.from_pretrained(model_path)
-        print("Done with loading the tokenizer.")
-        self.nlp = pipeline("sentiment-analysis", model=self.model, tokenizer=self.tokenizer)
-        print("Done with loading nlp.")
-
+        self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.nlp = pipeline("text-classification", model=self.model, tokenizer=self.tokenizer)
 
     def analyze_commits(self, commits_dict):
         types_per_user = {}

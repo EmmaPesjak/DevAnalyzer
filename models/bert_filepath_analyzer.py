@@ -6,11 +6,11 @@ from transformers import pipeline
 class BertFilepathAnalyzer:
 
     def __init__(self):
-        model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/trained_filepath_model"
+        model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/split_14"
 
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_path)
-        self.nlp = pipeline("sentiment-analysis", model=self.model, tokenizer=self.tokenizer)
+        self.nlp = pipeline("text-classification", model=self.model, tokenizer=self.tokenizer)
 
     def analyze_commits(self, commits_dict):
         types_per_user = {}

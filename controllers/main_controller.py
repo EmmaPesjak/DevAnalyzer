@@ -1,5 +1,3 @@
-from models.batch_analyzer import BatchAnalyzer
-from models.transformer_analyzer import TransformerAnalyzer
 from models.bert_message_analyzer import BertMessageAnalyzer
 import time
 
@@ -19,9 +17,8 @@ class MainController:
         self.main_model = main_model
         self.view = view
         self.view.set_on_input_change(self.retrieve_url)
-        self.analyzer = BatchAnalyzer()
-        self.transformer_analyzer = TransformerAnalyzer()
-        self.bert_commit_analyzer = BertMessageAnalyzer()
+        self.bert_message_analyzer = BertMessageAnalyzer()
+        self.bert_filepath_analyzer = BertFilepathAnalyzer()
 
 
     def retrieve_url(self, new_url):
@@ -52,7 +49,7 @@ class MainController:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
                 all_commits = self.main_model.get_all_authors_and_their_commits()
-                self.analyzer.analyze_commits(all_commits)
+                #self.analyzer.analyze_commits(all_commits)
                 self.test_bert_model(all_commits)
                 # self.transformer_analyzer.analyze_commits(self.main_model.get_auths_commits_and_files())
                 # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
@@ -71,7 +68,8 @@ class MainController:
 
 
     def test_bert_model(self, all_commits):
-        self.bert_commit_analyzer.analyze_commits(all_commits)
+        self.bert_message_analyzer.analyze_commits(all_commits)
+        self.bert_filepath_analyzer.analyze_commits(all_commits)
         file_data = self.read_file_data()
         top_10_per_user = file_data["top_10_per_user"]
 
@@ -110,6 +108,3 @@ class MainController:
             # Execute the file content in an empty global namespace and capture the local variables
             exec(file_content, {}, local_variables)
             return local_variables
-
-
-
