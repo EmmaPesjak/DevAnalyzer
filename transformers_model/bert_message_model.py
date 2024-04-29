@@ -1,3 +1,5 @@
+import sys
+
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
@@ -14,6 +16,12 @@ def clear_directory(path):
     if os.path.exists(path):
         shutil.rmtree(path)
     os.makedirs(path)
+
+# Ask user whether to clear BERT model and continue or terminate the script
+user_input = input("Do you want to clear BERT and continue? (yes/no): ")
+if user_input.lower() != 'yes':
+    print("Terminating the program.")
+    sys.exit()  # Terminate the program if the user does not confirm
 
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
