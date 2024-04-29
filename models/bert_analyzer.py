@@ -1,16 +1,21 @@
-from transformers import BertTokenizerFast, BertForSequenceClassification
 from pathlib import Path
 from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
-class BertFilepathAnalyzer:
+class BertAnalyzer:
 
     def __init__(self):
-        model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/split_14"
+        commit_message_model_path = Path(__file__).parent.parent / "transformers_model/results/messages/split_14"
+        self.commit_message_model = AutoModelForSequenceClassification.from_pretrained(commit_message_model_path)
+        self.commit_message_tokenizer = AutoTokenizer.from_pretrained(commit_message_model_path)
+        self.commit_message_nlp = pipeline("text-classification", model=self.commit_message_model, tokenizer=self.commit_message_tokenizer)
 
-        self.model = BertForSequenceClassification.from_pretrained(model_path)
-        self.tokenizer = BertTokenizerFast.from_pretrained(model_path)
-        self.nlp = pipeline("text-classification", model=self.model, tokenizer=self.tokenizer)
+        filepath_model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/split_14"
+        self.filepath_model = BertForSequenceClassification.from_pretrained(filepath_model_path)
+        self.filepath_tokenizer = BertTokenizerFast.from_pretrained(filepath_model_path)
+        self.filepath_nlp = pipeline("text-classification", model=self.filepath_model, tokenizer=self.filepath_tokenizer)
+
 
     def analyze_commits(self, commits_dict):
         types_per_user = {}
@@ -18,7 +23,7 @@ class BertFilepathAnalyzer:
 
         for author, commits in commits_dict.items():
             for commit_message in commits:
-                prediction = self.nlp(commit_message)
+                prediction = self.commit_message_nlp(commit_message)
                 predicted_label = prediction[0]['label']
                 #print(f'Predicted label: {predicted_label}, msg: \"{commit_message}\"')
 
@@ -64,6 +69,13 @@ class BertFilepathAnalyzer:
 
     def print_results(self, types_per_user, types_of_commits):
 
+        # TODO include the files in the summary
+        # # Convert to descriptive text
+        # descriptive_texts = self.counts_to_descriptive_text(types_per_user)
+        #
+        # # Generate summaries
+        # author_summaries = self.summarize_texts(descriptive_texts)
+
         # Print author-specific counts
         for author, label_counts in types_per_user.items():
             print(f'Author: {author}')
@@ -79,3 +91,6 @@ class BertFilepathAnalyzer:
         author_summaries = self.generate_author_summaries(types_per_user)
         for summary in author_summaries:
             print(summary)
+
+        # for author, summary in author_summaries.items():
+        #     print(f"{author}: {summary}")

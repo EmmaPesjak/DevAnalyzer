@@ -6,6 +6,7 @@ from models.db_handler import DBHandler
 import atexit
 from models.git_traversal import GitTraversal
 
+
 class MainModel:
     """
     Class that represents the main model of the project. Handles all database operations and writing to file.
@@ -69,13 +70,13 @@ class MainModel:
         data = self.db_handler.get_top_files_per_user()
         top_10_per_user = {}
 
-        for name, file_name, changes in data:
+        for name, file_path, changes in data:
             if name not in top_10_per_user:
                 top_10_per_user[name] = {}
 
             # Only keep top 10 entries per user
             if len(top_10_per_user[name]) < 10:
-                top_10_per_user[name][file_name] = changes
+                top_10_per_user[name][file_path] = changes
 
         return top_10_per_user
 
