@@ -165,6 +165,10 @@ for i, seed_value in enumerate(seed_values):
     # Train and evaluate the model
     trainer.train()
 
+    # Manually save the model and tokenizer
+    model.save_pretrained(output_dir)
+    tokenizer.save_pretrained(output_dir)
+
     eval_results = trainer.evaluate()
     print("Evaluation results:", eval_results)
 
