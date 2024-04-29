@@ -3,6 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from models.db_handler import DBHandler
+from models.readme_driller import ReadmeDriller
 import atexit
 from models.git_traversal import GitTraversal
 
@@ -18,6 +19,7 @@ class MainModel:
 
         # Create the database.
         self.db_handler = DBHandler('repo_data.db')
+        self.readme_driller = ReadmeDriller()
 
         # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
@@ -30,6 +32,9 @@ class MainModel:
         :param callback: Callback method.
         """
         self.git_traversal.set_repo(repo_url)
+
+        self.readme_driller.clone_and_extract_readme(repo_url)
+
 
         def background_task():
             """
