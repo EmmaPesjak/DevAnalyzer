@@ -152,7 +152,7 @@ class MainModel:
             f"top_10_per_user = {top_10_per_user}\n"
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}\n"
-            f"readme_summary = {readme_summary}\n"
+            f"readme_summary = \"{readme_summary}\"\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:
