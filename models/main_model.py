@@ -168,5 +168,8 @@ class MainModel:
         filename = "support//repo_stats.py"
         with open(filename, "w", encoding="utf-8") as file:
             file.write("")
+        filename = "support//user_readme.txt"
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write("")
         if self.db_handler.database_has_values():
             self.db_handler.clear_database()
