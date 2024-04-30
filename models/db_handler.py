@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from pydriller import Repository
 from datetime import datetime
 
+
 class DBHandler:
     """
     Class to handle the repository data, creating and connecting to the database.
@@ -49,7 +50,7 @@ class DBHandler:
                        CREATE TABLE IF NOT EXISTS commit_files (
                            id INTEGER PRIMARY KEY,
                            commit_id INTEGER,
-                           file_name TEXT,
+                           file_path TEXT,
                            FOREIGN KEY (commit_id) REFERENCES commits (id)
                        );
                    ''')
@@ -85,8 +86,8 @@ class DBHandler:
 
                 # For each modified file in the commit, add the modified files.
                 for mod in commit.modified_files:
-                    cursor.execute('INSERT INTO commit_files (commit_id, file_name) VALUES (?, ?)',
-                                   (commit_id, mod.filename))
+                    cursor.execute('INSERT INTO commit_files (commit_id, file_path) VALUES (?, ?)',
+                                   (commit_id, mod.new_path))
 
                 conn.commit()
         except Exception as e:
@@ -109,7 +110,7 @@ class DBHandler:
 
         # Execute SQL query to retrieve author details, their commits, and associated file changes
         cursor.execute('''
-                SELECT a.name, c.message, GROUP_CONCAT(cf.file_name) as files
+                SELECT a.name, c.message, GROUP_CONCAT(cf.file_path) as files
                 FROM authors a
                 JOIN commits c ON a.id = c.author_id
                 LEFT JOIN commit_files cf ON c.id = cf.commit_id
@@ -138,19 +139,21 @@ class DBHandler:
 
     def get_all_authors_and_their_commits(self):
         """
-        Retrieves all authors along with their commits from the database.
-        :return: Dictionary with author and their commits.
+        Retrieves all authors along with their commits and the file paths of the changed files from the database.
+        :return: Dictionary with author as key, and each value being a list of tuples (commit message, list of file paths).
         """
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        # Execute SQL query to retrieve author details and their commits
+        # Execute SQL query to retrieve author details, their commits, and associated file changes
         cursor.execute('''
-                SELECT a.name, c.message
+                SELECT a.name, c.message, GROUP_CONCAT(cf.file_path) AS files
                 FROM authors a
                 JOIN commits c ON a.id = c.author_id
-                ORDER BY a.name;
+                LEFT JOIN commit_files cf ON c.id = cf.commit_id
+                GROUP BY c.id
+                ORDER BY a.name, c.date;
             ''')
 
         # Fetch the results
@@ -161,14 +164,16 @@ class DBHandler:
 
         # Organize the results into a structured format
         # Here we create a dictionary where each key is an author's name,
-        # and the value is a list of commit messages.
-        authors_commits = {}
-        for name, message in results:
-            if name not in authors_commits:
-                authors_commits[name] = []
-            authors_commits[name].append(message)
+        # and the value is a list of tuples (commit message, [list of file paths]).
+        authors_commits_files = {}
+        for name, message, files in results:
+            if name not in authors_commits_files:
+                authors_commits_files[name] = []
+            # Split the concatenated file paths back into a list
+            file_list = files.split(',') if files else []
+            authors_commits_files[name].append((message, file_list))
 
-        return authors_commits
+        return authors_commits_files
 
     def get_top_10_changed_files(self):
         """
@@ -181,9 +186,9 @@ class DBHandler:
 
         # SQL query to find the top 10 file names by occurrence
         cursor.execute('''
-               SELECT file_name, COUNT(file_name) AS occurrence
+               SELECT file_path, COUNT(file_path) AS occurrence
                FROM commit_files
-               GROUP BY file_name
+               GROUP BY file_path
                ORDER BY occurrence DESC
                LIMIT 10
            ''')
@@ -195,7 +200,7 @@ class DBHandler:
         conn.close()
 
         # Convert the results into a dictionary
-        top_10_changed_files = {file_name: occurrence for file_name, occurrence in results}
+        top_10_changed_files = {file_path: occurrence for file_path, occurrence in results}
         return top_10_changed_files
 
     def get_top_files_per_user(self):
@@ -208,11 +213,11 @@ class DBHandler:
 
         # Fetches the number of times each file has been modified by each author
         cursor.execute('''
-            SELECT a.name, cf.file_name, COUNT(cf.file_name) as changes
+            SELECT a.name, cf.file_path, COUNT(cf.file_path) as changes
             FROM commit_files cf
             JOIN commits c ON cf.commit_id = c.id
             JOIN authors a ON c.author_id = a.id
-            GROUP BY a.id, cf.file_name
+            GROUP BY a.id, cf.file_path
             ORDER BY a.name, changes DESC
         ''')
 

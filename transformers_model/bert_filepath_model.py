@@ -1,3 +1,5 @@
+import sys
+
 import pandas as pd
 from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast
 from transformers import TrainingArguments, Trainer
@@ -14,6 +16,13 @@ def clear_directory(path):
     if os.path.exists(path):
         shutil.rmtree(path)
     os.makedirs(path)
+
+
+# Ask user whether to clear BERT model and continue or terminate the script
+user_input = input("Do you want to clear BERT and continue? (yes/no): ")
+if user_input.lower() != 'yes':
+    print("Terminating the program.")
+    sys.exit()  # Terminate the program if the user does not confirm
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
@@ -59,6 +68,11 @@ tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=51
 # corresponding to the classes of our dataset.
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
                                                       label2id=label2id)
+
+# Update the configuration with label2id and id2label
+model.config.label2id = label2id
+model.config.id2label = id2label
+
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
 # This is critical for efficient training, especially with large models like BERT.
 model.to(device)
@@ -155,6 +169,10 @@ for i, seed_value in enumerate(seed_values):
 
     # Train and evaluate the model
     trainer.train()
+
+    # Manually save the model and tokenizer
+    model.save_pretrained(output_dir)
+    tokenizer.save_pretrained(output_dir)
 
     eval_results = trainer.evaluate()
     print("Evaluation results:", eval_results)
