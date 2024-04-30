@@ -22,9 +22,9 @@ class BertAnalyzer:
             self.commit_message_model.config.label2id = {v: int(k) for k, v in
                                                          self.commit_message_model.config.label2id.items()}
             self.filepath_model.config.id2label = {int(k): v for k, v in
-                                                         self.filepath_model.config.id2label.items()}
+                                                   self.filepath_model.config.id2label.items()}
             self.filepath_model.config.label2id = {v: int(k) for k, v in
-                                                         self.filepath_model.config.label2id.items()}
+                                                   self.filepath_model.config.label2id.items()}
 
         # Create pipelines
         self.commit_message_nlp = pipeline("text-classification", model=self.commit_message_model,
@@ -80,8 +80,12 @@ class BertAnalyzer:
             print()
 
         # Print total counts for the project
-        print('Total label counts for the project:')
+        print('Total label commit message counts for the project:')
         for label, count in types_of_commits.items():
+            print(f'  {label}: {count}')
+
+        print('Total label filepath counts for the project:')
+        for label, count in file_type_predictions_per_user.items():
             print(f'  {label}: {count}')
 
         author_summaries = self.generate_author_summaries(types_per_user)
@@ -107,4 +111,3 @@ class BertAnalyzer:
             summaries.append(summary)
 
         return summaries
-

@@ -4,6 +4,7 @@ from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from views.data_visualizer import DataVisualizer
 import matplotlib.font_manager
+import threading
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=[
@@ -191,7 +192,9 @@ class MainView:
         if repo_input and self.on_input_change:
             # Display loading indicator.
             self.show_loading_indicator()
-            self.fetch_repo_data(repo_input)
+            # Start a thread to fetch repository data
+            thread = threading.Thread(target=self.fetch_repo_data, args=(repo_input,))
+            thread.start()
 
     def fetch_repo_data(self, repo_input):
         """
