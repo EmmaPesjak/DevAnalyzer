@@ -28,8 +28,8 @@ class MainController:
         """
         self.repo = new_url
         self.start_time = time.time()  # Start timing, remove this later.
-        self.readme_getter.extract_readme(new_url)
         self.main_model.cleanup()
+        self.readme_getter.extract_readme(new_url)
         self.main_model.set_repo(new_url, self.handle_set_repo_result)
 
     def handle_set_repo_result(self, result, error):

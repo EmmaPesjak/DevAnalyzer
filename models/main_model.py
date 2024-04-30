@@ -144,9 +144,6 @@ class MainModel:
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
         readme_summary = self.readme_bert.get_readme_summary()
-        print("------")
-        print(readme_summary)
-        print("------")
 
         # Prepare the content to be written as valid Python code
         content_to_write = (
@@ -155,7 +152,7 @@ class MainModel:
             f"top_10_per_user = {top_10_per_user}\n"
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}\n"
-            #f"readme_summary = {readme_summary}\n"
+            f"readme_summary = {readme_summary}\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

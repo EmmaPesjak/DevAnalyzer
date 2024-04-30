@@ -21,7 +21,7 @@ class ReadmeGetter:
         default_branch = self.get_default_branch_name(repo_url)
 
         if default_branch is None:
-            return False  # Return False because we couldn't get the default branch name
+            return   # Return because we couldn't get the default branch name
 
         # Correctly form the URL to the README.md file
         url = f"https://raw.githubusercontent.com/{'/'.join(repo_url.split('/')[-2:])}/{default_branch}/README.md"
@@ -30,6 +30,4 @@ class ReadmeGetter:
             # Write the content of the README.md to a local file
             with open('support/Downloaded_README.txt', 'w', encoding='utf-8') as file:
                 file.write(response.text)
-            return True
-        else:
-            return False
+        return
