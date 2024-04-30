@@ -22,9 +22,9 @@ class BertAnalyzer:
             self.commit_message_model.config.label2id = {v: int(k) for k, v in
                                                          self.commit_message_model.config.label2id.items()}
             self.filepath_model.config.id2label = {int(k): v for k, v in
-                                                         self.filepath_model.config.id2label.items()}
+                                                   self.filepath_model.config.id2label.items()}
             self.filepath_model.config.label2id = {v: int(k) for k, v in
-                                                         self.filepath_model.config.label2id.items()}
+                                                   self.filepath_model.config.label2id.items()}
 
         # Create pipelines
         self.commit_message_nlp = pipeline("text-classification", model=self.commit_message_model,
@@ -80,31 +80,60 @@ class BertAnalyzer:
             print()
 
         # Print total counts for the project
-        print('Total label counts for the project:')
+        print('Total label commit message counts for the project:')
         for label, count in types_of_commits.items():
             print(f'  {label}: {count}')
 
-        author_summaries = self.generate_author_summaries(types_per_user)
+        print('Total label filepath counts for the project:')
+        for label, count in file_type_predictions_per_user.items():
+            print(f'  {label}: {count}')
+
+        author_summaries = self.generate_author_summaries(types_per_user, file_type_predictions_per_user)
         for summary in author_summaries:
             print(summary)
 
-    def generate_author_summaries(self, types_per_user):
+    def generate_author_summaries(self, types_per_user, file_type_predictions_per_user):
         summaries = []
 
         for author, label_counts in types_per_user.items():
             # Sort the labels by count, descending
             sorted_labels = sorted(label_counts.items(), key=lambda item: item[1], reverse=True)
 
-            # Build the summary string
+            # Build the summary string for commit types
             summary_parts = [f"{label}: {count}" for label, count in sorted_labels]
-            summary = f"{author} has mainly been working with {summary_parts[0]}"
+            commit_summary = f"{author} has mainly been working with {summary_parts[0]}"
 
             # If there are more labels, add them as secondary mentions
             if len(summary_parts) > 1:
                 secondary_activities = ", ".join(summary_parts[1:])
-                summary += f", but also contributed to {secondary_activities}"
+                commit_summary += f", but also contributed to {secondary_activities}"
 
+            # Include file type information
+            file_types = file_type_predictions_per_user[author]
+            sorted_file_types = sorted(file_types.items(), key=lambda item: item[1], reverse=True)
+            file_type_summary = ", ".join([f"{ftype}: {count}" for ftype, count in sorted_file_types])
+
+            # Combine commit and file type summaries
+            summary = f"{commit_summary}. In terms of file types, {author} modified {file_type_summary}"
             summaries.append(summary)
 
         return summaries
-
+    # def generate_author_summaries(self, types_per_user):
+    #     summaries = []
+    #
+    #     for author, label_counts in types_per_user.items():
+    #         # Sort the labels by count, descending
+    #         sorted_labels = sorted(label_counts.items(), key=lambda item: item[1], reverse=True)
+    #
+    #         # Build the summary string
+    #         summary_parts = [f"{label}: {count}" for label, count in sorted_labels]
+    #         summary = f"{author} has mainly been working with {summary_parts[0]}"
+    #
+    #         # If there are more labels, add them as secondary mentions
+    #         if len(summary_parts) > 1:
+    #             secondary_activities = ", ".join(summary_parts[1:])
+    #             summary += f", but also contributed to {secondary_activities}"
+    #
+    #         summaries.append(summary)
+    #
+    #     return summaries
