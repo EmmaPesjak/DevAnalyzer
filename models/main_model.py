@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from models.db_handler import DBHandler
-from models.readme_driller import ReadmeDriller
+from models.readme_getter import ReadmeGetter
 import atexit
 from models.git_traversal import GitTraversal
 
@@ -19,7 +19,7 @@ class MainModel:
 
         # Create the database.
         self.db_handler = DBHandler('repo_data.db')
-        self.readme_driller = ReadmeDriller()
+        self.readme_getter = ReadmeGetter()
 
         # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
@@ -33,8 +33,10 @@ class MainModel:
         """
         self.git_traversal.set_repo(repo_url)
 
-        self.readme_driller.clone_and_extract_readme(repo_url)
-
+        if self.readme_getter.extract_readme(repo_url):
+            print("hej")  # Här ska vi kalla på readme bert
+        else:
+            print("nej")  # Detta betyder att readmen inte fanns eller så.
 
         def background_task():
             """
