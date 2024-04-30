@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from views.data_visualizer import DataVisualizer
 import matplotlib.font_manager
 import threading
+import textwrap
 
 plt.rcParams["axes.prop_cycle"] = plt.cycler(
     color=[
@@ -295,6 +296,9 @@ class MainView:
             exec(file_content, {}, local_variables)
             return local_variables
 
+    def wrap_text(self, text, width=80):
+        return "\n".join(textwrap.wrap(text, width=width))
+
     def create_info_bar(self, file_data=None, initial=False):
         """
         Creates the information bar on to display statistics.
@@ -342,6 +346,13 @@ class MainView:
                 most_types_of_commits = "N/A"
                 commits_in_type_with_most_commits = 0
 
+            if 'readme_summary' in file_data:
+                readme_summary = file_data['readme_summary']
+            else:
+                readme_summary = "None"
+
+            readme_summary = self.wrap_text(readme_summary, width=35)  # Adjust width as needed
+
             # Construct info_text with possibly modified values.
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
@@ -349,7 +360,8 @@ class MainView:
                 f"Most active month last 12\nmonths: {month_with_most_commits}, "
                 f"{total_commits_in_month_with_most_commits} commits\n\n"
                 f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
-                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits"
+                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits\n\n"
+                f"Readme summary:\n{readme_summary}"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
             self.info_label.pack(pady=10, padx=5, fill='x')
