@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from models.db_handler import DBHandler
-from models.readme_driller import ReadmeDriller
+from models.bert_readme_model import BertReadmeModel
 import atexit
 from models.git_traversal import GitTraversal
 
@@ -19,7 +19,7 @@ class MainModel:
 
         # Create the database.
         self.db_handler = DBHandler('repo_data.db')
-        self.readme_driller = ReadmeDriller()
+        self.readme_bert = BertReadmeModel()
 
         # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
@@ -32,9 +32,6 @@ class MainModel:
         :param callback: Callback method.
         """
         self.git_traversal.set_repo(repo_url)
-
-        self.readme_driller.clone_and_extract_readme(repo_url)
-
 
         def background_task():
             """
@@ -146,6 +143,10 @@ class MainModel:
         top_10_per_user = self.get_top_10_files_per_user()
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
+        readme_summary = self.readme_bert.get_readme_summary()
+        print("------")
+        print(readme_summary)
+        print("------")
 
         # Prepare the content to be written as valid Python code
         content_to_write = (
@@ -154,6 +155,7 @@ class MainModel:
             f"top_10_per_user = {top_10_per_user}\n"
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}\n"
+            #f"readme_summary = {readme_summary}\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:
@@ -168,7 +170,7 @@ class MainModel:
         filename = "support//repo_stats.py"
         with open(filename, "w", encoding="utf-8") as file:
             file.write("")
-        filename = "support//user_readme.txt"
+        filename = "support//Downloaded_README.txt"
         with open(filename, "w", encoding="utf-8") as file:
             file.write("")
         if self.db_handler.database_has_values():

@@ -51,6 +51,7 @@ Thumbs.db
 *.html
 repo_data.db
 support/repo_stats.py
+support/Downloaded_README.txt
 
 transformers_model/results
 
