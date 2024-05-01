@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 Helper script for displaying evaluation data for trained models.
 """
 
-eval_losses = [0.8660570383071899, 0.24161763489246368, 0.10363951325416565, 0.04632510617375374, 0.043312981724739075]
-epochs = [1.0, 2.0, 3.0, 4.0, 5.0]
+eval_losses = [1.0479152202606201, 0.4390053153038025, 0.3743869960308075]
+epochs = [1.0, 2.0, 3.0]
 
 # Create a plot
 plt.figure(figsize=(8, 5))  # Set the figure size
