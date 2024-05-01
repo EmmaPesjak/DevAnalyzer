@@ -41,19 +41,19 @@ class BertAnalyzer:
 
         for author, commits in commits_dict.items():
             if author not in commit_types_per_user:
-                print(f"Author: {author}")
+                #print(f"Author: {author}")
                 commit_types_per_user[author] = {}
                 file_types_per_user[author] = {}
                 detailed_contributions[author] = {}
 
             for commit_message, file_paths in commits:
-                print(f"Commit message: {commit_message}")
-                print(f"File paths: {len(file_paths)}")
+                #print(f"Commit message: {commit_message}")
+                #print(f"File paths: {len(file_paths)}")
                 # Classify the commit message
                 commit_prediction = self.commit_message_nlp(commit_message)
                 commit_type = commit_prediction[0]['label']
 
-                print(f"Commit type: {commit_type}")
+                #print(f"Commit type: {commit_type}")
 
                 # Initialize commit label counts
                 commit_types_per_user[author].setdefault(commit_type, 0)
@@ -68,11 +68,11 @@ class BertAnalyzer:
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
-                    print(f"File path: {file_path}")
+                    #print(f"File path: {file_path}")
                     file_prediction = self.filepath_nlp(file_path)
                     file_type = file_prediction[0]['label']
 
-                    print(f"File type: {file_type}")
+                    #print(f"File type: {file_type}")
 
                     # Update commit label counts
                     if file_type not in file_types_per_user[author]:
@@ -87,13 +87,14 @@ class BertAnalyzer:
                     if file_type not in detailed_contributions[author][commit_type]:
                         detailed_contributions[author][commit_type][file_type] = 0
                     detailed_contributions[author][commit_type][file_type] += 1
-        print(f'Detailed contribution: {detailed_contributions}')
+        #print(f'Detailed contribution: {detailed_contributions}')
 
-        self.print_results(commit_types_per_user, commit_types_in_project, file_types_per_user, file_types_in_project)
+        #self.print_results(commit_types_per_user, commit_types_in_project, file_types_per_user, file_types_in_project)
 
         # Generate personal summaries from detailed contributions
         personal_summaries = self.generate_personal_summaries(detailed_contributions)
-        self.print_summary(personal_summaries)
+        project_summaries = self.generate_project_summaries(commit_types_in_project, file_types_in_project)
+        self.print_summary(personal_summaries, project_summaries)
 
     def generate_personal_summaries(self, detailed_contributions):
         personal_summaries = {}
@@ -115,12 +116,28 @@ class BertAnalyzer:
 
         return personal_summaries
 
-    def print_summary(self, personal_summaries):
+    def generate_project_summaries(self, commit_types_in_project, file_types_in_project):
+        # Summarize the most common types of commits
+        sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        commit_summary = "In this project, the most frequent types of commits have been: "
+        commit_summary += ", ".join([f"{ctype} ({count} times)" for ctype, count in sorted_commits])
+
+        # Summarize the most common types of file changes
+        sorted_file_types = sorted(file_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        file_type_summary = "The types of files most changed have been: "
+        file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
+
+        return commit_summary + ". " + file_type_summary
+
+
+    def print_summary(self, personal_summaries, project_summary):
         # Print the personal summaries
         for author, summary in personal_summaries.items():
             print(f'Author: {author}')
             print(f'  Summary: {summary}')
             print()
+
+        print(f'Project Summary: \n{project_summary}')
 
     def print_results(self, commit_types_per_user, commit_types_in_project, file_types_per_user, file_types_in_project):
         # Print author-specific counts
