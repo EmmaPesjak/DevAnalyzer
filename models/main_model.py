@@ -164,7 +164,7 @@ class MainModel:
             f"total_what = {total_what}\n"
             f"total_where = {total_where}\n"
             f"personal_summaries = {personal_summaries}\n"
-            f"overall_summary = {overall_summary}"
+            f"overall_summary = \'{overall_summary}\'" # TODO ändra så att den hämtas bara som en sträng som i readmen. det blir error i view
         )
 
         with open(filename, "w", encoding="utf-8") as file:
