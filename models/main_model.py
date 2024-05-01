@@ -150,6 +150,9 @@ class MainModel:
         total_monthly_commits = self.get_timeline()
         readme_summary = self.readme_bert.get_readme_summary()
         total_what = self.bert_analyzer.get_total_what()
+        total_where = self.bert_analyzer.get_total_where()
+        personal_summaries = self.bert_analyzer.get_personal_summary()
+        overall_summary = self.bert_analyzer.get_overall_summary()
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
@@ -158,7 +161,10 @@ class MainModel:
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}\n"
             f"readme_summary = \"{readme_summary}\"\n"
-            f"total_what = {total_what}"
+            f"total_what = {total_what}\n"
+            f"total_where = {total_where}\n"
+            f"personal_summaries = {personal_summaries}\n"
+            f"overall_summary = {overall_summary}"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

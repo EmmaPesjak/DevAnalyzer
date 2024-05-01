@@ -35,7 +35,7 @@ class BertAnalyzer:
     def analyze_commits(self, commits_dict):
         self.commit_types_per_user = {}
         commit_types_in_project = {}
-        file_types_per_user = {}
+        self.file_types_per_user = {}
         file_types_in_project = {}
         detailed_contributions = {}
 
@@ -43,7 +43,7 @@ class BertAnalyzer:
             if author not in self.commit_types_per_user:
                 #print(f"Author: {author}")
                 self.commit_types_per_user[author] = {}
-                file_types_per_user[author] = {}
+                self.file_types_per_user[author] = {}
                 detailed_contributions[author] = {}
 
             for commit_message, file_paths in commits:
@@ -75,9 +75,9 @@ class BertAnalyzer:
                     #print(f"File type: {file_type}")
 
                     # Update commit label counts
-                    if file_type not in file_types_per_user[author]:
-                        file_types_per_user[author][file_type] = 0
-                    file_types_per_user[author][file_type] += 1
+                    if file_type not in self.file_types_per_user[author]:
+                        self.file_types_per_user[author][file_type] = 0
+                    self.file_types_per_user[author][file_type] += 1
 
                     if file_type not in file_types_in_project:
                         file_types_in_project[file_type] = 0
@@ -89,12 +89,12 @@ class BertAnalyzer:
                     detailed_contributions[author][commit_type][file_type] += 1
         print(f'Detailed contribution: {detailed_contributions}')
 
-        self.print_results(self.commit_types_per_user, commit_types_in_project, file_types_per_user, file_types_in_project)
+        self.print_results(self.commit_types_per_user, commit_types_in_project, self.file_types_per_user, file_types_in_project)
 
         # Generate personal summaries from detailed contributions
-        personal_summaries = self.generate_personal_summaries(detailed_contributions)
-        project_summaries = self.generate_project_summaries(commit_types_in_project, file_types_in_project)
-        self.print_summary(personal_summaries, project_summaries)
+        self.personal_summaries = self.generate_personal_summaries(detailed_contributions)
+        self.project_summaries = self.generate_project_summaries(commit_types_in_project, file_types_in_project)
+        self.print_summary(self.personal_summaries, self.project_summaries)
 
     def generate_personal_summaries(self, detailed_contributions):
         personal_summaries = {}
@@ -135,6 +135,14 @@ class BertAnalyzer:
         """
         return self.commit_types_per_user
 
+    def get_total_where(self):
+        return self.file_types_per_user
+
+    def get_personal_summary(self):
+        pass
+
+    def get_overall_summary(self):
+        pass
 
     def print_summary(self, personal_summaries, project_summary):
         # Print the personal summaries
