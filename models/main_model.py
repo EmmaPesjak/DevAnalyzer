@@ -68,24 +68,6 @@ class MainModel:
     def get_auths_commits_and_files(self):
         return self.db_handler.get_all_authors_commits_and_files()
 
-    def get_top_10_files_per_user(self):
-        """
-        Gets top 10 files per user.
-        :return: Dictionary with top 10 files.
-        """
-        data = self.db_handler.get_top_files_per_user()
-        top_10_per_user = {}
-
-        for name, file_path, changes in data:
-            if name not in top_10_per_user:
-                top_10_per_user[name] = {}
-
-            # Only keep top 10 entries per user
-            if len(top_10_per_user[name]) < 10:
-                top_10_per_user[name][file_path] = changes
-
-        return top_10_per_user
-
     def structure_monthly_activity_by_author(self):
         """
         Gets structured monthly activity data per author.
@@ -144,11 +126,11 @@ class MainModel:
         self.analyze_commits()
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
-        top_10_changed_files = self.db_handler.get_top_10_changed_files() # TODO ta bort
-        top_10_per_user = self.get_top_10_files_per_user() # TODO ta bort
         monthly_commits_by_users = self.structure_monthly_activity_by_author()
         total_monthly_commits = self.get_timeline()
         readme_summary = self.readme_bert.get_readme_summary()
+        total_what_per_user = self.bert_analyzer.get_total_what_per_user()
+        total_where_per_user = self.bert_analyzer.get_total_where_per_user()
         total_what = self.bert_analyzer.get_total_what()
         total_where = self.bert_analyzer.get_total_where()
         personal_summaries = self.bert_analyzer.get_personal_summary()
@@ -156,15 +138,15 @@ class MainModel:
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
-            f"top_10_changed_files = {top_10_changed_files}\n"  # TODO ta bort
-            f"top_10_per_user = {top_10_per_user}\n"  # TODO ta bort
             f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
             f"total_monthly_commits = {total_monthly_commits}\n"
             f"readme_summary = \"{readme_summary}\"\n"
             f"total_what = {total_what}\n"
             f"total_where = {total_where}\n"
+            f"total_what_per_user = {total_what_per_user}\n"
+            f"total_where_per_user = {total_where_per_user}\n"
             f"personal_summaries = {personal_summaries}\n"
-            f"overall_summary = \'{overall_summary}\'" # TODO ändra så att den hämtas bara som en sträng som i readmen. det blir error i view
+            f"overall_summary = \'{overall_summary}\'"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

@@ -113,14 +113,17 @@ class MainView:
         self.help_button = ctk.CTkButton(self.menu_frame, text="Help", command=self.open_help)
         self.help_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
+        self.categories_button = ctk.CTkButton(self.menu_frame, text="Categories", command=self.open_categories)
+        self.categories_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+
         self.git_button = ctk.CTkButton(self.menu_frame, text="Select repository", command=self.open_git_input)
-        self.git_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.git_button.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.mode_button = ctk.CTkButton(self.menu_frame, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.mode_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.exit_button = ctk.CTkButton(self.menu_frame, text="Exit", command=self.on_closing)
-        self.exit_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.exit_button.grid(row=5, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -132,6 +135,8 @@ class MainView:
         :param initial: Flag indicating if the placeholder label should be displayed.
         """
         self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        # self.diagram_frame = ctk.CTkScrollableFrame(self.root)
+        # self.diagram_frame.grid()
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
         self.diagram_frame.grid_columnconfigure(0, weight=1)
         self.diagram_frame.grid_columnconfigure(1, weight=1)
@@ -177,11 +182,35 @@ class MainView:
             the repository's commit history. Keep in mind 
             that large repositories may take a while 
             to load.
-        4. Use the dropdown menu to select specific users and 
+        3. Use the dropdown menu to select specific users and 
             view detailed analysis.
 
             """
         messagebox.showinfo("Help - DevAnalyzer", help_text)
+
+    @staticmethod
+    def open_categories():
+        """
+        Displays a categories text.
+        """
+        cat_text = """
+            Git commit messages are categorized into the
+             following categories:
+                1. Adaptive - 
+                2. Perfective - 
+                3. Corrective - 
+                4. Administrative - 
+                5. Other - 
+                
+            Changed files are categorized into the
+             following categories:
+                1. Source Code - 
+                2. Tests - 
+                3. Resources - 
+                4. Configuration - 
+                5. Documentation - 
+                """
+        messagebox.showinfo("Categories - DevAnalyzer", cat_text)
 
     def open_git_input(self):
         """
@@ -277,7 +306,7 @@ class MainView:
         self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users,
                                              command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
-        self.user_select.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.user_select.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
         self.create_main_area(file_data)
@@ -314,37 +343,8 @@ class MainView:
             # Verify data presence and non-emptiness for required keys.
             if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
                 total_commits = sum(file_data['total_commits_by_contributor'].values())
-                most_commits_from = max(file_data['total_commits_by_contributor'],
-                                        key=file_data['total_commits_by_contributor'].get)
-                commits_from_highest_user = file_data['total_commits_by_contributor'].get(most_commits_from, 0)
             else:
                 total_commits = 0
-                most_commits_from = "N/A"
-                commits_from_highest_user = 0
-
-            if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
-                file_with_most_commits = max(file_data['top_10_changed_files'],
-                                             key=file_data['top_10_changed_files'].get)
-                commits_in_file_with_most_commits = file_data['top_10_changed_files'][file_with_most_commits]
-            else:
-                file_with_most_commits = "N/A"
-                commits_in_file_with_most_commits = 0
-
-            if 'total_monthly_commits' in file_data and any(
-                    value > 0 for value in file_data['total_monthly_commits'].values()):
-                month_with_most_commits = max(file_data['total_monthly_commits'],
-                                              key=file_data['total_monthly_commits'].get)
-                total_commits_in_month_with_most_commits = file_data['total_monthly_commits'][month_with_most_commits]
-            else:
-                month_with_most_commits = "N/A"
-                total_commits_in_month_with_most_commits = 0
-
-            if 'types_of_commits' in file_data and file_data['types_of_commits']:
-                most_types_of_commits = max(file_data['types_of_commits'], key=file_data['types_of_commits'].get)
-                commits_in_type_with_most_commits = file_data['types_of_commits'][most_types_of_commits]
-            else:
-                most_types_of_commits = "N/A"
-                commits_in_type_with_most_commits = 0
 
             if 'readme_summary' in file_data:
                 readme_summary = file_data['readme_summary']
@@ -353,14 +353,17 @@ class MainView:
 
             readme_summary = self.wrap_text(readme_summary, width=35)  # Adjust width as needed
 
+            if 'overall_summary' in file_data:
+                overall_summary = file_data['overall_summary']
+            else:
+                overall_summary = "None"
+
+            overall_summary = self.wrap_text(overall_summary, width=35)  # Adjust width as needed
+
             # Construct info_text with possibly modified values.
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
-                f"Most commits from:\n{most_commits_from}, {commits_from_highest_user} commits\n\n"
-                f"Most active month last 12\nmonths: {month_with_most_commits}, "
-                f"{total_commits_in_month_with_most_commits} commits\n\n"
-                f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits\n\n"
-                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits\n\n"
+                f"Overall summary: \n{overall_summary}\n\n"
                 f"Readme summary:\n{readme_summary}"
             )
             self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
@@ -405,29 +408,19 @@ class MainView:
             info_text_parts.append(f"Total Commits: {total_commits_for_user}")
 
         # Check and create a diagram for types per user.
-        if choice in file_data.get('types_per_user', {}):
+        if choice in file_data.get('total_what_per_user', {}):
             data_found = True
-            types_per_user = file_data['types_per_user'][choice]
-            most_types_of_commits = max(types_per_user, key=types_per_user.get)
-            commits_in_type_with_most_commits = types_per_user[most_types_of_commits]
-            info_text_parts.append(
-                f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits")
-
-            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="Type of commit", xlabel="Type",
-                                                      ylabel="Commits")
+            types_per_user = file_data['total_what_per_user'][choice]
+            fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="What")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
             canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check and create a diagram for top 10 changed files per user.
-        if choice in file_data.get('top_10_per_user', {}):
+        if choice in file_data.get('total_where_per_user', {}):
             data_found = True
-            top_10_per_user = file_data['top_10_per_user'][choice]
-            file_with_most_commits = max(top_10_per_user, key=top_10_per_user.get)
-            commits_in_file_with_most_commits = top_10_per_user[file_with_most_commits]
-            info_text_parts.append(
-                f"Most commits in:\n{file_with_most_commits}, {commits_in_file_with_most_commits} commits")
+            top_10_per_user = file_data['total_where_per_user'][choice]
             fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
                                                       title="Changed components")
             # Canvas 2
@@ -435,8 +428,7 @@ class MainView:
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Top 10 Changed Files",
-                                                      xlabel="File", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user, title="Where")
             # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
@@ -447,12 +439,6 @@ class MainView:
             total_monthly_commits = file_data['monthly_commits_by_contributor'][choice]
             if any(value > 0 for value in total_monthly_commits.values()):
                 data_found = True
-                month_with_most_commits = max(total_monthly_commits, key=total_monthly_commits.get)
-                total_commits_in_month_with_most_commits = total_monthly_commits[month_with_most_commits]
-                info_text_parts.append(
-                    f"Most active month last 12\nmonths: {month_with_most_commits}, "
-                    f"{total_commits_in_month_with_most_commits} commits")
-
                 fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
                                                           title="Monthly commits last 12 months",
                                                           xlabel="Month", ylabel="Commits")
@@ -460,6 +446,12 @@ class MainView:
                 canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
                 canvas3.draw()
                 canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
+        if choice in file_data.get('personal_summaries', {}):
+            data_found = True
+            personal_summary = file_data['personal_summaries'][choice]
+            personal_summary = self.wrap_text(personal_summary, width=35)
+            info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
             # If no data was found for any category.
@@ -496,11 +488,10 @@ class MainView:
         diagram_row = 1  # Start placing diagrams after the repository label row
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
-        if 'types_of_commits' in file_data and file_data['types_of_commits']:
+        if 'total_what' in file_data and file_data['total_what']:
             diagrams_created = True
-            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['types_of_commits'],
-                                                      title="Type of commit",
-                                                      xlabel="Type", ylabel="Commits")
+            fig1, ax1 = self.visualizer.create_figure('spider', data=file_data['total_what'],
+                                                      title="What")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
             canvas1.get_tk_widget().grid(row=diagram_row, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
@@ -527,11 +518,10 @@ class MainView:
                 canvas3.get_tk_widget().grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check for 'top_10_changed_files' data and create a diagram if it's not empty
-        if 'top_10_changed_files' in file_data and file_data['top_10_changed_files']:
+        if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
-            fig4, ax4 = self.visualizer.create_figure('bar', data=file_data['top_10_changed_files'],
-                                                      title="Top 10 Changed Files",
-                                                      xlabel="File", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
+                                                      title="Where the commits has been made")
             canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=diagram_row+1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
