@@ -115,7 +115,7 @@ class DataVisualizer:
         angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
         angles += angles[:1]  # Repeat the first angle to close the circle
 
-        fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+        fig, ax = plt.subplots(figsize=(10, 6), subplot_kw=dict(polar=True), dpi=75)
         ax.fill(angles, values, "#158274", alpha=0.1)
         ax.plot(angles, values, "#3FA27B")
         ax.set_xticks(angles[:-1])

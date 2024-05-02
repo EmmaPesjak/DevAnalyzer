@@ -113,14 +113,17 @@ class MainView:
         self.help_button = ctk.CTkButton(self.menu_frame, text="Help", command=self.open_help)
         self.help_button.grid(row=0, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
+        self.categories_button = ctk.CTkButton(self.menu_frame, text="Categories", command=self.open_categories)
+        self.categories_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+
         self.git_button = ctk.CTkButton(self.menu_frame, text="Select repository", command=self.open_git_input)
-        self.git_button.grid(row=1, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.git_button.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.mode_button = ctk.CTkButton(self.menu_frame, text="Appearance mode", command=self.set_appearance_mode)
-        self.mode_button.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.mode_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         self.exit_button = ctk.CTkButton(self.menu_frame, text="Exit", command=self.on_closing)
-        self.exit_button.grid(row=4, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.exit_button.grid(row=5, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Ensure the application prompts the user before closing
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -177,11 +180,35 @@ class MainView:
             the repository's commit history. Keep in mind 
             that large repositories may take a while 
             to load.
-        4. Use the dropdown menu to select specific users and 
+        3. Use the dropdown menu to select specific users and 
             view detailed analysis.
 
             """
         messagebox.showinfo("Help - DevAnalyzer", help_text)
+
+    @staticmethod
+    def open_categories():
+        """
+        Displays a categories text.
+        """
+        cat_text = """
+            Git commit messages are categorized into the
+             following categories:
+                1. Adaptive - 
+                2. Perfective - 
+                3. Corrective - 
+                4. Administrative - 
+                5. Other - 
+                
+            Changed files are categorized into the
+             following categories:
+                1. Source Code - 
+                2. Tests - 
+                3. Resources - 
+                4. Configuration - 
+                5. Documentation - 
+                """
+        messagebox.showinfo("Categories - DevAnalyzer", cat_text)
 
     def open_git_input(self):
         """
@@ -277,7 +304,7 @@ class MainView:
         self.user_select = ctk.CTkOptionMenu(self.menu_frame, values=users,
                                              command=lambda choice: self.setup_user_window(choice, file_data))
         self.user_select.set("Select user")
-        self.user_select.grid(row=2, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
+        self.user_select.grid(row=3, column=0, pady=self.PADDING, padx=self.PADDING, sticky="ew")
 
         # Update the main area and info bar.
         self.create_main_area(file_data)
@@ -382,13 +409,7 @@ class MainView:
         if choice in file_data.get('total_what_per_user', {}):
             data_found = True
             types_per_user = file_data['total_what_per_user'][choice]
-            most_types_of_commits = max(types_per_user, key=types_per_user.get)
-            commits_in_type_with_most_commits = types_per_user[most_types_of_commits]
-            info_text_parts.append(
-                f"Most commits of type:\n{most_types_of_commits}, {commits_in_type_with_most_commits} commits")
-
-            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="Type of commit", xlabel="Type",
-                                                      ylabel="Commits")
+            fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="What")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
@@ -405,8 +426,7 @@ class MainView:
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-            fig4, ax4 = self.visualizer.create_figure('bar', data=top_10_per_user, title="Top 10 Changed Files",
-                                                      xlabel="File", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user, title="Where")
             # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
@@ -424,6 +444,12 @@ class MainView:
                 canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
                 canvas3.draw()
                 canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
+        if choice in file_data.get('personal_summaries', {}):
+            data_found = True
+            personal_summary = file_data['personal_summaries'][choice]
+            personal_summary = self.wrap_text(personal_summary, width=35)
+            info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
             # If no data was found for any category.
@@ -462,9 +488,8 @@ class MainView:
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
             diagrams_created = True
-            fig1, ax1 = self.visualizer.create_figure('bar', data=file_data['total_what'],
-                                                      title="Type of commit",
-                                                      xlabel="Type", ylabel="Commits")
+            fig1, ax1 = self.visualizer.create_figure('spider', data=file_data['total_what'],
+                                                      title="What")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
             canvas1.get_tk_widget().grid(row=diagram_row, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
@@ -493,9 +518,8 @@ class MainView:
         # Check for 'top_10_changed_files' data and create a diagram if it's not empty
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
-            fig4, ax4 = self.visualizer.create_figure('bar', data=file_data['total_where'],
-                                                      title="Where the commits has been made",
-                                                      xlabel="File", ylabel="Commits")
+            fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
+                                                      title="Where the commits has been made")
             canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=diagram_row+1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
