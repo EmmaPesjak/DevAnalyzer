@@ -135,6 +135,8 @@ class MainView:
         :param initial: Flag indicating if the placeholder label should be displayed.
         """
         self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
+        # self.diagram_frame = ctk.CTkScrollableFrame(self.root)
+        # self.diagram_frame.grid()
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
         self.diagram_frame.grid_columnconfigure(0, weight=1)
         self.diagram_frame.grid_columnconfigure(1, weight=1)
