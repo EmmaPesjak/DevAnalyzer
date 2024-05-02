@@ -101,7 +101,6 @@ class MainView:
         self.root.grid_rowconfigure(0, weight=1)  # Make row 0 expandable
         self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0 (sidebar)
         self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable (main content area)
-        self.root.grid_columnconfigure(2, minsize=200)  # Set min width for column 2 (info bar)
 
     def create_sidebar(self):
         """
@@ -134,9 +133,8 @@ class MainView:
         :param file_data: Data to generate the diagrams.
         :param initial: Flag indicating if the placeholder label should be displayed.
         """
-        self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        # self.diagram_frame = ctk.CTkScrollableFrame(self.root)
-        # self.diagram_frame.grid()
+        self.diagram_frame = ctk.CTkScrollableFrame(self.root)
+        self.diagram_frame.grid()
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
         self.diagram_frame.grid_columnconfigure(0, weight=1)
         self.diagram_frame.grid_columnconfigure(1, weight=1)
@@ -334,8 +332,6 @@ class MainView:
         :param file_data: Data to generate text.
         :param initial: Flag indicating if the bar should be empty.
         """
-        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically.
 
         if initial:
             pass  # This should be empty when starting the application.
@@ -366,8 +362,8 @@ class MainView:
                 f"Overall summary: \n{overall_summary}\n\n"
                 f"Readme summary:\n{readme_summary}"
             )
-            self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
-            self.info_label.pack(pady=10, padx=5, fill='x')
+            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, text_color=self.TEXT_COLOR)
+            self.info_label.grid(pady=10, padx=5)
 
     def setup_user_window(self, choice, file_data):
         """
@@ -377,23 +373,16 @@ class MainView:
         """
         new_window = ctk.CTkToplevel(self.root)
         new_window.title(f"Information about {choice}")
-        new_window.geometry(self.WINDOW_GEOMETRY)
+        new_window.geometry("450x500")
 
-        # Configure grid layout for new_window.
+        # Configure grid layout for new_window. Only one column now.
         new_window.grid_columnconfigure(0, weight=1)
         new_window.grid_rowconfigure(0, weight=1)
 
-        sidebar_frame = ctk.CTkFrame(new_window, corner_radius=1)
-        # Adjust sidebar_frame grid placement.
-        sidebar_frame.grid(row=0, column=1, sticky="ns")
-        new_window.grid_columnconfigure(1, minsize=200)  # Adjust the sidebar width if necessary.
-
-        main_area_frame = ctk.CTkFrame(new_window, corner_radius=1)
+        main_area_frame = ctk.CTkScrollableFrame(new_window)
         main_area_frame.grid(row=0, column=0, sticky="nsew")
         main_area_frame.grid_columnconfigure(0, weight=1)
-        main_area_frame.grid_columnconfigure(1, weight=1)
-        main_area_frame.grid_rowconfigure(0, weight=1)
-        main_area_frame.grid_rowconfigure(1, weight=1)
+        main_area_frame.grid_rowconfigure(0, weight=0)
 
         # Initialize info_text with basic information.
         info_text_parts = [f"Info for {choice}"]
@@ -411,28 +400,22 @@ class MainView:
         if choice in file_data.get('total_what_per_user', {}):
             data_found = True
             types_per_user = file_data['total_what_per_user'][choice]
-            fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="What")
+            fig1, ax1 = self.visualizer.create_figure('bar', data=types_per_user, title="What", xlabel="Something", ylabel="Something")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
-            canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check and create a diagram for top 10 changed files per user.
         if choice in file_data.get('total_where_per_user', {}):
             data_found = True
             top_10_per_user = file_data['total_where_per_user'][choice]
-            fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Changed components")
+            fig2, ax2 = self.visualizer.create_figure('bar', data=top_10_per_user,
+                                                      title="Changed components", xlabel="Something", ylabel="Something")
             # Canvas 2
             canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
             canvas2.draw()
-            canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
-
-            fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user, title="Where")
-            # Canvas 4
-            canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
-            canvas4.draw()
-            canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas2.get_tk_widget().grid(row=2, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         # Check and create a diagram for monthly commits by contributor.
         if choice in file_data.get('monthly_commits_by_contributor', {}):
@@ -445,12 +428,12 @@ class MainView:
                 # Canvas 3
                 canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
                 canvas3.draw()
-                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+                canvas3.get_tk_widget().grid(row=3, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
         if choice in file_data.get('personal_summaries', {}):
             data_found = True
             personal_summary = file_data['personal_summaries'][choice]
-            personal_summary = self.wrap_text(personal_summary, width=35)
+            personal_summary = self.wrap_text(personal_summary, width=50)
             info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
@@ -459,11 +442,10 @@ class MainView:
         else:
             info_text = "\n\n".join(info_text_parts)
 
-        # Configure grid layout for sidebar_frame to properly align info_label
-        sidebar_frame.grid_rowconfigure(0, weight=1)
-        info_label = ctk.CTkLabel(sidebar_frame, text=info_text,
-                                  anchor="w", width=130, text_color=self.TEXT_COLOR)
-        info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
+        # Create an info label where the pie chart was
+        info_label = ctk.CTkLabel(main_area_frame, text=info_text, text_color=self.TEXT_COLOR)
+        info_label.grid(row=0, column=0, sticky="nsew", padx=self.PADDING, pady=self.PADDING)
+
         self.user_windows.append(new_window)
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
 
