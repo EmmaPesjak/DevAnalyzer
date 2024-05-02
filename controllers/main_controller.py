@@ -18,7 +18,7 @@ class MainController:
         self.main_model = main_model
         self.view = view
         self.view.set_on_input_change(self.retrieve_url)
-        self.bert_analyzer = BertAnalyzer()
+        #self.bert_analyzer = BertAnalyzer()
         self.readme_getter = ReadmeGetter()
 
     def retrieve_url(self, new_url):
@@ -50,8 +50,8 @@ class MainController:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
 
-                all_commits = self.main_model.get_all_authors_and_their_commits()
-                self.bert_analyzer.analyze_commits(all_commits)
+                #all_commits = self.main_model.get_all_authors_and_their_commits()
+                #self.bert_analyzer.analyze_commits(all_commits)
                  # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
             else:

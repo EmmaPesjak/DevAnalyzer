@@ -33,91 +33,176 @@ class BertAnalyzer:
                                      tokenizer=self.filepath_tokenizer)
 
     def analyze_commits(self, commits_dict):
-        types_per_user = {}
-        types_of_commits = {}
-        file_type_predictions_per_user = {}
+        self.commit_types_per_user = {}
+        commit_types_in_project = {}
+        self.file_types_per_user = {}
+        file_types_in_project = {}
+        detailed_contributions = {}
 
         for author, commits in commits_dict.items():
-            if author not in types_per_user:
-                types_per_user[author] = {}
-                file_type_predictions_per_user[author] = {}
+            if author not in self.commit_types_per_user:
+                #print(f"Author: {author}")
+                self.commit_types_per_user[author] = {}
+                self.file_types_per_user[author] = {}
+                detailed_contributions[author] = {}
 
             for commit_message, file_paths in commits:
+                #print(f"Commit message: {commit_message}")
+                #print(f"File paths: {len(file_paths)}")
                 # Classify the commit message
-                prediction = self.commit_message_nlp(commit_message)
-                predicted_label = prediction[0]['label']
+                commit_prediction = self.commit_message_nlp(commit_message)
+                commit_type = commit_prediction[0]['label']
+
+                #print(f"Commit type: {commit_type}")
 
                 # Initialize commit label counts
-                types_per_user[author].setdefault(predicted_label, 0)
-                types_of_commits.setdefault(predicted_label, 0)
+                self.commit_types_per_user[author].setdefault(commit_type, 0)
+                commit_types_in_project.setdefault(commit_type, 0)
 
                 # Update commit label counts
-                types_per_user[author][predicted_label] += 1
-                types_of_commits[predicted_label] += 1
+                self.commit_types_per_user[author][commit_type] += 1
+                commit_types_in_project[commit_type] += 1
+
+                if commit_type not in detailed_contributions[author]:
+                    detailed_contributions[author][commit_type] = {}
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
+                    #print(f"File path: {file_path}")
                     file_prediction = self.filepath_nlp(file_path)
-                    file_type_label = file_prediction[0]['label']
+                    file_type = file_prediction[0]['label']
 
-                    # Initialize file type counts
-                    file_type_predictions_per_user[author].setdefault(file_type_label, 0)
+                    #print(f"File type: {file_type}")
 
-                    # Update file type counts
-                    file_type_predictions_per_user[author][file_type_label] += 1
+                    # Update commit label counts
+                    if file_type not in self.file_types_per_user[author]:
+                        self.file_types_per_user[author][file_type] = 0
+                    self.file_types_per_user[author][file_type] += 1
 
-        self.print_results(types_per_user, types_of_commits, file_type_predictions_per_user)
+                    if file_type not in file_types_in_project:
+                        file_types_in_project[file_type] = 0
+                    file_types_in_project[file_type] += 1
 
-    def print_results(self, types_per_user, types_of_commits, file_type_predictions_per_user):
+                    # Update detailed contribution summary
+                    if file_type not in detailed_contributions[author][commit_type]:
+                        detailed_contributions[author][commit_type][file_type] = 0
+                    detailed_contributions[author][commit_type][file_type] += 1
+        print(f'Detailed contribution: {detailed_contributions}')
+
+        self.print_results(self.commit_types_per_user, commit_types_in_project, self.file_types_per_user, file_types_in_project)
+
+        # Generate personal summaries from detailed contributions
+        self.personal_summaries = self.generate_personal_summaries(detailed_contributions)
+        self.project_summaries = self.generate_project_summaries(commit_types_in_project, file_types_in_project)
+        self.print_summary(self.personal_summaries, self.project_summaries)
+
+    def generate_personal_summaries(self, detailed_contributions):
+        personal_summaries = {}
+
+        for author, contributions in detailed_contributions.items():
+            summary_parts = []
+            for commit_type, file_types in contributions.items():
+                # Find the file type with the highest count for each commit type
+                if len(file_types) > 0:
+                    most_common_file_type, highest_count = max(file_types.items(), key=lambda item: item[1])
+                    summary_part = f"{commit_type} in {most_common_file_type} ({highest_count} times)"
+                else:
+                    summary_part = f"{commit_type} changes"
+                summary_parts.append(summary_part)
+
+            # Combine all parts into one summary for each author
+            personal_summary = f"{author} has worked mostly on " + "; ".join(summary_parts) + "."
+            personal_summaries[author] = personal_summary
+
+        return personal_summaries
+
+    def generate_project_summaries(self, commit_types_in_project, file_types_in_project):
+        # Summarize the most common types of commits
+        sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        commit_summary = "In this project, the most frequent types of commits have been: "
+        commit_summary += ", ".join([f"{ctype} ({count} times)" for ctype, count in sorted_commits])
+
+        # Summarize the most common types of file changes
+        sorted_file_types = sorted(file_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        file_type_summary = "The types of files most changed have been: "
+        file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
+
+        return f'{commit_summary} + ". " + {file_type_summary}'
+
+    def get_total_what(self):
+        """
+        Returns a dictionary mapping each author to their total counts of each commit type.
+        """
+        return self.commit_types_per_user
+
+    def get_total_where(self):
+        return self.file_types_per_user
+
+    def get_personal_summary(self):
+        return self.personal_summaries
+
+    def get_overall_summary(self):
+        return self.project_summaries
+
+    def print_summary(self, personal_summaries, project_summary):
+        # Print the personal summaries
+        for author, summary in personal_summaries.items():
+            print(f'Author: {author}')
+            print(f'  Summary: {summary}')
+            print()
+
+        print(f'Project Summary: \n{project_summary}')
+
+    def print_results(self, commit_types_per_user, commit_types_in_project, file_types_per_user, file_types_in_project):
         # Print author-specific counts
-        for author, label_counts in types_per_user.items():
+        for author, label_counts in commit_types_per_user.items():
             print(f'Author: {author}')
             for label, count in label_counts.items():
                 print(f'  {label}: {count}')
             print('  File types:')
-            for file_type_label, count in file_type_predictions_per_user[author].items():
+            for file_type_label, count in file_types_per_user[author].items():
                 print(f'    {file_type_label}: {count}')
             print()
 
         # Print total counts for the project
         print('Total label commit message counts for the project:')
-        for label, count in types_of_commits.items():
+        for label, count in commit_types_in_project.items():
             print(f'  {label}: {count}')
 
         print('Total label filepath counts for the project:')
-        for label, count in file_type_predictions_per_user.items():
+        for label, count in file_types_in_project.items():
             print(f'  {label}: {count}')
 
-        author_summaries = self.generate_author_summaries(types_per_user, file_type_predictions_per_user)
-        for summary in author_summaries:
-            print(summary)
+        # author_summaries = self.generate_author_summaries(types_per_user, file_type_predictions_per_user)
+        # for summary in author_summaries:
+        #     print(summary)
 
-    def generate_author_summaries(self, types_per_user, file_type_predictions_per_user):
-        summaries = []
-
-        for author, label_counts in types_per_user.items():
-            # Sort the labels by count, descending
-            sorted_labels = sorted(label_counts.items(), key=lambda item: item[1], reverse=True)
-
-            # Build the summary string for commit types
-            summary_parts = [f"{label}: {count}" for label, count in sorted_labels]
-            commit_summary = f"{author} has mainly been working with {summary_parts[0]}"
-
-            # If there are more labels, add them as secondary mentions
-            if len(summary_parts) > 1:
-                secondary_activities = ", ".join(summary_parts[1:])
-                commit_summary += f", but also contributed to {secondary_activities}"
-
-            # Include file type information
-            file_types = file_type_predictions_per_user[author]
-            sorted_file_types = sorted(file_types.items(), key=lambda item: item[1], reverse=True)
-            file_type_summary = ", ".join([f"{ftype}: {count}" for ftype, count in sorted_file_types])
-
-            # Combine commit and file type summaries
-            summary = f"{commit_summary}. In terms of file types, {author} modified {file_type_summary}"
-            summaries.append(summary)
-
-        return summaries
+    # def generate_author_summaries(self, types_per_user, file_type_predictions_per_user):
+    #     summaries = []
+    #
+    #     for author, label_counts in types_per_user.items():
+    #         # Sort the labels by count, descending
+    #         sorted_labels = sorted(label_counts.items(), key=lambda item: item[1], reverse=True)
+    #
+    #         # Build the summary string for commit types
+    #         summary_parts = [f"{label}: {count}" for label, count in sorted_labels]
+    #         commit_summary = f"{author} has mainly been working with {summary_parts[0]}"
+    #
+    #         # If there are more labels, add them as secondary mentions
+    #         if len(summary_parts) > 1:
+    #             secondary_activities = ", ".join(summary_parts[1:])
+    #             commit_summary += f", but also contributed to {secondary_activities}"
+    #
+    #         # Include file type information
+    #         file_types = file_type_predictions_per_user[author]
+    #         sorted_file_types = sorted(file_types.items(), key=lambda item: item[1], reverse=True)
+    #         file_type_summary = ", ".join([f"{ftype}: {count}" for ftype, count in sorted_file_types])
+    #
+    #         # Combine commit and file type summaries
+    #         summary = f"{commit_summary}. In terms of file types, {author} modified {file_type_summary}"
+    #         summaries.append(summary)
+    #
+    #     return summaries
     # def generate_author_summaries(self, types_per_user):
     #     summaries = []
     #
