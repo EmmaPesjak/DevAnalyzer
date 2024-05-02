@@ -127,7 +127,7 @@ class BertAnalyzer:
         file_type_summary = "The types of files most changed have been: "
         file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
 
-        return f'{commit_summary} + ". " + {file_type_summary}'
+        return f"{commit_summary}. {file_type_summary}"
 
     def get_total_what(self):
         """
