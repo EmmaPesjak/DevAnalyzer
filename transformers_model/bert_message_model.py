@@ -155,9 +155,9 @@ for i, seed_value in enumerate(seed_values):
         per_device_eval_batch_size=32,
         warmup_steps=100,
         weight_decay=0.01,
-        evaluation_strategy="steps",
-        eval_steps=50,
-        save_strategy="steps",
+        evaluation_strategy="epoch",
+        #eval_steps=50,
+        save_strategy="epoch",
         fp16=False,
         load_best_model_at_end=True
     )
