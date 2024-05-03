@@ -284,7 +284,7 @@
 "pdfsam-basic\src\main\resources\images\basic\32x32.png","Resources"
 "pdfsam-gui\src\test\java\org\pdfsam\gui\components\content\preference\PreferenceOutputPaneTest.java","Tests"
 "pdfsam-core\src\main\java\org\pdfsam\update\UpdateAvailableEvent.java","Source Code"
-"pdfsam-basic\src\msi\resources\LICENSE.rtf","ocumentation"
+"pdfsam-basic\src\msi\resources\LICENSE.rtf","Documentation"
 "pdfsam-tools\pdfsam-rotate\LICENSE.txt","Documentation"
 "pdfsam-gui\src\main\java\org\pdfsam\gui\components\dialog\OpenWithDialogController.java","Source Code"
 "pdfsam-gui\src\main\java\org\pdfsam\ui\dashboard\AboutDashboardPane.java","Source Code"
