@@ -92,7 +92,7 @@ class MainView:
         self.setup_layout()
         self.create_sidebar()
         self.create_main_area(initial=True)
-        self.create_info_bar(initial=True)
+        self.create_info_text(initial=True)
 
     def setup_layout(self):
         """
@@ -101,7 +101,6 @@ class MainView:
         self.root.grid_rowconfigure(0, weight=1)  # Make row 0 expandable
         self.root.grid_columnconfigure(0, minsize=200)  # Set min width for column 0 (sidebar)
         self.root.grid_columnconfigure(1, weight=1)  # Make column 1 expandable (main content area)
-        self.root.grid_columnconfigure(2, minsize=200)  # Set min width for column 2 (info bar)
 
     def create_sidebar(self):
         """
@@ -134,15 +133,17 @@ class MainView:
         :param file_data: Data to generate the diagrams.
         :param initial: Flag indicating if the placeholder label should be displayed.
         """
-        self.diagram_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        # self.diagram_frame = ctk.CTkScrollableFrame(self.root)
-        # self.diagram_frame.grid()
+        if self.diagram_frame:
+            self.diagram_frame.destroy()
+
+        self.diagram_frame = ctk.CTkScrollableFrame(self.root)
         self.diagram_frame.grid(row=0, column=1, sticky="nsew")  # Expand in all directions
         self.diagram_frame.grid_columnconfigure(0, weight=1)
         self.diagram_frame.grid_columnconfigure(1, weight=1)
         self.diagram_frame.grid_rowconfigure(0, weight=1)
         self.diagram_frame.grid_rowconfigure(1, weight=1)
         self.diagram_frame.grid_rowconfigure(2, weight=1)
+        self.diagram_frame.grid_rowconfigure(3, weight=1)
 
         if initial:
             # Display a placeholder message
@@ -195,20 +196,45 @@ class MainView:
         """
         cat_text = """
             Git commit messages are categorized into the
-             following categories:
-                1. Adaptive - 
-                2. Perfective - 
-                3. Corrective - 
-                4. Administrative - 
-                5. Other - 
+            following categories:
+                1. Adaptive - Adaptive activities are functional
+                   activities and involve making modifications 
+                   to the software to ensure it remains compatible 
+                   with new environments. Examples of these are 
+                   feature additions and test cases.
+                2. Perfective - Perfective activities encompass 
+                   modifications aimed at improving the software's 
+                   overall quality, structure, and efficiency, 
+                   such as refactoring, renaming, cleaning up 
+                   redundant segments, and improving algorithms 
+                   and performance.
+                3. Corrective - Corrective activities address 
+                   and correct software problems such as bugs, 
+                   defects, errors, and faults that negatively 
+                   impact the system. 
+                4. Administrative - Administrative activities 
+                   include working on documentation such as 
+                   README.md files, javadocs, or commenting
+                   the code.
+                5. Other - This activity include Git operations 
+                   such as merges and pull requests. It also include 
+                   vague and unspecified tasks.
                 
             Changed files are categorized into the
              following categories:
-                1. Source Code - 
-                2. Tests - 
-                3. Resources - 
-                4. Configuration - 
-                5. Documentation - 
+                1. Source Code - Core application code typically 
+                   involving back-end (server-side logic, APIs, 
+                   database interactions) and front-end (user 
+                   interface, client-side logic).
+                2. Tests - Code files in a test directory or 
+                   containing "test".
+                3. Resources - Assets and other resources (images, 
+                   stylesheets).
+                4. Configuration - Configuration files and scripts 
+                   (build scripts, manifests, shell scripts).
+                5. Documentation - Software documentation 
+                   (README files, package-info, license, notice 
+                   files).
                 """
         messagebox.showinfo("Categories - DevAnalyzer", cat_text)
 
@@ -310,7 +336,7 @@ class MainView:
 
         # Update the main area and info bar.
         self.create_main_area(file_data)
-        self.create_info_bar(file_data)
+        self.create_info_text(file_data)
 
     @staticmethod
     def read_file_data():
@@ -328,14 +354,12 @@ class MainView:
     def wrap_text(self, text, width=80):
         return "\n".join(textwrap.wrap(text, width=width))
 
-    def create_info_bar(self, file_data=None, initial=False):
+    def create_info_text(self, file_data=None, initial=False):
         """
         Creates the information bar on to display statistics.
         :param file_data: Data to generate text.
         :param initial: Flag indicating if the bar should be empty.
         """
-        info_frame = ctk.CTkFrame(self.root, corner_radius=1)
-        info_frame.grid(row=0, column=2, sticky="ns")  # Expand only vertically.
 
         if initial:
             pass  # This should be empty when starting the application.
@@ -351,14 +375,14 @@ class MainView:
             else:
                 readme_summary = "None"
 
-            readme_summary = self.wrap_text(readme_summary, width=35)  # Adjust width as needed
+            readme_summary = self.wrap_text(readme_summary, width=120)  # Adjust width as needed
 
             if 'overall_summary' in file_data:
                 overall_summary = file_data['overall_summary']
             else:
                 overall_summary = "None"
 
-            overall_summary = self.wrap_text(overall_summary, width=35)  # Adjust width as needed
+            overall_summary = self.wrap_text(overall_summary, width=120)  # Adjust width as needed
 
             # Construct info_text with possibly modified values.
             info_text = (
@@ -366,8 +390,8 @@ class MainView:
                 f"Overall summary: \n{overall_summary}\n\n"
                 f"Readme summary:\n{readme_summary}"
             )
-            self.info_label = ctk.CTkLabel(info_frame, text=info_text, text_color=self.TEXT_COLOR)
-            self.info_label.pack(pady=10, padx=5, fill='x')
+            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, text_color=self.TEXT_COLOR)
+            self.info_label.grid(row=1, column=0, columnspan=2, sticky="nsew")
 
     def setup_user_window(self, choice, file_data):
         """
@@ -383,12 +407,7 @@ class MainView:
         new_window.grid_columnconfigure(0, weight=1)
         new_window.grid_rowconfigure(0, weight=1)
 
-        sidebar_frame = ctk.CTkFrame(new_window, corner_radius=1)
-        # Adjust sidebar_frame grid placement.
-        sidebar_frame.grid(row=0, column=1, sticky="ns")
-        new_window.grid_columnconfigure(1, minsize=200)  # Adjust the sidebar width if necessary.
-
-        main_area_frame = ctk.CTkFrame(new_window, corner_radius=1)
+        main_area_frame = ctk.CTkScrollableFrame(new_window)
         main_area_frame.grid(row=0, column=0, sticky="nsew")
         main_area_frame.grid_columnconfigure(0, weight=1)
         main_area_frame.grid_columnconfigure(1, weight=1)
@@ -421,12 +440,6 @@ class MainView:
         if choice in file_data.get('total_where_per_user', {}):
             data_found = True
             top_10_per_user = file_data['total_where_per_user'][choice]
-            fig2, ax2 = self.visualizer.create_figure('pie', data=top_10_per_user,
-                                                      title="Changed components")
-            # Canvas 2
-            canvas2 = FigureCanvasTkAgg(fig2, master=main_area_frame)
-            canvas2.draw()
-            canvas2.get_tk_widget().grid(row=0, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
             fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user, title="Where")
             # Canvas 4
@@ -459,11 +472,9 @@ class MainView:
         else:
             info_text = "\n\n".join(info_text_parts)
 
-        # Configure grid layout for sidebar_frame to properly align info_label
-        sidebar_frame.grid_rowconfigure(0, weight=1)
-        info_label = ctk.CTkLabel(sidebar_frame, text=info_text,
+        info_label = ctk.CTkLabel(main_area_frame, text=info_text,
                                   anchor="w", width=130, text_color=self.TEXT_COLOR)
-        info_label.grid(row=0, column=0, sticky="nw", padx=self.PADDING, pady=self.PADDING)
+        info_label.grid(row=0, column=1, sticky="nw", padx=self.PADDING, pady=self.PADDING)
         self.user_windows.append(new_window)
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
 
@@ -485,7 +496,7 @@ class MainView:
 
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
-        diagram_row = 1  # Start placing diagrams after the repository label row
+        diagram_row = 2  # Start placing diagrams after the repository label row
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
