@@ -84,6 +84,7 @@ class MainModel:
         total_where = self.bert_analyzer.get_total_where()
         personal_summaries = self.bert_analyzer.get_personal_summary()
         overall_summary = self.bert_analyzer.get_overall_summary()
+        matrix = self.bert_analyzer.get_matrix()
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
@@ -93,7 +94,8 @@ class MainModel:
             f"total_what_per_user = {total_what_per_user}\n"
             f"total_where_per_user = {total_where_per_user}\n"
             f"personal_summaries = {personal_summaries}\n"
-            f"overall_summary = \'{overall_summary}\'"
+            f"overall_summary = \'{overall_summary}\'\n"
+            f"matrix = {matrix}\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

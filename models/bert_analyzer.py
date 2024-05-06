@@ -37,14 +37,14 @@ class BertAnalyzer:
         self.commit_types_in_project = {}
         self.file_types_per_user = {}
         self.file_types_in_project = {}
-        detailed_contributions = {}
+        self.detailed_contributions = {}
 
         for author, commits in commits_dict.items():
             if author not in self.commit_types_per_user:
                 #print(f"Author: {author}")
                 self.commit_types_per_user[author] = {}
                 self.file_types_per_user[author] = {}
-                detailed_contributions[author] = {}
+                self.detailed_contributions[author] = {}
 
             for commit_message, file_paths in commits:
                 #print(f"Commit message: {commit_message}")
@@ -63,8 +63,8 @@ class BertAnalyzer:
                 self.commit_types_per_user[author][commit_type] += 1
                 self.commit_types_in_project[commit_type] += 1
 
-                if commit_type not in detailed_contributions[author]:
-                    detailed_contributions[author][commit_type] = {}
+                if commit_type not in self.detailed_contributions[author]:
+                    self.detailed_contributions[author][commit_type] = {}
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
@@ -84,17 +84,30 @@ class BertAnalyzer:
                     self.file_types_in_project[file_type] += 1
 
                     # Update detailed contribution summary
-                    if file_type not in detailed_contributions[author][commit_type]:
-                        detailed_contributions[author][commit_type][file_type] = 0
-                    detailed_contributions[author][commit_type][file_type] += 1
-        print(f'Detailed contribution: {detailed_contributions}')
+                    if file_type not in self.detailed_contributions[author][commit_type]:
+                        self.detailed_contributions[author][commit_type][file_type] = 0
+                    self.detailed_contributions[author][commit_type][file_type] += 1
+        #print(f'Detailed contribution: {detailed_contributions}')
 
-        self.print_results(self.commit_types_per_user, self.commit_types_in_project, self.file_types_per_user, self.file_types_in_project)
+        #self.print_results(self.commit_types_per_user, self.commit_types_in_project, self.file_types_per_user, self.file_types_in_project)
 
         # Generate personal summaries from detailed contributions
-        self.personal_summaries = self.generate_personal_summaries(detailed_contributions)
+        self.personal_summaries = self.generate_personal_summaries(self.detailed_contributions)
         self.project_summaries = self.generate_project_summaries(self.commit_types_in_project, self.file_types_in_project)
-        self.print_summary(self.personal_summaries, self.project_summaries)
+        #self.print_summary(self.personal_summaries, self.project_summaries)
+
+    def prepare_summary_matrix(self, commit_types, file_types, detailed_contributions):
+        # Initialize the matrix with zeros
+        summary_matrix = {ftype: {ctype: 0 for ctype in commit_types} for ftype in file_types}
+
+        # Fill the matrix with actual counts
+        for author, contributions in detailed_contributions.items():
+            for commit_type, file_stats in contributions.items():
+                for file_type, count in file_stats.items():
+                    if file_type in summary_matrix:
+                        summary_matrix[file_type][commit_type] += count
+
+        return summary_matrix
 
     def generate_personal_summaries(self, detailed_contributions):
         personal_summaries = {}
@@ -128,6 +141,9 @@ class BertAnalyzer:
         file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
 
         return f"{commit_summary}. {file_type_summary}"
+
+    def get_matrix(self):
+        return self.prepare_summary_matrix(self.commit_types_in_project.keys(), self.file_types_in_project.keys(), self.detailed_contributions)
 
     def get_total_what_per_user(self):
         """
