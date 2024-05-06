@@ -68,55 +68,6 @@ class MainModel:
     def get_auths_commits_and_files(self):
         return self.db_handler.get_all_authors_commits_and_files()
 
-    def structure_monthly_activity_by_author(self):
-        """
-        Gets structured monthly activity data per author.
-        :return: Dictionary with structured monthly data.
-        """
-        today = datetime.now()
-
-        # Adjust strftime to generate month names without the year.
-        readable_past_12_months = [(today - relativedelta(months=11 - i)).strftime("%b") for i in range(12)]
-
-        # Get monthly commits.
-        data = self.db_handler.get_monthly_commits_by_author()
-
-        # Initialize the dictionary.
-        structured_data = defaultdict(lambda: {month: 0 for month in readable_past_12_months})
-
-        for month_year, name, commits_count in data:
-            readable_month_year = datetime.strptime(month_year, "%Y-%m").strftime("%b")
-
-            # Ensure we fill the commit counts for each author correctly.
-            if readable_month_year in structured_data[name]:
-                structured_data[name][readable_month_year] = commits_count
-
-        return dict(structured_data)
-
-    def get_timeline(self):
-        """
-        Gets timeline of activity.
-        :return: Dictionary with monthly commit data.
-        """
-        data = self.db_handler.get_commit_counts_past_year()
-
-        today = datetime.now()
-        # Initialize a dictionary for the past 12 months
-        structured_data = {((today - relativedelta(months=i)).strftime("%Y-%m")): 0 for i in range(12)}
-
-        # Fill in the data from the list of tuples
-        for month_year, commits_count in data:
-            if month_year in structured_data:
-                structured_data[month_year] = commits_count
-
-        # Convert 'month_year' to month names without year
-        readable_format_data = {}
-        for month_year in reversed(list(structured_data.keys())):
-            month_name = datetime.strptime(month_year, "%Y-%m").strftime("%b")
-            readable_format_data[month_name] = structured_data[month_year]
-
-        return readable_format_data
-
     def write_to_file(self):
         """
         Writes data to a file.
@@ -126,8 +77,6 @@ class MainModel:
         self.analyze_commits()
 
         total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
-        monthly_commits_by_users = self.structure_monthly_activity_by_author()
-        total_monthly_commits = self.get_timeline()
         readme_summary = self.readme_bert.get_readme_summary()
         total_what_per_user = self.bert_analyzer.get_total_what_per_user()
         total_where_per_user = self.bert_analyzer.get_total_where_per_user()
@@ -138,8 +87,6 @@ class MainModel:
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
-            f"monthly_commits_by_contributor = {monthly_commits_by_users}\n"
-            f"total_monthly_commits = {total_monthly_commits}\n"
             f"readme_summary = \"{readme_summary}\"\n"
             f"total_what = {total_what}\n"
             f"total_where = {total_where}\n"
