@@ -34,13 +34,12 @@ class DBHandler:
                     );
                 ''')
 
-        # Create a table for the commits, containing an ID, contributor ID, the message, and the date.
+        # Create a table for the commits, containing an ID, contributor ID, the message
         cursor.execute('''
                     CREATE TABLE IF NOT EXISTS commits (
                         id INTEGER PRIMARY KEY,
                         author_id INTEGER,
                         message TEXT,
-                        date DATE,
                         FOREIGN KEY (author_id) REFERENCES authors (id)
                     );
                 ''')
@@ -77,11 +76,8 @@ class DBHandler:
                 cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
                 author_id = cursor.fetchone()[0]
 
-                # Format the date and insert commit
-                formatted_date = commit.author_date.strftime("%Y-%m-%d %H:%M:%S")
-
-                cursor.execute('INSERT INTO commits (author_id, message, date) VALUES (?, ?, ?)',
-                               (author_id, commit.msg, formatted_date))
+                cursor.execute('INSERT INTO commits (author_id, message) VALUES (?, ?)',
+                               (author_id, commit.msg))
                 commit_id = cursor.lastrowid
 
                 # For each modified file in the commit, add the modified files.
@@ -115,7 +111,7 @@ class DBHandler:
                 JOIN commits c ON a.id = c.author_id
                 LEFT JOIN commit_files cf ON c.id = cf.commit_id
                 GROUP BY c.id
-                ORDER BY a.name, c.date;
+                ORDER BY a.name;
             ''')
 
         # Fetch the results
@@ -153,7 +149,7 @@ class DBHandler:
                 JOIN commits c ON a.id = c.author_id
                 LEFT JOIN commit_files cf ON c.id = cf.commit_id
                 GROUP BY c.id
-                ORDER BY a.name, c.date;
+                ORDER BY a.name;
             ''')
 
         # Fetch the results
@@ -174,119 +170,6 @@ class DBHandler:
             authors_commits_files[name].append((message, file_list))
 
         return authors_commits_files
-
-    def get_top_10_changed_files(self):
-        """
-        Retrieves the top 10 changed files.
-        :return: Dictionary with filenames and amount of times they have been changed.
-        """
-        # Connect to the database
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # SQL query to find the top 10 file names by occurrence
-        cursor.execute('''
-               SELECT file_path, COUNT(file_path) AS occurrence
-               FROM commit_files
-               GROUP BY file_path
-               ORDER BY occurrence DESC
-               LIMIT 10
-           ''')
-
-        # Fetch the results
-        results = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Convert the results into a dictionary
-        top_10_changed_files = {file_path: occurrence for file_path, occurrence in results}
-        return top_10_changed_files
-
-    def get_top_files_per_user(self):
-        """
-        Retrieves the top 10 files per user.
-        :return: Top 10 files per user.
-        """
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Fetches the number of times each file has been modified by each author
-        cursor.execute('''
-            SELECT a.name, cf.file_path, COUNT(cf.file_path) as changes
-            FROM commit_files cf
-            JOIN commits c ON cf.commit_id = c.id
-            JOIN authors a ON c.author_id = a.id
-            GROUP BY a.id, cf.file_path
-            ORDER BY a.name, changes DESC
-        ''')
-
-        results = cursor.fetchall()
-        conn.close()
-        return results
-
-    def get_monthly_commits_by_author(self):
-        """
-        Retrieves the monthly commits by author for the past 12 months.
-        :return: Months with amount of commits per author.
-        """
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Get today's date and the date 12 months ago
-        today = datetime.now()
-        twelve_months_ago = today - relativedelta(months=12)
-
-        cursor.execute('''
-                SELECT
-                    strftime('%Y-%m', date) AS month_year,
-                    a.name,
-                    COUNT(*) AS commits_count
-                FROM
-                    commits c
-                    JOIN authors a ON c.author_id = a.id
-                WHERE
-                    c.date >= ?
-                GROUP BY
-                    month_year, a.name
-                ORDER BY
-                    month_year ASC
-            ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
-
-        results = cursor.fetchall()
-        conn.close()
-        return results
-
-    def get_commit_counts_past_year(self):
-        """
-        Retrieves a timeline of amount of commits the past 12 months.
-        :return: Result of retrieval.
-        """
-
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Get today's date and the date 12 months ago
-        today = datetime.now()
-        twelve_months_ago = today - relativedelta(months=12)
-
-        cursor.execute('''
-                SELECT
-                    strftime('%Y-%m', date) AS month_year,
-                    COUNT(*) AS commits_count
-                FROM
-                    commits
-                WHERE
-                    date >= ?
-                GROUP BY
-                    month_year
-                ORDER BY
-                    month_year ASC
-            ''', (twelve_months_ago.strftime('%Y-%m-%d'),))
-
-        results = cursor.fetchall()
-        conn.close()
-        return results
 
     def database_has_values(self):
         """

@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from views.data_visualizer import DataVisualizer
 import matplotlib.font_manager
@@ -447,19 +447,6 @@ class MainView:
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=1, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Check and create a diagram for monthly commits by contributor.
-        if choice in file_data.get('monthly_commits_by_contributor', {}):
-            total_monthly_commits = file_data['monthly_commits_by_contributor'][choice]
-            if any(value > 0 for value in total_monthly_commits.values()):
-                data_found = True
-                fig3, ax3 = self.visualizer.create_figure('line', data=total_monthly_commits,
-                                                          title="Monthly commits last 12 months",
-                                                          xlabel="Month", ylabel="Commits")
-                # Canvas 3
-                canvas3 = FigureCanvasTkAgg(fig3, master=main_area_frame)
-                canvas3.draw()
-                canvas3.get_tk_widget().grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
-
         if choice in file_data.get('personal_summaries', {}):
             data_found = True
             personal_summary = file_data['personal_summaries'][choice]
@@ -468,7 +455,7 @@ class MainView:
 
         if not data_found:
             # If no data was found for any category.
-            info_text = f"The user {choice} has not committed enough the last 12 months to analyze."
+            info_text = f"The user {choice} has not committed enough to analyze."
         else:
             info_text = "\n\n".join(info_text_parts)
 
@@ -494,9 +481,12 @@ class MainView:
         repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=self.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        #self.create_table(self.table_frame, matrix)
+
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
         diagram_row = 2  # Start placing diagrams after the repository label row
+
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
@@ -516,17 +506,48 @@ class MainView:
             canvas2.draw()
             canvas2.get_tk_widget().grid(row=diagram_row, column=1, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        # Check for 'total_monthly_commits' data and create a diagram if it's not empty.
-        if 'total_monthly_commits' in file_data and file_data['total_monthly_commits']:
-            # Check if there's at least one month with commits greater than 0.
-            if any(value > 0 for value in file_data['total_monthly_commits'].values()):
-                diagrams_created = True
-                fig3, ax3 = self.visualizer.create_figure('line', data=file_data['total_monthly_commits'],
-                                                          title="Total Monthly Commits last 12 months",
-                                                          xlabel="Month", ylabel="Commits")
-                canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
-                canvas3.draw()
-                canvas3.get_tk_widget().grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+        if 'matrix' in file_data and file_data['matrix']:
+            diagrams_created = True
+
+            matrix = file_data['matrix']
+
+            # Define the file types as column headers
+            file_types = list(matrix.keys())
+            print(f'file types: {file_types}')
+            # Determine all unique commit types across all file types for row labels
+            commit_types = {ct for counts in matrix.values() for ct in counts}
+            commit_types = sorted(commit_types)  # Sorting for consistent ordering
+            print(f'commit types: {commit_types}')
+
+            # Create the Treeview widget for the table
+            table = ttk.Treeview(self.diagram_frame, columns=['Commit Type'] + file_types, show="headings")
+            table.heading('Commit Type', text='Commit Type')
+            for file_type in file_types:
+                table.heading(file_type, text=file_type)
+
+            # Inserting data into the table
+            for commit_type in commit_types:
+                row = [commit_type]  # Start row with the commit type label
+                for file_type in file_types:
+                    # Append the count for this commit type under each file type
+                    count = matrix[file_type].get(commit_type, 0)
+                    row.append(count)
+                table.insert('', 'end', values=row)
+            # # Get commit types from the matrix
+            # commit_types = list(next(iter(data.values())).keys())
+            # file_types = list(data.keys())
+            # # Create the Table
+            # table = ttk.Treeview(self.diagram_frame, columns=file_types, show="headings")
+            # for ctype in commit_types:
+            #    table.heading(ctype, text=ctype)
+            #
+            # # Inserting data
+            # for ftype, counts in matrix.items():
+            #     row_values = [counts.get(ctype, 0) for ctype in commit_types]
+            #     table.insert('', 'end', values=row_values)
+
+            table.grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
 
         # Check for 'top_10_changed_files' data and create a diagram if it's not empty
         if 'total_where' in file_data and file_data['total_where']:
@@ -544,6 +565,23 @@ class MainView:
                                          text="No data available for analysis, please select another repository.",
                                          text_color=self.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
+    def create_table(self, parent, matrix):
+        # Get commit types from the matrix
+        commit_types = list(next(iter(matrix.values())).keys())
+        file_types = list(matrix.keys())
+
+        # Create the Table
+        self.table = ttk.Treeview(parent, columns=commit_types, show="headings")
+        for ctype in commit_types:
+            self.table.heading(ctype, text=ctype)
+
+        # Inserting data
+        for ftype, counts in matrix.items():
+            row_values = [counts.get(ctype, 0) for ctype in commit_types]
+            self.table.insert('', 'end', values=row_values)
+
+        return self.table
 
     def set_appearance_mode(self):
         """
