@@ -513,11 +513,9 @@ class MainView:
 
             # Define the file types as column headers
             file_types = list(matrix.keys())
-            print(f'file types: {file_types}')
             # Determine all unique commit types across all file types for row labels
             commit_types = {ct for counts in matrix.values() for ct in counts}
             commit_types = sorted(commit_types)  # Sorting for consistent ordering
-            print(f'commit types: {commit_types}')
 
             # Create the Treeview widget for the table
             table = ttk.Treeview(self.diagram_frame, columns=['Commit Type'] + file_types, show="headings")

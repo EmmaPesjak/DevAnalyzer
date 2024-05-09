@@ -87,7 +87,7 @@ class BertAnalyzer:
                     if file_type not in self.detailed_contributions[author][commit_type]:
                         self.detailed_contributions[author][commit_type][file_type] = 0
                     self.detailed_contributions[author][commit_type][file_type] += 1
-        #print(f'Detailed contribution: {detailed_contributions}')
+        print(f'Detailed contribution: {self.detailed_contributions}')
 
         #self.print_results(self.commit_types_per_user, self.commit_types_in_project, self.file_types_per_user, self.file_types_in_project)
 
@@ -98,14 +98,19 @@ class BertAnalyzer:
 
     def prepare_summary_matrix(self, commit_types, file_types, detailed_contributions):
         # Initialize the matrix with zeros
-        summary_matrix = {ftype: {ctype: 0 for ctype in commit_types} for ftype in file_types}
+        summary_matrix = {ctype: {ftype: 0 for ftype in file_types} for ctype in commit_types}
 
         # Fill the matrix with actual counts
         for author, contributions in detailed_contributions.items():
+            print(f'{author}: {contributions}')
+            #print(f'Contribution items: {contributions.items()}')
             for commit_type, file_stats in contributions.items():
+                print(f'\t{commit_type}, file stats: {file_stats}')
                 for file_type, count in file_stats.items():
-                    if file_type in summary_matrix:
-                        summary_matrix[file_type][commit_type] += count
+                    print(f'\t\t{file_type}, count: {count}')
+                    if commit_type in summary_matrix and file_type in summary_matrix[commit_type]:
+                        summary_matrix[commit_type][file_type] += count
+                        print(f'summary matrix: {summary_matrix}')
 
         return summary_matrix
 
