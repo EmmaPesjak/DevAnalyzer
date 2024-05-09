@@ -549,6 +549,7 @@ class MainView:
         table.heading('File Type', text='File Type')
         for commit_type in commit_types:
             table.heading(commit_type, text=commit_type)
+            table.column(commit_type, width=100, anchor='center')  # Set uniform width and center align
 
         # Inserting data into the table
         for file_type in file_types:
