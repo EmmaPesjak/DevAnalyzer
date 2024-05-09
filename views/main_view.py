@@ -511,24 +511,25 @@ class MainView:
 
             matrix = file_data['matrix']
 
-            # Define the file types as column headers
-            file_types = list(matrix.keys())
-            # Determine all unique commit types across all file types for row labels
-            commit_types = {ct for counts in matrix.values() for ct in counts}
-            commit_types = sorted(commit_types)  # Sorting for consistent ordering
+            # Define the commit types as column headers
+            commit_types = list(matrix.keys())
+
+            # Determine all unique file types across all commit types for row labels
+            file_types = {ftype for counts in matrix.values() for ftype in counts}
+            file_types = sorted(file_types)  # Sorting for consistent ordering
 
             # Create the Treeview widget for the table
-            table = ttk.Treeview(self.diagram_frame, columns=['Commit Type'] + file_types, show="headings")
-            table.heading('Commit Type', text='Commit Type')
-            for file_type in file_types:
-                table.heading(file_type, text=file_type)
+            table = ttk.Treeview(self.diagram_frame, columns=['File Type'] + commit_types, show="headings")
+            table.heading('File Type', text='File Type')
+            for commit_type in commit_types:
+                table.heading(commit_type, text=commit_type)
 
             # Inserting data into the table
-            for commit_type in commit_types:
-                row = [commit_type]  # Start row with the commit type label
-                for file_type in file_types:
-                    # Append the count for this commit type under each file type
-                    count = matrix[file_type].get(commit_type, 0)
+            for file_type in file_types:
+                row = [file_type]  # Start row with the file type label
+                for commit_type in commit_types:
+                    # Append the count for this file type under each commit type
+                    count = matrix[commit_type].get(file_type, 0)
                     row.append(count)
                 table.insert('', 'end', values=row)
             # # Get commit types from the matrix
