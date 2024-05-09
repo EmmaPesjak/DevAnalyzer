@@ -481,12 +481,9 @@ class MainView:
         repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=self.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        #self.create_table(self.table_frame, matrix)
-
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
         diagram_row = 2  # Start placing diagrams after the repository label row
-
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
@@ -532,23 +529,12 @@ class MainView:
                     count = matrix[commit_type].get(file_type, 0)
                     row.append(count)
                 table.insert('', 'end', values=row)
-            # # Get commit types from the matrix
-            # commit_types = list(next(iter(data.values())).keys())
-            # file_types = list(data.keys())
-            # # Create the Table
-            # table = ttk.Treeview(self.diagram_frame, columns=file_types, show="headings")
-            # for ctype in commit_types:
-            #    table.heading(ctype, text=ctype)
-            #
-            # # Inserting data
-            # for ftype, counts in matrix.items():
-            #     row_values = [counts.get(ctype, 0) for ctype in commit_types]
-            #     table.insert('', 'end', values=row_values)
 
             table.grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
 
         # Check for 'top_10_changed_files' data and create a diagram if it's not empty
+        # TODO remove?
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
             fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
@@ -564,23 +550,6 @@ class MainView:
                                          text="No data available for analysis, please select another repository.",
                                          text_color=self.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
-
-    def create_table(self, parent, matrix):
-        # Get commit types from the matrix
-        commit_types = list(next(iter(matrix.values())).keys())
-        file_types = list(matrix.keys())
-
-        # Create the Table
-        self.table = ttk.Treeview(parent, columns=commit_types, show="headings")
-        for ctype in commit_types:
-            self.table.heading(ctype, text=ctype)
-
-        # Inserting data
-        for ftype, counts in matrix.items():
-            row_values = [counts.get(ctype, 0) for ctype in commit_types]
-            self.table.insert('', 'end', values=row_values)
-
-        return self.table
 
     def set_appearance_mode(self):
         """

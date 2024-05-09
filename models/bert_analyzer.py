@@ -150,6 +150,8 @@ class BertAnalyzer:
     def get_matrix(self):
         return self.prepare_summary_matrix(self.commit_types_in_project.keys(), self.file_types_in_project.keys(), self.detailed_contributions)
 
+    def get_detailed_contributions(self):
+        return self.detailed_contributions
     def get_total_what_per_user(self):
         """
         Returns a dictionary mapping each author to their total counts of each commit type.
