@@ -436,6 +436,15 @@ class MainView:
             canvas.draw()
             canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        # Detailed Contributions Matrix
+        if choice in file_data.get('detailed_contributions', {}):
+            data_found = True
+            matrix = file_data['detailed_contributions'][choice]
+            table = self.set_up_table(matrix, main_area_frame)
+
+            table.grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            #table.grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
         # Check and create a diagram for top 10 changed files per user.
         if choice in file_data.get('total_where_per_user', {}):
             data_found = True
@@ -507,34 +516,10 @@ class MainView:
             diagrams_created = True
 
             matrix = file_data['matrix']
-
-            # Define the commit types as column headers
-            commit_types = list(matrix.keys())
-
-            # Determine all unique file types across all commit types for row labels
-            file_types = {ftype for counts in matrix.values() for ftype in counts}
-            file_types = sorted(file_types)  # Sorting for consistent ordering
-
-            # Create the Treeview widget for the table
-            table = ttk.Treeview(self.diagram_frame, columns=['File Type'] + commit_types, show="headings")
-            table.heading('File Type', text='File Type')
-            for commit_type in commit_types:
-                table.heading(commit_type, text=commit_type)
-
-            # Inserting data into the table
-            for file_type in file_types:
-                row = [file_type]  # Start row with the file type label
-                for commit_type in commit_types:
-                    # Append the count for this file type under each commit type
-                    count = matrix[commit_type].get(file_type, 0)
-                    row.append(count)
-                table.insert('', 'end', values=row)
-
+            table = self.set_up_table(matrix, self.diagram_frame)
             table.grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-
-        # Check for 'top_10_changed_files' data and create a diagram if it's not empty
-        # TODO remove?
+        # Check for 'total_where' data and create a diagram if it's not empty
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
             fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
@@ -550,6 +535,30 @@ class MainView:
                                          text="No data available for analysis, please select another repository.",
                                          text_color=self.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
+    def set_up_table(self, matrix, frame):
+        # Define the commit types as column headers
+        commit_types = list(matrix.keys())
+
+        # Determine all unique file types across all commit types for row labels
+        file_types = {ftype for counts in matrix.values() for ftype in counts}
+        file_types = sorted(file_types)  # Sorting for consistent ordering
+
+        # Create the Treeview widget for the table
+        table = ttk.Treeview(frame, columns=['File Type'] + commit_types, show="headings")
+        table.heading('File Type', text='File Type')
+        for commit_type in commit_types:
+            table.heading(commit_type, text=commit_type)
+
+        # Inserting data into the table
+        for file_type in file_types:
+            row = [file_type]  # Start row with the file type label
+            for commit_type in commit_types:
+                # Append the count for this file type under each commit type
+                count = matrix[commit_type].get(file_type, 0)
+                row.append(count)
+            table.insert('', 'end', values=row)
+        return table
 
     def set_appearance_mode(self):
         """
