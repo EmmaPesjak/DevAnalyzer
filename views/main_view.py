@@ -436,6 +436,15 @@ class MainView:
             canvas.draw()
             canvas.get_tk_widget().grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
+        # Detailed Contributions Matrix
+        if choice in file_data.get('detailed_contributions', {}):
+            data_found = True
+            matrix = file_data['detailed_contributions'][choice]
+            table = self.set_up_table(matrix, main_area_frame)
+
+            table.grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            #table.grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+
         # Check and create a diagram for top 10 changed files per user.
         if choice in file_data.get('total_where_per_user', {}):
             data_found = True
@@ -481,12 +490,9 @@ class MainView:
         repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=self.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-        #self.create_table(self.table_frame, matrix)
-
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
         diagram_row = 2  # Start placing diagrams after the repository label row
-
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
@@ -510,46 +516,10 @@ class MainView:
             diagrams_created = True
 
             matrix = file_data['matrix']
-
-            # Define the file types as column headers
-            file_types = list(matrix.keys())
-            print(f'file types: {file_types}')
-            # Determine all unique commit types across all file types for row labels
-            commit_types = {ct for counts in matrix.values() for ct in counts}
-            commit_types = sorted(commit_types)  # Sorting for consistent ordering
-            print(f'commit types: {commit_types}')
-
-            # Create the Treeview widget for the table
-            table = ttk.Treeview(self.diagram_frame, columns=['Commit Type'] + file_types, show="headings")
-            table.heading('Commit Type', text='Commit Type')
-            for file_type in file_types:
-                table.heading(file_type, text=file_type)
-
-            # Inserting data into the table
-            for commit_type in commit_types:
-                row = [commit_type]  # Start row with the commit type label
-                for file_type in file_types:
-                    # Append the count for this commit type under each file type
-                    count = matrix[file_type].get(commit_type, 0)
-                    row.append(count)
-                table.insert('', 'end', values=row)
-            # # Get commit types from the matrix
-            # commit_types = list(next(iter(data.values())).keys())
-            # file_types = list(data.keys())
-            # # Create the Table
-            # table = ttk.Treeview(self.diagram_frame, columns=file_types, show="headings")
-            # for ctype in commit_types:
-            #    table.heading(ctype, text=ctype)
-            #
-            # # Inserting data
-            # for ftype, counts in matrix.items():
-            #     row_values = [counts.get(ctype, 0) for ctype in commit_types]
-            #     table.insert('', 'end', values=row_values)
-
+            table = self.set_up_table(matrix, self.diagram_frame)
             table.grid(row=diagram_row+1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-
-        # Check for 'top_10_changed_files' data and create a diagram if it's not empty
+        # Check for 'total_where' data and create a diagram if it's not empty
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
             fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
@@ -566,22 +536,30 @@ class MainView:
                                          text_color=self.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
 
-    def create_table(self, parent, matrix):
-        # Get commit types from the matrix
-        commit_types = list(next(iter(matrix.values())).keys())
-        file_types = list(matrix.keys())
+    def set_up_table(self, matrix, frame):
+        # Define the commit types as column headers
+        commit_types = list(matrix.keys())
 
-        # Create the Table
-        self.table = ttk.Treeview(parent, columns=commit_types, show="headings")
-        for ctype in commit_types:
-            self.table.heading(ctype, text=ctype)
+        # Determine all unique file types across all commit types for row labels
+        file_types = {ftype for counts in matrix.values() for ftype in counts}
+        file_types = sorted(file_types)  # Sorting for consistent ordering
 
-        # Inserting data
-        for ftype, counts in matrix.items():
-            row_values = [counts.get(ctype, 0) for ctype in commit_types]
-            self.table.insert('', 'end', values=row_values)
+        # Create the Treeview widget for the table
+        table = ttk.Treeview(frame, columns=['File Type'] + commit_types, show="headings")
+        table.heading('File Type', text='File Type')
+        for commit_type in commit_types:
+            table.heading(commit_type, text=commit_type)
+            table.column(commit_type, width=100, anchor='center')  # Set uniform width and center align
 
-        return self.table
+        # Inserting data into the table
+        for file_type in file_types:
+            row = [file_type]  # Start row with the file type label
+            for commit_type in commit_types:
+                # Append the count for this file type under each commit type
+                count = matrix[commit_type].get(file_type, 0)
+                row.append(count)
+            table.insert('', 'end', values=row)
+        return table
 
     def set_appearance_mode(self):
         """

@@ -32,64 +32,78 @@ class BertAnalyzer:
         self.filepath_nlp = pipeline("text-classification", model=self.filepath_model,
                                      tokenizer=self.filepath_tokenizer)
 
-    def analyze_commits(self, commits_dict):
+        # Initialize commit and file types lists
+        self.all_commit_types = list(self.commit_message_model.config.id2label.values())
+        self.all_file_types = list(self.filepath_model.config.id2label.values())
+        print(f'Commit types: {self.all_commit_types}')
+        print(f'File types: {self.all_file_types}')
+
+    def reset_for_new_repository(self):
         self.commit_types_per_user = {}
         self.commit_types_in_project = {}
         self.file_types_per_user = {}
         self.file_types_in_project = {}
         self.detailed_contributions = {}
 
+        for commit_type in self.all_commit_types:
+            self.commit_types_in_project[commit_type] = 0
+            for file_type in self.all_file_types:
+                self.file_types_in_project[file_type] = 0
+
+
+    def analyze_commits(self, commits_dict):
+        self.reset_for_new_repository()  # Reset counts before processing new data
+
         for author, commits in commits_dict.items():
             if author not in self.commit_types_per_user:
-                #print(f"Author: {author}")
-                self.commit_types_per_user[author] = {}
-                self.file_types_per_user[author] = {}
-                self.detailed_contributions[author] = {}
+                # self.commit_types_per_user[author] = {}
+                # self.file_types_per_user[author] = {}
+                # self.detailed_contributions[author] = {}
+
+                # Prepopulate with zero counts for all commit types
+                self.commit_types_per_user[author] = {ct: 0 for ct in self.all_commit_types}
+                # Prepopulate with zero counts for all file types
+                self.file_types_per_user[author] = {ft: 0 for ft in self.all_file_types}
+                # Prepare detailed contributions with nested dictionaries
+                self.detailed_contributions[author] = {ct: {ft: 0 for ft in self.all_file_types} for ct in
+                                                       self.all_commit_types}
 
             for commit_message, file_paths in commits:
-                #print(f"Commit message: {commit_message}")
-                #print(f"File paths: {len(file_paths)}")
                 # Classify the commit message
                 commit_prediction = self.commit_message_nlp(commit_message)
                 commit_type = commit_prediction[0]['label']
 
-                #print(f"Commit type: {commit_type}")
-
-                # Initialize commit label counts
-                self.commit_types_per_user[author].setdefault(commit_type, 0)
-                self.commit_types_in_project.setdefault(commit_type, 0)
+                # # Initialize commit label counts
+                # self.commit_types_per_user[author].setdefault(commit_type, 0)
+                # self.commit_types_in_project.setdefault(commit_type, 0)
 
                 # Update commit label counts
                 self.commit_types_per_user[author][commit_type] += 1
                 self.commit_types_in_project[commit_type] += 1
 
-                if commit_type not in self.detailed_contributions[author]:
-                    self.detailed_contributions[author][commit_type] = {}
+                # if commit_type not in self.detailed_contributions[author]:
+                #     self.detailed_contributions[author][commit_type] = {}
+                #self.detailed_contributions[author][commit_type] = {ft: 0 for ft in self.all_file_types}
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
-                    #print(f"File path: {file_path}")
                     file_prediction = self.filepath_nlp(file_path)
                     file_type = file_prediction[0]['label']
 
-                    #print(f"File type: {file_type}")
-
                     # Update commit label counts
-                    if file_type not in self.file_types_per_user[author]:
-                        self.file_types_per_user[author][file_type] = 0
+                    # if file_type not in self.file_types_per_user[author]:
+                    #     self.file_types_per_user[author][file_type] = 0
                     self.file_types_per_user[author][file_type] += 1
 
-                    if file_type not in self.file_types_in_project:
-                        self.file_types_in_project[file_type] = 0
+                    # if file_type not in self.file_types_in_project:
+                    #     self.file_types_in_project[file_type] = 0
                     self.file_types_in_project[file_type] += 1
 
-                    # Update detailed contribution summary
-                    if file_type not in self.detailed_contributions[author][commit_type]:
-                        self.detailed_contributions[author][commit_type][file_type] = 0
+                    # # Update detailed contribution summary
+                    # if file_type not in self.detailed_contributions[author][commit_type]:
+                    #     self.detailed_contributions[author][commit_type][file_type] = 0
                     self.detailed_contributions[author][commit_type][file_type] += 1
-        #print(f'Detailed contribution: {detailed_contributions}')
-
-        #self.print_results(self.commit_types_per_user, self.commit_types_in_project, self.file_types_per_user, self.file_types_in_project)
+        print(f'Detailed contribution: {self.detailed_contributions}')
 
         # Generate personal summaries from detailed contributions
         self.personal_summaries = self.generate_personal_summaries(self.detailed_contributions)
@@ -98,14 +112,19 @@ class BertAnalyzer:
 
     def prepare_summary_matrix(self, commit_types, file_types, detailed_contributions):
         # Initialize the matrix with zeros
-        summary_matrix = {ftype: {ctype: 0 for ctype in commit_types} for ftype in file_types}
+        summary_matrix = {ctype: {ftype: 0 for ftype in file_types} for ctype in commit_types}
 
         # Fill the matrix with actual counts
         for author, contributions in detailed_contributions.items():
+            print(f'{author}: {contributions}')
+            #print(f'Contribution items: {contributions.items()}')
             for commit_type, file_stats in contributions.items():
+                print(f'\t{commit_type}, file stats: {file_stats}')
                 for file_type, count in file_stats.items():
-                    if file_type in summary_matrix:
-                        summary_matrix[file_type][commit_type] += count
+                    print(f'\t\t{file_type}, count: {count}')
+                    if commit_type in summary_matrix and file_type in summary_matrix[commit_type]:
+                        summary_matrix[commit_type][file_type] += count
+                        print(f'summary matrix: {summary_matrix}')
 
         return summary_matrix
 
@@ -145,6 +164,8 @@ class BertAnalyzer:
     def get_matrix(self):
         return self.prepare_summary_matrix(self.commit_types_in_project.keys(), self.file_types_in_project.keys(), self.detailed_contributions)
 
+    def get_detailed_contributions(self):
+        return self.detailed_contributions
     def get_total_what_per_user(self):
         """
         Returns a dictionary mapping each author to their total counts of each commit type.
