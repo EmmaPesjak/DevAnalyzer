@@ -35,8 +35,8 @@ class BertAnalyzer:
         # Initialize commit and file types lists
         self.all_commit_types = list(self.commit_message_model.config.id2label.values())
         self.all_file_types = list(self.filepath_model.config.id2label.values())
-        print(f'Commit types: {self.all_commit_types}')
-        print(f'File types: {self.all_file_types}')
+        # print(f'Commit types: {self.all_commit_types}')
+        # print(f'File types: {self.all_file_types}')
 
     def reset_for_new_repository(self):
         self.commit_types_per_user = {}
@@ -116,15 +116,15 @@ class BertAnalyzer:
 
         # Fill the matrix with actual counts
         for author, contributions in detailed_contributions.items():
-            print(f'{author}: {contributions}')
+            # print(f'{author}: {contributions}')
             #print(f'Contribution items: {contributions.items()}')
             for commit_type, file_stats in contributions.items():
-                print(f'\t{commit_type}, file stats: {file_stats}')
+                # print(f'\t{commit_type}, file stats: {file_stats}')
                 for file_type, count in file_stats.items():
-                    print(f'\t\t{file_type}, count: {count}')
+                    # print(f'\t\t{file_type}, count: {count}')
                     if commit_type in summary_matrix and file_type in summary_matrix[commit_type]:
                         summary_matrix[commit_type][file_type] += count
-                        print(f'summary matrix: {summary_matrix}')
+                        # print(f'summary matrix: {summary_matrix}')
 
         return summary_matrix
 

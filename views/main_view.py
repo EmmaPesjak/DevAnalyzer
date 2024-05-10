@@ -181,8 +181,8 @@ class MainView:
         2. The analysis will begin automatically and display 
             various statistics and visualizations about
             the repository's commit history. Keep in mind 
-            that large repositories may take a while 
-            to load.
+            that large repositories with many commits
+            may take a while to load.
         3. Use the dropdown menu to select specific users and 
             view detailed analysis.
 
