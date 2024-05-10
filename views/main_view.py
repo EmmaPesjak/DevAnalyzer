@@ -162,7 +162,7 @@ class MainView:
         self.placeholder_label = ctk.CTkLabel(self.diagram_frame,
                                               text="No repository is selected, please select one with the "
                                                    "'Select repository' button.",
-                                              text_color=self.TEXT_COLOR)
+                                              text_color=self.TEXT_COLOR,  font=("Segoe UI", 16, "bold"))
         self.placeholder_label.grid(row=0, column=0, sticky="nsew")
 
     @staticmethod
@@ -305,8 +305,9 @@ class MainView:
         if hasattr(self, 'info_label') and self.info_label is not None:
             self.info_label.destroy()  # or self.info_label.configure(text="")
 
-        self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait...",
-                                          text_color=self.TEXT_COLOR)
+        self.loading_label = ctk.CTkLabel(self.diagram_frame, text="Loading, please wait... "
+                                                                   "Large repositories might take a while.",
+                                          text_color=self.TEXT_COLOR, font=("Segoe UI", 16, "bold"))
         # Place the loading label in a specific row and column.
         self.loading_label.grid(row=0, column=0, sticky="nsew")
 
