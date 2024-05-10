@@ -246,8 +246,8 @@ class MainView:
         dialog = ctk.CTkInputDialog(text="Enter you repository link:", title="Repository")
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
-            # Display loading indicator.
-            self.show_loading_indicator()
+            # Schedule the loading indicator to show in the main GUI thread
+            self.root.after(0, self.show_loading_indicator)
             # Start a thread to fetch repository data
             thread = threading.Thread(target=self.fetch_repo_data, args=(repo_input,))
             thread.start()

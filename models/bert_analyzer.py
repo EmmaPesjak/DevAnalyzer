@@ -6,7 +6,7 @@ from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassifica
 class BertAnalyzer:
 
     def __init__(self):
-        commit_message_model_path = Path(__file__).parent.parent / "transformers_model/results/messages/split_14"
+        commit_message_model_path = Path(__file__).parent.parent / "transformers_model/results/messages/split_11"
         filepath_model_path = Path(__file__).parent.parent / "transformers_model/results/filepaths/split_14"
 
         # Load models and tokenizers
