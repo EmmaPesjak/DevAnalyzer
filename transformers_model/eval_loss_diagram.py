@@ -1,21 +1,25 @@
 import matplotlib
-matplotlib.use('TkAgg')  # Or use 'Qt5Agg', 'Agg', etc.
 import matplotlib.pyplot as plt
+
+matplotlib.use('TkAgg')  # Or use 'Qt5Agg', 'Agg', etc.
 """
 Helper script for displaying evaluation data for trained models.
 """
+# Set a larger font size for all elements (titles, labels, ticks, legend)
+matplotlib.rcParams.update({'font.size': 12})  # Adjust the size as needed
 
-eval_losses = [1.0479152202606201, 0.4390053153038025, 0.3743869960308075]
-epochs = [1.0, 2.0, 3.0]
+eval_losses = [1.4558498151018284e-05, 3.541656724337372e-06, 2.6403126867080573e-06, 2.8146262138761813e-06, 2.8165950425318442e-06, 2.656338438100647e-06, 2.6504342258704128e-06]
+epochs = [0.47, 0.94, 1.42, 1.89, 2.36, 2.83, 3.00]
 
 # Create a plot
 plt.figure(figsize=(8, 5))  # Set the figure size
 plt.plot(epochs, eval_losses, marker='o', linestyle='-', color='b', label='Evaluation Loss')
-plt.title('Evaluation Loss per Epoch')  # Title of the plot
-plt.xlabel('Epoch')  # X-axis label
-plt.ylabel('Loss')  # Y-axis label
-plt.xticks(epochs)  # Ensure we have a tick for each epoch
-plt.legend()  # Add a legend
+plt.title('Evaluation Loss per Epoch', fontsize=20)  # Increase title font size
+plt.xlabel('Epoch', fontsize=18)  # Increase x-axis label font size
+plt.ylabel('Loss', fontsize=18)  # Increase y-axis label font size
+plt.xticks(epochs, fontsize=12)  # Increase tick label font size
+plt.yticks(fontsize=12)  # Increase y-axis tick label font size
+plt.legend(fontsize=12)  # Increase legend font size
 plt.grid(True)  # Turn on the grid lines
 plt.show()  # Display the plot
 
@@ -34,14 +38,15 @@ plt.show()  # Display the plot
 # # Create a plot
 # plt.figure(figsize=(8, 5))  # Set the figure size
 # plt.plot(epochs, eval_losses, marker='o', linestyle='-', color='b', label='Evaluation Loss')
-# plt.title('Evaluation Loss per Epoch')  # Title of the plot
-# plt.xlabel('Epoch')  # X-axis label
-# plt.ylabel('Loss')  # Y-axis label
+
+# plt.title('Evaluation Loss per Epoch', fontsize=20)  # Increase title font size
+# plt.xlabel('Epoch', fontsize=18)  # Increase x-axis label font size
+# plt.ylabel('Loss', fontsize=18)  # Increase y-axis label font size
+# plt.xticks(epochs, fontsize=12)  # Increase tick label font size
+# plt.yticks(fontsize=12)  # Increase y-axis tick label font size
+# plt.legend(fontsize=12)  # Increase legend font size
 #
 # # Format y-axis to scientific notation
 # plt.gca().yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1e'))
-#
-# plt.xticks(epochs)  # Ensure we have a tick for each epoch
-# plt.legend()  # Add a legend
 # plt.grid(True)  # Turn on the grid lines
 # plt.show()  # Display the plot
