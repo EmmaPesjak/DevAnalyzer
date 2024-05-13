@@ -12,6 +12,9 @@ class BertAnalyzer:
         # Load models and tokenizers
         self.commit_message_model = AutoModelForSequenceClassification.from_pretrained(commit_message_model_path)
         self.commit_message_tokenizer = AutoTokenizer.from_pretrained(commit_message_model_path)
+        # self.commit_message_tokenizer = AutoTokenizer.from_pretrained("dev-analyzer/commit-message-model")
+        # self.commit_message_model = AutoModelForSequenceClassification.from_pretrained(
+        #     "dev-analyzer/commit-message-model")
         self.filepath_model = BertForSequenceClassification.from_pretrained(filepath_model_path)
         self.filepath_tokenizer = BertTokenizerFast.from_pretrained(filepath_model_path)
 
@@ -35,30 +38,45 @@ class BertAnalyzer:
         # Initialize commit and file types lists
         self.all_commit_types = list(self.commit_message_model.config.id2label.values())
         self.all_file_types = list(self.filepath_model.config.id2label.values())
+
+
+
+
         # print(f'Commit types: {self.all_commit_types}')
         # print(f'File types: {self.all_file_types}')
 
     def reset_for_new_repository(self):
+        # self.commit_types_per_user = {}
+        # self.commit_types_in_project = {}
+        # self.file_types_per_user = {}
+        # self.file_types_in_project = {}
+        # self.detailed_contributions = {}
+        # self.detailed_contributions_in_project = {}
+
+        # for commit_type in self.all_commit_types:
+        #     self.commit_types_in_project[commit_type] = 0
+        #     self.detailed_contributions_in_project[commit_type] = {}
+        #     for file_type in self.all_file_types:
+        #         self.file_types_in_project[file_type] = 0
+
         self.commit_types_per_user = {}
         self.commit_types_in_project = {}
         self.file_types_per_user = {}
         self.file_types_in_project = {}
         self.detailed_contributions = {}
+        self.detailed_contributions_in_project = {}
 
-        for commit_type in self.all_commit_types:
-            self.commit_types_in_project[commit_type] = 0
-            for file_type in self.all_file_types:
-                self.file_types_in_project[file_type] = 0
-
+        self.commit_types_in_project = {ct: 0 for ct in self.all_commit_types}
+        self.file_types_in_project = {ft: 0 for ft in self.all_file_types}
+        self.detailed_contributions_in_project = {
+            ct: {ft: 0 for ft in self.all_file_types} for ct in self.all_commit_types
+        }
 
     def analyze_commits(self, commits_dict):
         self.reset_for_new_repository()  # Reset counts before processing new data
 
         for author, commits in commits_dict.items():
             if author not in self.commit_types_per_user:
-                # self.commit_types_per_user[author] = {}
-                # self.file_types_per_user[author] = {}
-                # self.detailed_contributions[author] = {}
 
                 # Prepopulate with zero counts for all commit types
                 self.commit_types_per_user[author] = {ct: 0 for ct in self.all_commit_types}
@@ -73,17 +91,9 @@ class BertAnalyzer:
                 commit_prediction = self.commit_message_nlp(commit_message)
                 commit_type = commit_prediction[0]['label']
 
-                # # Initialize commit label counts
-                # self.commit_types_per_user[author].setdefault(commit_type, 0)
-                # self.commit_types_in_project.setdefault(commit_type, 0)
-
                 # Update commit label counts
                 self.commit_types_per_user[author][commit_type] += 1
                 self.commit_types_in_project[commit_type] += 1
-
-                # if commit_type not in self.detailed_contributions[author]:
-                #     self.detailed_contributions[author][commit_type] = {}
-                #self.detailed_contributions[author][commit_type] = {ft: 0 for ft in self.all_file_types}
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
@@ -91,19 +101,14 @@ class BertAnalyzer:
                     file_type = file_prediction[0]['label']
 
                     # Update commit label counts
-                    # if file_type not in self.file_types_per_user[author]:
-                    #     self.file_types_per_user[author][file_type] = 0
                     self.file_types_per_user[author][file_type] += 1
-
-                    # if file_type not in self.file_types_in_project:
-                    #     self.file_types_in_project[file_type] = 0
                     self.file_types_in_project[file_type] += 1
+                    self.detailed_contributions_in_project[commit_type][file_type] += 1
 
                     # # Update detailed contribution summary
-                    # if file_type not in self.detailed_contributions[author][commit_type]:
-                    #     self.detailed_contributions[author][commit_type][file_type] = 0
                     self.detailed_contributions[author][commit_type][file_type] += 1
-        print(f'Detailed contribution: {self.detailed_contributions}')
+        print(f'Detailed contribution for authors: {self.detailed_contributions}')
+        print(f'Detailed contribution for project: {self.detailed_contributions_in_project}')
 
         # Generate personal summaries from detailed contributions
         self.personal_summaries = self.generate_personal_summaries(self.detailed_contributions)
@@ -151,15 +156,66 @@ class BertAnalyzer:
     def generate_project_summaries(self, commit_types_in_project, file_types_in_project):
         # Summarize the most common types of commits
         sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
-        commit_summary = "In this project, the most frequent types of commits have been: "
-        commit_summary += ", ".join([f"{ctype} ({count} times)" for ctype, count in sorted_commits])
+        summary_parts = []
+        zero_commit_types = []
+        first = True  # Flag to check if it's the first item
+        second = True
+        for ctype, count in sorted_commits:
+            commit_word = "commit" if count == 1 else "commits"
+            commit_has_have = "has" if count == 1 else "have"
+            if count == 0:
+                zero_commit_types.append(ctype.lower())  # Add to zero count list
+                continue  # Skip further processing for zero count types
+            else:
+                # Get the file type with the highest count for this commit type
+                file_changes = self.detailed_contributions_in_project[ctype]
+                most_common_file, most_common_count = max(file_changes.items(),
+                                                          key=lambda item: item[1]) if file_changes else ("", 0)
+                if first:
+                    # Special formatting for the most common commit type
+                    summary_part = f"In this project, {ctype.lower()} {commit_word} have been the most frequent, with {count} commits."
+                    if most_common_count > 0:
+                        summary_part += f" These have mostly been done in {most_common_file.lower()} files."
+                    else:
+                        summary_part += " However, in 0 files."
+                    first = False
+                else:
+                    if second:
+                        # Formatting for other commit types
+                        if most_common_count > 0:
+                            summary_part = f" Then, {count} {ctype.lower()} {commit_word} {commit_has_have} mostly been done in {most_common_file.lower()} files. Besides these"
+                        else:
+                            summary_part = f" Then, there {commit_has_have} been {count} {ctype.lower()} {commit_word} in 0 files. Besides these"
+                        second = False
+                    else:
+                        # Formatting for all other commit types
+                        if most_common_count > 0:
+                            summary_part = f", {count} {ctype.lower()} {commit_word} {commit_has_have} primarily been done in {most_common_file.lower()} files"
+                        else:
+                            summary_part = f", {count} {ctype.lower()} {commit_word}, but in 0 files"
 
-        # Summarize the most common types of file changes
-        sorted_file_types = sorted(file_types_in_project.items(), key=lambda x: x[1], reverse=True)
-        file_type_summary = "The types of files most changed have been: "
-        file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
+            summary_parts.append(summary_part)
 
-        return f"{commit_summary}. {file_type_summary}"
+        if zero_commit_types:
+            # Format the zero count types into a readable string
+            zero_commits_sentence = f", but there have been 0 {', '.join(zero_commit_types)} commits"
+            summary_parts.append(zero_commits_sentence)
+
+        summary_parts.append(f".")
+
+        return "".join(summary_parts)
+
+        # commit_summary = "In this project, "
+        #
+        # commit_summary = "In this project, the most frequent types of commits have been: "
+        # commit_summary += ", ".join([f"{ctype} ({count} times)" for ctype, count in sorted_commits])
+        #
+        # # Summarize the most common types of file changes
+        # sorted_file_types = sorted(file_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        # file_type_summary = "The types of files most changed have been: "
+        # file_type_summary += ", ".join([f"{ftype} ({count} times)" for ftype, count in sorted_file_types])
+        #
+        # return f"{commit_summary}. {file_type_summary}"
 
     def get_matrix(self):
         return self.prepare_summary_matrix(self.commit_types_in_project.keys(), self.file_types_in_project.keys(), self.detailed_contributions)
