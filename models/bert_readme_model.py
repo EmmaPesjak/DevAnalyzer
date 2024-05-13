@@ -39,8 +39,23 @@ class BertReadmeModel:
             return combined_summaries
 
     def get_readme_summary(self):
-        with open('support/Downloaded_README.txt', 'r', encoding='utf-8') as file:
-            readme_content = file.read()
-        preprocessed_content = self.preprocess_readme(readme_content)
-        return self.summarize_text(preprocessed_content)
+        try:
+            with open('support/Downloaded_README.txt', 'r', encoding='utf-8') as file:
+                readme_content = file.read()
+
+            # Check if the content is empty or consists only of whitespaces
+            if not readme_content.strip():
+                return "No README file found in the root directory of selected project."
+
+            preprocessed_content = self.preprocess_readme(readme_content)
+            return self.summarize_text(preprocessed_content)
+        except FileNotFoundError:
+            # Handle the case where the README file does not exist
+            return "No README file found in the root."
+
+    # def get_readme_summary(self):
+    #     with open('support/Downloaded_README.txt', 'r', encoding='utf-8') as file:
+    #         readme_content = file.read()
+    #     preprocessed_content = self.preprocess_readme(readme_content)
+    #     return self.summarize_text(preprocessed_content)
 
