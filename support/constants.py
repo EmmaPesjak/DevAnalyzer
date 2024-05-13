@@ -14,13 +14,12 @@ HELP_TEXT = """
         Instructions:
         1. Click on 'Select repository' to input the repository URL.
         2. The analysis will begin automatically and display 
-            various statistics and visualizations about
-            the repository's commit history. Keep in mind 
-            that large repositories with many commits
-            may take a while to load.
+            various statistics and visualizations about the 
+            repository's commit history. Keep in mind that large 
+            repositories with many commits may take a while to 
+            load.
         3. Use the dropdown menu to select specific users and 
             view detailed analysis.
-
             """
 HELP_INFO = "Help - DevAnalyzer"
 CAT_TEXT = """

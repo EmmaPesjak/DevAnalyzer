@@ -310,9 +310,9 @@ class MainView:
         new_window.title(f"Information about {choice}")
         new_window.geometry(constants.WINDOW_GEOMETRY)
 
-        # Configure grid layout for new_window.
-        new_window.grid_columnconfigure(0, weight=1)
+        # Configure the window to expand the frame to full window
         new_window.grid_rowconfigure(0, weight=1)
+        new_window.grid_columnconfigure(0, weight=1)
 
         main_area_frame = ctk.CTkScrollableFrame(new_window)
         main_area_frame.grid(row=0, column=0, sticky="nsew")
@@ -337,27 +337,19 @@ class MainView:
         if choice in file_data.get('total_what_per_user', {}):
             data_found = True
             types_per_user = file_data['total_what_per_user'][choice]
-            fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="What")
+            fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="Type of commit")
             # Canvas 1
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
-            canvas.get_tk_widget().grid(row=0, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
-
-        # Detailed Contributions Matrix
-        if choice in file_data.get('detailed_contributions', {}):
-            data_found = True
-            matrix = file_data['detailed_contributions'][choice]
-            table = self.set_up_table(matrix, main_area_frame)
-
-            table.grid(row=1, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
-            # table.grid(row=1, column=0, padx=self.PADDING, pady=self.PADDING, sticky='nsew')
+            canvas.get_tk_widget().grid(row=1, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
         # Check and create a diagram for top 10 changed files per user.
         if choice in file_data.get('total_where_per_user', {}):
             data_found = True
             top_10_per_user = file_data['total_where_per_user'][choice]
 
-            fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user, title="Where")
+            fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user,
+                                                      title="Where the commits has been made")
             # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
@@ -366,7 +358,7 @@ class MainView:
         if choice in file_data.get('personal_summaries', {}):
             data_found = True
             personal_summary = file_data['personal_summaries'][choice]
-            personal_summary = self.wrap_text(personal_summary, width=35)
+            personal_summary = self.wrap_text(personal_summary, width=120)
             info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
@@ -376,8 +368,8 @@ class MainView:
             info_text = "\n\n".join(info_text_parts)
 
         info_label = ctk.CTkLabel(main_area_frame, text=info_text,
-                                  anchor="w", width=130, text_color=constants.TEXT_COLOR)
-        info_label.grid(row=0, column=1, sticky="nw", padx=constants.PADDING, pady=constants.PADDING)
+                                  anchor="center", width=120, text_color=constants.TEXT_COLOR)
+        info_label.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=constants.PADDING, pady=constants.PADDING)
         self.user_windows.append(new_window)
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
 
@@ -405,7 +397,7 @@ class MainView:
         if 'total_what' in file_data and file_data['total_what']:
             diagrams_created = True
             fig1, ax1 = self.visualizer.create_figure('spider', data=file_data['total_what'],
-                                                      title="What")
+                                                      title="Type of commit")
             canvas1 = FigureCanvasTkAgg(fig1, master=self.diagram_frame)
             canvas1.draw()
             canvas1.get_tk_widget().grid(row=diagram_row, column=0, padx=constants.PADDING, pady=constants.PADDING,
@@ -415,18 +407,11 @@ class MainView:
         if 'total_commits_by_contributor' in file_data and file_data['total_commits_by_contributor']:
             diagrams_created = True
             fig2, ax2 = self.visualizer.create_figure('pie', data=file_data['total_commits_by_contributor'],
-                                                      title="Total commits by contributor")
+                                                      title="Commits by contributors")
             canvas2 = FigureCanvasTkAgg(fig2, master=self.diagram_frame)
             canvas2.draw()
-            canvas2.get_tk_widget().grid(row=diagram_row, column=1, padx=constants.PADDING, pady=constants.PADDING,
+            canvas2.get_tk_widget().grid(row=diagram_row+1, column=0, padx=constants.PADDING, pady=constants.PADDING,
                                          sticky='nsew')
-
-        if 'matrix' in file_data and file_data['matrix']:
-            diagrams_created = True
-
-            matrix = file_data['matrix']
-            table = self.set_up_table(matrix, self.diagram_frame)
-            table.grid(row=diagram_row + 1, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
         # Check for 'total_where' data and create a diagram if it's not empty
         if 'total_where' in file_data and file_data['total_where']:
@@ -435,7 +420,7 @@ class MainView:
                                                       title="Where the commits has been made")
             canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
             canvas4.draw()
-            canvas4.get_tk_widget().grid(row=diagram_row + 1, column=1, padx=constants.PADDING, pady=constants.PADDING,
+            canvas4.get_tk_widget().grid(row=diagram_row, column=1, padx=constants.PADDING, pady=constants.PADDING,
                                          sticky='nsew')
 
         # If no diagrams were created due to empty datasets
