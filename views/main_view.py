@@ -42,6 +42,7 @@ class MainView:
         self.exit_button = None
         self.info_label = None
         self.placeholder_label = None
+        self.loading_repo = False
         self.user_windows = []
         ctk.set_appearance_mode(constants.MODE_DARK)
         ctk.set_default_color_theme(constants.DEFAULT_THEME)
@@ -157,6 +158,7 @@ class MainView:
             # Start a thread to fetch repository data.
             thread = threading.Thread(target=self.fetch_repo_data, args=(repo_input,))
             thread.start()
+            self.loading_repo = True
 
     def fetch_repo_data(self, repo_input):
         """
@@ -222,6 +224,7 @@ class MainView:
         """
         # Destroy the loading indicator
         self.remove_loading_indicator()
+        self.loading_repo = False
 
         self.repo = repo
 
@@ -477,12 +480,35 @@ class MainView:
             ctk.set_appearance_mode("dark")
             self.mode = "dark"
 
+    # def on_closing(self):
+    #     """
+    #     Handles the closing event of the application.
+    #     """
+    #     if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
+    #         self.root.quit()
+
     def on_closing(self):
         """
         Handles the closing event of the application.
         """
-        if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
-            self.root.quit()
+        if self.loading_repo:
+            # Check if the user really wants to exit while loading
+            if messagebox.askyesno("Exit", "Loading is in progress. Do you still want to exit?"):
+                # Perform any necessary cleanup here
+                self.clean_up_on_exit()
+                self.root.quit()
+        else:
+            # Normal exit prompt
+            if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
+                self.root.quit()
+
+    def clean_up_on_exit(self):
+        """
+        Perform necessary cleanup operations, such as terminating threads,
+        saving state, or other shutdown procedures.
+        """
+        # Example: Stop background tasks or save current state
+        print("Cleaning up resources before exiting...")
 
     @staticmethod
     def show_error_message(message):
