@@ -7,8 +7,6 @@ from models.bert_analyzer import BertAnalyzer
 from models.db_handler import DBHandler
 from models.bert_readme_model import BertReadmeModel
 import atexit
-from models.git_traversal import GitTraversal
-
 
 class MainModel:
     """
@@ -26,7 +24,6 @@ class MainModel:
 
         # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
-        self.git_traversal = GitTraversal()
 
     def set_repo(self, repo_url, callback=None):
         """
@@ -34,8 +31,6 @@ class MainModel:
         :param repo_url: URL of the repository.
         :param callback: Callback method.
         """
-        self.git_traversal.set_repo(repo_url)
-
         def background_task():
             """
             Runs the background task of the insertion into the database.
@@ -63,7 +58,6 @@ class MainModel:
         """
         all_commits = self.db_handler.get_all_authors_and_their_commits()
         self.bert_analyzer.analyze_commits(all_commits)
-        #return self.db_handler.get_all_authors_and_their_commits()
 
     def get_auths_commits_and_files(self):
         return self.db_handler.get_all_authors_commits_and_files()
@@ -76,7 +70,7 @@ class MainModel:
         filename = "support//repo_stats.py"
         self.analyze_commits()
 
-        total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
+        total_commits_by_contributor = self.db_handler.get_commit_counts_by_author()
         readme_summary = self.readme_bert.get_readme_summary()
         total_what_per_user = self.bert_analyzer.get_total_what_per_user()
         total_where_per_user = self.bert_analyzer.get_total_where_per_user()
@@ -85,6 +79,7 @@ class MainModel:
         personal_summaries = self.bert_analyzer.get_personal_summary()
         overall_summary = self.bert_analyzer.get_overall_summary()
         detailed_contributions = self.bert_analyzer.get_detailed_contributions()
+
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"

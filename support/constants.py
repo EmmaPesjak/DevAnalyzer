@@ -44,8 +44,8 @@ CAT_TEXT = """
                    include working on documentation such as 
                    README.md files, javadocs, or commenting
                    the code.
-                5. Other - This activity include Git operations 
-                   such as merges and pull requests. It also include 
+                5. Other - This activity includes Git operations 
+                   such as merges and pull requests. It also includes 
                    vague and unspecified tasks.
 
             Changed files are categorized into the
