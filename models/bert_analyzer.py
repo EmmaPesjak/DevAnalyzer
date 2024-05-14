@@ -71,8 +71,10 @@ class BertAnalyzer:
 
     def analyze_commits(self, commits_dict):
         self.reset_for_new_repository()  # Reset counts before processing new data
+        print(f"Commits_dict: {commits_dict}")
 
         for author, commits in commits_dict.items():
+            print(f"Author: {author}, commits: {commits}")
             if author not in self.commit_types_per_user:
 
                 # Prepopulate with zero counts for all commit types

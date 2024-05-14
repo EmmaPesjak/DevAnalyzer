@@ -26,7 +26,7 @@ class MainModel:
 
         # Register a cleanup of the database when program exits.
         atexit.register(self.cleanup)
-        self.git_traversal = GitTraversal()
+        #self.git_traversal = GitTraversal()
 
     def set_repo(self, repo_url, callback=None):
         """
@@ -34,7 +34,7 @@ class MainModel:
         :param repo_url: URL of the repository.
         :param callback: Callback method.
         """
-        self.git_traversal.set_repo(repo_url)
+        #self.git_traversal.set_repo(repo_url)
 
         def background_task():
             """
@@ -76,7 +76,8 @@ class MainModel:
         filename = "support//repo_stats.py"
         self.analyze_commits()
 
-        total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
+        #total_commits_by_contributor = self.git_traversal.get_authors_with_amount_of_commits()
+        total_commits_by_contributor = self.db_handler.get_commit_counts_by_author()
         readme_summary = self.readme_bert.get_readme_summary()
         total_what_per_user = self.bert_analyzer.get_total_what_per_user()
         total_where_per_user = self.bert_analyzer.get_total_where_per_user()

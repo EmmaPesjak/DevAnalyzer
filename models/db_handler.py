@@ -171,6 +171,28 @@ class DBHandler:
 
         return authors_commits_files
 
+    def get_commit_counts_by_author(self):
+        """
+        Retrieves the number of commits made by each author.
+        :return: A dictionary with author names as keys and commit counts as values.
+        """
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT a.name, COUNT(c.id)
+            FROM authors a
+            JOIN commits c ON a.id = c.author_id
+            GROUP BY a.name;
+        ''')
+
+        results = cursor.fetchall()
+        conn.close()
+
+        # Organize results into a dictionary
+        commit_counts = {name: count for name, count in results}
+        return commit_counts
+
     def database_has_values(self):
         """
         Checks if the database has values.
