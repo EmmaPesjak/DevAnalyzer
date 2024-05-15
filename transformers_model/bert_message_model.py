@@ -17,12 +17,12 @@ def clear_directory(path):
         shutil.rmtree(path)
     os.makedirs(path)
 
-# Ask user whether to clear BERT model and continue or terminate the script
+
+# Ask user whether to clear BERT model and continue or terminate the script.
 user_input = input("Do you want to clear BERT and continue? (yes/no): ")
 if user_input.lower() != 'yes':
     print("Terminating the program.")
-    sys.exit()  # Terminate the program if the user does not confirm
-
+    sys.exit()
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
@@ -61,13 +61,9 @@ df_org["labels"] = df_org.label.map(lambda x: label2id[x.strip()])
 print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize=True) * 100}")
 
 # The tokenizer converts text into tokens that the BERT model can understand.
-# tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased", max_length=512)
-# A BERT model specifically for sequence classification is initialized with the same bert-base-uncased
-# pre-trained weights. It's configured for the number of unique labels in our dataset and is informed
+# The BERT model is configured for the number of unique labels in our dataset and is informed
 # about the label mappings (id2label and label2id). This allows the model to output predictions
 # corresponding to the classes of our dataset.
-# model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=NUM_LABELS, id2label=id2label,
-#                                                       label2id=label2id)
 tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
 model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
 
@@ -177,7 +173,6 @@ for i, seed_value in enumerate(seed_values):
     tokenizer.save_pretrained(output_dir)
 
     eval_results = trainer.evaluate()
-    print("Evaluation results:", eval_results)
 
     # Store results along with identifying information
     results.append({
@@ -194,7 +189,6 @@ for i, seed_value in enumerate(seed_values):
     # Store and print the loss score
     loss_score = eval_results['eval_loss'] 
     loss_scores.append(loss_score)
-    print(loss_score)
 
 # Calculate the average loss score and standard deviation
 average_loss_score = np.mean(loss_scores)
@@ -235,17 +229,3 @@ print("-------------------------")
 # Find the best split based on a specific metric, e.g., lowest loss
 best_by_loss = df_results.loc[df_results['loss'].idxmin()]
 print("Best split by loss:", best_by_loss)
-
-# Check if 'accuracy' column exists and contains non-null values
-if 'accuracy' in df_results and df_results['accuracy'].notna().any():
-    best_by_accuracy = df_results.loc[df_results['accuracy'].idxmax()]
-    print("Best split by accuracy:", best_by_accuracy)
-else:
-    print("No valid accuracy data available.")
-
-# Check if all required metrics are available before sorting
-if df_results[['accuracy', 'f1', 'loss']].notnull().all().all():
-    best_overall = df_results.sort_values(by=['accuracy', 'f1', 'loss'], ascending=[False, False, True]).iloc[0]
-    print("Best overall split:", best_overall)
-else:
-    print("Cannot determine best overall split due to missing data.")

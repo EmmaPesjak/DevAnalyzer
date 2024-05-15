@@ -1,7 +1,7 @@
 import sys
 
 import pandas as pd
-from transformers import pipeline, BertForSequenceClassification, BertTokenizerFast
+from transformers import BertForSequenceClassification, BertTokenizerFast
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
@@ -18,11 +18,11 @@ def clear_directory(path):
     os.makedirs(path)
 
 
-# Ask user whether to clear BERT model and continue or terminate the script
+# Ask user whether to clear BERT model and continue or terminate the script.
 user_input = input("Do you want to clear BERT and continue? (yes/no): ")
 if user_input.lower() != 'yes':
     print("Terminating the program.")
-    sys.exit()  # Terminate the program if the user does not confirm
+    sys.exit()
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
 # the training session. Training on a GPU is significantly faster than on a CPU.
@@ -151,7 +151,8 @@ for i, seed_value in enumerate(seed_values):
         num_train_epochs=3,
         per_device_train_batch_size=16,
         per_device_eval_batch_size=32,
-        warmup_steps=100,
+        learning_rate=2e-5,
+        warmup_steps=21,
         weight_decay=0.01,
         evaluation_strategy="steps",
         eval_steps=50,
@@ -159,6 +160,7 @@ for i, seed_value in enumerate(seed_values):
         fp16=False,
         load_best_model_at_end=True
     )
+
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -175,7 +177,6 @@ for i, seed_value in enumerate(seed_values):
     tokenizer.save_pretrained(output_dir)
 
     eval_results = trainer.evaluate()
-    print("Evaluation results:", eval_results)
 
     # Store results along with identifying information
     results.append({
@@ -192,7 +193,6 @@ for i, seed_value in enumerate(seed_values):
     # Store and print the loss score
     loss_score = eval_results['eval_loss']
     loss_scores.append(loss_score)
-    print(loss_score)
 
 # Calculate the average loss score and standard deviation
 average_loss_score = np.mean(loss_scores)
@@ -200,10 +200,10 @@ std_deviation = np.std(loss_scores)
 print("Average Loss Score:", average_loss_score)
 print("Standard Deviation:", std_deviation)
 
-# Convert list of results to a DataFrame for easier analysis
+# Convert list of results to a DataFrame for easier analysis.
 df_results = pd.DataFrame(results)
 
-# Compute average metrics if they exist and are not all None
+# Compute average metrics.
 if 'accuracy' in df_results.columns and df_results['accuracy'].notna().any():
     average_accuracy = df_results['accuracy'].mean()
     print("Average Accuracy:", average_accuracy)
@@ -230,20 +230,5 @@ else:
 
 print("-------------------------")
 
-# Find the best split based on a specific metric, e.g., lowest loss
 best_by_loss = df_results.loc[df_results['loss'].idxmin()]
 print("Best split by loss:", best_by_loss)
-
-# Check if 'accuracy' column exists and contains non-null values
-if 'accuracy' in df_results and df_results['accuracy'].notna().any():
-    best_by_accuracy = df_results.loc[df_results['accuracy'].idxmax()]
-    print("Best split by accuracy:", best_by_accuracy)
-else:
-    print("No valid accuracy data available.")
-
-# Check if all required metrics are available before sorting
-if df_results[['accuracy', 'f1', 'loss']].notnull().all().all():
-    best_overall = df_results.sort_values(by=['accuracy', 'f1', 'loss'], ascending=[False, False, True]).iloc[0]
-    print("Best overall split:", best_overall)
-else:
-    print("Cannot determine best overall split due to missing data.")
