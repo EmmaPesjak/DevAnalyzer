@@ -1,5 +1,4 @@
 import sys
-
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torch import cuda
@@ -13,6 +12,10 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 def clear_directory(path):
+    """
+    Removes old training data.
+    :param path: is the path to the specific split.
+    """
     if os.path.exists(path):
         shutil.rmtree(path)
     os.makedirs(path)
@@ -25,7 +28,7 @@ if user_input.lower() != 'yes':
     sys.exit()
 
 # Check if a CUDA-compatible GPU is available to enable GPU acceleration and optimize
-# the training session. Training on a GPU is significantly faster than on a CPU.
+# the training session. Training on a GPU is usually significantly faster than on a CPU.
 device = 'cuda' if cuda.is_available() else 'cpu'
 
 # Load the dataset using Pandas DataFrame, contains the data that will be used for training the model.
@@ -57,7 +60,7 @@ label2id = {label: idx for idx, label in enumerate(labels)}
 df_org["labels"] = df_org.label.map(lambda x: label2id[x.strip()])
 # print(df_org.head())   Can print to verify.
 
-# Print out the label distribution in percentages
+# Print out the label distribution in percentages.
 print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize=True) * 100}")
 
 # The tokenizer converts text into tokens that the BERT model can understand.
@@ -67,20 +70,19 @@ print(f"Label Distribution in Percentages:\n{df_org.label.value_counts(normalize
 tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base", normalization=True)
 model = AutoModelForSequenceClassification.from_pretrained("vinai/bertweet-base", num_labels=NUM_LABELS)
 
-# Update the configuration with label2id and id2label
+# Update the configuration with label2id and id2label.
 model.config.label2id = label2id
 model.config.id2label = id2label
 
 # Ensure the model utilizes the GPU if available, falling back on the CPU otherwise.
-# This is critical for efficient training, especially with large models like BERT.
 model.to(device)
 
-# Constants for the experiment
+# Constants for the experiment.
 num_splits = 15
 test_size = 0.2
 seed_values = [19, 42, 123, 2023, 777, 101, 333, 888, 999, 444, 246, 555, 666, 777, 222]
 
-# Lists to store loss scores from each split
+# Lists to store loss scores from each split.
 loss_scores = []
 results = []
 
@@ -124,25 +126,25 @@ def compute_metrics(pred):
     }
 
 
-# Loop through multiple splits and train the model
+# Loop through multiple splits and train the model.
 for i, seed_value in enumerate(seed_values):
-    # Define unique output directory for each split
+    # Define output directory for each split.
     output_dir = f'./results/messages/split_{i}'
     clear_directory(output_dir)
 
-    # Split the data
+    # Split the data.
     train_texts, test_texts, train_labels, test_labels = train_test_split(df_org['message'], df_org['labels'],
                                                                           test_size=test_size, random_state=seed_value)
 
-    # Tokenize data
+    # Tokenize data.
     train_encodings = tokenizer(list(train_texts), truncation=True, padding=True)
     test_encodings = tokenizer(list(test_texts), truncation=True, padding=True)
 
-    # Create data loaders
+    # Create data loaders.
     train_dataloader = DataLoader(train_encodings, list(train_labels))
     test_dataset = DataLoader(test_encodings, list(test_labels))
 
-    # Define training arguments and create Trainer
+    # Define training arguments and create Trainer.
     training_args = TrainingArguments(
         output_dir=output_dir,
         do_train=True,
@@ -154,9 +156,10 @@ for i, seed_value in enumerate(seed_values):
         evaluation_strategy="steps",
         eval_steps=50,
         save_strategy="steps",
-        fp16=False,
+        fp16=False,  # Remove this line if training on a GPU.
         load_best_model_at_end=True
     )
+
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -165,16 +168,16 @@ for i, seed_value in enumerate(seed_values):
         compute_metrics=compute_metrics
     )
 
-    # Train and evaluate the model
+    # Train and evaluate the model.
     trainer.train()
 
-    # Manually save the model and tokenizer
+    # Manually save the model and tokenizer.
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 
     eval_results = trainer.evaluate()
 
-    # Store results along with identifying information
+    # Store results along with identifying information.
     results.append({
         'split_index': i,
         'seed_value': seed_value,
@@ -190,16 +193,16 @@ for i, seed_value in enumerate(seed_values):
     loss_score = eval_results['eval_loss'] 
     loss_scores.append(loss_score)
 
-# Calculate the average loss score and standard deviation
+# Calculate the average loss score and standard deviation.
 average_loss_score = np.mean(loss_scores)
 std_deviation = np.std(loss_scores)
 print("Average Loss Score:", average_loss_score)
 print("Standard Deviation:", std_deviation)
 
-# Convert list of results to a DataFrame for easier analysis
+# Convert list of results to a DataFrame for easier analysis.
 df_results = pd.DataFrame(results)
 
-# Compute average metrics if they exist and are not all None
+# Compute average metrics.
 if 'accuracy' in df_results.columns and df_results['accuracy'].notna().any():
     average_accuracy = df_results['accuracy'].mean()
     print("Average Accuracy:", average_accuracy)
@@ -226,6 +229,5 @@ else:
 
 print("-------------------------")
 
-# Find the best split based on a specific metric, e.g., lowest loss
 best_by_loss = df_results.loc[df_results['loss'].idxmin()]
 print("Best split by loss:", best_by_loss)
