@@ -24,7 +24,7 @@ plt.grid(True)  # Turn on the grid lines
 plt.show()  # Display the plot
 
 
-# # KOMMENTERA IN DETTA ISTÄLLET OM MAN HAN PYTTESMÅ TAL ex e-7
+# # Use this instead if the values are very small like e-6.
 # import matplotlib
 # matplotlib.use('TkAgg')  # Or use 'Qt5Agg', 'Agg', etc.
 # import matplotlib.pyplot as plt
