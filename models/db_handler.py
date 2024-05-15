@@ -1,9 +1,5 @@
 import sqlite3
-
-from dateutil.relativedelta import relativedelta
 from pydriller import Repository
-from datetime import datetime
-
 
 class DBHandler:
     """
@@ -227,6 +223,5 @@ class DBHandler:
 
             conn.commit()
             conn.close()
-            print("Database successfully cleared.")
         except Exception as e:
             print(f"Error clearing database: {e}")

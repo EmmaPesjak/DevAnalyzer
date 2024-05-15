@@ -163,6 +163,9 @@ def generate_project_summaries(commit_types_in_project, detailed_contributions_i
 
 
 class BertAnalyzer:
+    """
+    Class to analyze commits with BERT models.
+    """
 
     def __init__(self):
         """
