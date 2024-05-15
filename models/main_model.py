@@ -83,7 +83,7 @@ class MainModel:
         # Prepare the content to be written as valid Python code
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
-            f"readme_summary = \"{readme_summary}\"\n"
+            f'readme_summary = """{readme_summary}"""\n'
             f"total_what = {total_what}\n"
             f"total_where = {total_where}\n"
             f"total_what_per_user = {total_what_per_user}\n"

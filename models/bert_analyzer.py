@@ -1,7 +1,7 @@
 from pathlib import Path
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification, \
     BertForSequenceClassification, BertTokenizerFast
-
+from itertools import cycle
 
 class BertAnalyzer:
 
@@ -111,7 +111,7 @@ class BertAnalyzer:
 
         # Generate personal summaries from detailed contributions
         self.personal_summaries = self.generate_personal_summaries(self.commit_types_per_user, self.detailed_contributions)
-        self.project_summaries = self.generate_project_summaries(self.commit_types_in_project, self.file_types_in_project)
+        self.project_summaries = self.generate_project_summaries(self.commit_types_in_project, self.detailed_contributions_in_project)
         #self.print_summary(self.personal_summaries, self.project_summaries)
 
     def prepare_summary_matrix(self, commit_types, file_types, detailed_contributions):
@@ -180,20 +180,28 @@ class BertAnalyzer:
                 summary_parts.append(summary_part)
 
             if zero_commit_types:
-                zero_commits_sentence = f". {author.capitalize()} has not done any {', '.join(zero_commit_types)} commits"
+                zero_commits_sentence = f" {author.capitalize()} has not done any {', '.join(zero_commit_types)} commits"
                 summary_parts.append(zero_commits_sentence)
 
             personal_summaries[author] = "".join(summary_parts) + "."
 
         return personal_summaries
 
-    def generate_project_summaries(self, commit_types_in_project, file_types_in_project):
+    def generate_project_summaries(self, commit_types_in_project, detailed_contributions_in_project):
         # Summarize the most common types of commits
         sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
         summary_parts = []
         zero_commit_types = []
         first = True  # Flag to check if it's the first item
         second = True
+
+        # Create an iterator to cycle through synonyms
+        emphasis_words = cycle(["primarily", "mostly", "mainly"])
+
+        # Determine the number of non-zero commit types for formatting
+        num_non_zero = sum(1 for _, count in sorted_commits if count > 0)
+        count_non_zero = 0
+
         for ctype, count in sorted_commits:
             commit_word = "commit" if count == 1 else "commits"
             commit_has_have = "has" if count == 1 else "have"
@@ -203,15 +211,21 @@ class BertAnalyzer:
                 zero_commit_types.append(ctype.lower())  # Add to zero count list
                 continue  # Skip further processing for zero count types
             else:
+                count_non_zero += 1  # Increment the counter of non-zero types
                 # Get the file type with the highest count for this commit type
-                file_changes = self.detailed_contributions_in_project[ctype]
+                file_changes = detailed_contributions_in_project[ctype]
                 most_common_file, most_common_count = max(file_changes.items(),
                                                           key=lambda item: item[1]) if file_changes else ("", 0)
+                next_emphasis_word = next(emphasis_words)  # Get the next word from the cycle
+
+                # Determine the conjunction for formatting
+                conjunction = "and" if count_non_zero == num_non_zero else ""
+
                 if first:
                     # Special formatting for the most common commit type
                     summary_part = f"In this project, {ctype.lower()} {commit_word} have been the most frequent, with {count} commits."
                     if most_common_count > 0:
-                        summary_part += f" {commit_these_this} {commit_has_have} mostly been done in {most_common_file.lower()} files."
+                        summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done in {most_common_file.lower()} files."
                     else:
                         summary_part += " However, in 0 files."
                     first = False
@@ -219,22 +233,26 @@ class BertAnalyzer:
                     if second:
                         # Formatting for other commit types
                         if most_common_count > 0:
-                            summary_part = f" Then, {count} {ctype.lower()} {commit_word} {commit_has_have} mostly been done in {most_common_file.lower()} files. Besides these"
+                            summary_part = f" Then, {count} {ctype.lower()} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file.lower()} files"
                         else:
-                            summary_part = f" Then, there {commit_has_have} been {count} {ctype.lower()} {commit_word} in 0 files. Besides these"
+                            summary_part = f" Then, there {commit_has_have} been {count} {ctype.lower()} {commit_word} in 0 files"
                         second = False
                     else:
                         # Formatting for all other commit types
+                        # if most_common_count > 0:
+                        #     summary_part = f", {count} {ctype.lower()} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file.lower()} files"
+                        # else:
+                        #     summary_part = f", {count} {ctype.lower()} {commit_word}, but in 0 files"
                         if most_common_count > 0:
-                            summary_part = f", {count} {ctype.lower()} {commit_word} {commit_has_have} primarily been done in {most_common_file.lower()} files"
+                            summary_part = f", {conjunction} {count} {ctype.lower()} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file.lower()} files"
                         else:
-                            summary_part = f", {count} {ctype.lower()} {commit_word}, but in 0 files"
+                            summary_part = f", {conjunction} {count} {ctype.lower()} {commit_word}, but in 0 files"
 
             summary_parts.append(summary_part)
 
         if zero_commit_types:
             # Format the zero count types into a readable string
-            zero_commits_sentence = f", no {', '.join(zero_commit_types)} commits have been done in this project"
+            zero_commits_sentence = f". However, no {', '.join(zero_commit_types)} commits have been done in this project"
             summary_parts.append(zero_commits_sentence)
 
         summary_parts.append(f".")
