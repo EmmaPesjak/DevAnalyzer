@@ -1,8 +1,4 @@
 import threading
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from collections import defaultdict
-
 from models.bert_analyzer import BertAnalyzer
 from models.db_handler import DBHandler
 from models.bert_readme_model import BertReadmeModel
@@ -59,9 +55,6 @@ class MainModel:
         all_commits = self.db_handler.get_all_authors_and_their_commits()
         self.bert_analyzer.analyze_commits(all_commits)
 
-    def get_auths_commits_and_files(self):
-        return self.db_handler.get_all_authors_commits_and_files()
-
     def write_to_file(self):
         """
         Writes data to a file.
@@ -70,6 +63,7 @@ class MainModel:
         filename = "support//repo_stats.py"
         self.analyze_commits()
 
+        # Retrieve information from database and BertAnalyzer.
         total_commits_by_contributor = self.db_handler.get_commit_counts_by_author()
         readme_summary = self.readme_bert.get_readme_summary()
         total_what_per_user = self.bert_analyzer.get_total_what_per_user()
@@ -80,10 +74,10 @@ class MainModel:
         overall_summary = self.bert_analyzer.get_overall_summary()
         detailed_contributions = self.bert_analyzer.get_detailed_contributions()
 
-        # Prepare the content to be written as valid Python code
+        # Prepare the content to be written
         content_to_write = (
             f"total_commits_by_contributor = {total_commits_by_contributor}\n"
-            f"readme_summary = \"{readme_summary}\"\n"
+            f'readme_summary = """{readme_summary}"""\n'
             f"total_what = {total_what}\n"
             f"total_where = {total_where}\n"
             f"total_what_per_user = {total_what_per_user}\n"
