@@ -16,6 +16,42 @@ plt.rcParams['font.family'] = 'Microsoft YaHei'  # Ensure non-latin characters a
 matplotlib.use('TkAgg')
 
 
+def wrap_text(text, width=80):
+    """
+    Wraps the text to a specific width.
+    :param text: is the text to wrap.
+    :param width: is the width.
+    :return: returns the wrapped string.
+    """
+    return "\n".join(textwrap.wrap(text, width=width))
+
+
+def open_help():
+    """
+    Displays a help text.
+    """
+    messagebox.showinfo(constants.HELP_INFO, constants.HELP_TEXT)
+
+
+def open_categories():
+    """
+    Displays a categories text.
+    """
+    messagebox.showinfo(constants.CAT_INFO, constants.CAT_TEXT)
+
+
+def read_file_data():
+    """
+    Read data from a file and return it.
+    """
+    local_variables = {}
+    with open("support//repo_stats.py", 'r', encoding="utf-8") as file:
+        file_content = file.read()
+        # Execute the file content in an empty global namespace and capture the local variables
+        exec(file_content, {}, local_variables)
+        return local_variables
+
+
 class MainView:
     """
     Class responsible for creating the view GUI.
@@ -81,9 +117,9 @@ class MainView:
         self.menu_frame = ctk.CTkFrame(self.root, corner_radius=1)
         self.menu_frame.grid(row=0, column=0, sticky="nswe")
 
-        self.help_button = ctk.CTkButton(self.menu_frame, text=constants.HELP, command=self.open_help)
+        self.help_button = ctk.CTkButton(self.menu_frame, text=constants.HELP, command=open_help)
         self.help_button.grid(row=0, column=0, pady=constants.PADDING, padx=constants.PADDING, sticky="ew")
-        self.categories_button = ctk.CTkButton(self.menu_frame, text=constants.CATEGORIES, command=self.open_categories)
+        self.categories_button = ctk.CTkButton(self.menu_frame, text=constants.CATEGORIES, command=open_categories)
         self.categories_button.grid(row=1, column=0, pady=constants.PADDING, padx=constants.PADDING, sticky="ew")
         self.git_button = ctk.CTkButton(self.menu_frame, text=constants.SELECT_REPO, command=self.open_git_input)
         self.git_button.grid(row=2, column=0, pady=constants.PADDING, padx=constants.PADDING, sticky="ew")
@@ -92,7 +128,7 @@ class MainView:
         self.exit_button = ctk.CTkButton(self.menu_frame, text=constants.EXIT, command=self.on_closing)
         self.exit_button.grid(row=5, column=0, pady=constants.PADDING, padx=constants.PADDING, sticky="ew")
 
-        # Ensure the application prompts the user before closing
+        # Ensure the application prompts the user before closing.
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def create_main_area(self, file_data=None, initial=False):
@@ -130,20 +166,6 @@ class MainView:
         self.placeholder_label = ctk.CTkLabel(self.diagram_frame, text=constants.SELECT_REPO_TEXT,
                                               text_color=constants.TEXT_COLOR, font=("Segoe UI", 16, "bold"))
         self.placeholder_label.grid(row=0, column=0, sticky="nsew")
-
-    @staticmethod
-    def open_help():
-        """
-        Displays a help text.
-        """
-        messagebox.showinfo(constants.HELP_INFO, constants.HELP_TEXT)
-
-    @staticmethod
-    def open_categories():
-        """
-        Displays a categories text.
-        """
-        messagebox.showinfo(constants.CAT_INFO, constants.CAT_TEXT)
 
     def open_git_input(self):
         """
@@ -231,7 +253,7 @@ class MainView:
         # Remove the existing 'user_select' widget if it exists and is not None.
         self.remove_user_select()
 
-        file_data = self.read_file_data()
+        file_data = read_file_data()
         total_commits_by_contributor = file_data['total_commits_by_contributor']
 
         # Create a list of the users.
@@ -246,21 +268,6 @@ class MainView:
         # Update the main area and info bar.
         self.create_main_area(file_data)
         self.create_info_text(file_data)
-
-    @staticmethod
-    def read_file_data():
-        """
-        Read data from a file and return it.
-        """
-        local_variables = {}
-        with open("support//repo_stats.py", 'r', encoding="utf-8") as file:
-            file_content = file.read()
-            # Execute the file content in an empty global namespace and capture the local variables
-            exec(file_content, {}, local_variables)
-            return local_variables
-
-    def wrap_text(self, text, width=80):
-        return "\n".join(textwrap.wrap(text, width=width))
 
     def create_info_text(self, file_data=None, initial=False):
         """
@@ -281,17 +288,14 @@ class MainView:
                 readme_summary = file_data['readme_summary']
             else:
                 readme_summary = constants.NONE
-
-            readme_summary = self.wrap_text(readme_summary, width=120)  # Adjust width as needed
+            readme_summary = wrap_text(readme_summary, width=120)
 
             if 'overall_summary' in file_data:
                 overall_summary = file_data['overall_summary']
             else:
                 overall_summary = constants.NONE
+            overall_summary = wrap_text(overall_summary, width=120)
 
-            overall_summary = self.wrap_text(overall_summary, width=120)  # Adjust width as needed
-
-            # Construct info_text with possibly modified values.
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
                 f"Overall summary: \n{overall_summary}\n\n"
@@ -310,7 +314,7 @@ class MainView:
         new_window.title(f"Information about {choice}")
         new_window.geometry(constants.WINDOW_GEOMETRY)
 
-        # Configure the window to expand the frame to full window
+        # Configure the window to expand the frame to full window.
         new_window.grid_rowconfigure(0, weight=1)
         new_window.grid_columnconfigure(0, weight=1)
 
@@ -358,7 +362,7 @@ class MainView:
         if choice in file_data.get('personal_summaries', {}):
             data_found = True
             personal_summary = file_data['personal_summaries'][choice]
-            personal_summary = self.wrap_text(personal_summary, width=120)
+            personal_summary = wrap_text(personal_summary, width=120)
             info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
@@ -413,7 +417,7 @@ class MainView:
             canvas2.get_tk_widget().grid(row=diagram_row+1, column=0, padx=constants.PADDING, pady=constants.PADDING,
                                          sticky='nsew')
 
-        # Check for 'total_where' data and create a diagram if it's not empty
+        # Check for 'total_where' data and create a diagram if it's not empty.
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
             fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
@@ -423,81 +427,38 @@ class MainView:
             canvas4.get_tk_widget().grid(row=diagram_row, column=1, padx=constants.PADDING, pady=constants.PADDING,
                                          sticky='nsew')
 
-        # If no diagrams were created due to empty datasets
+        # If no diagrams were created due to empty datasets.
         if not diagrams_created:
-            # Handle the case where no data was available to create any diagrams
             no_data_label = ctk.CTkLabel(self.diagram_frame, text=constants.NO_DATA, text_color=constants.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
-
-    def set_up_table(self, matrix, frame):
-        # Define the commit types as column headers
-        commit_types = list(matrix.keys())
-
-        # Determine all unique file types across all commit types for row labels
-        file_types = {ftype for counts in matrix.values() for ftype in counts}
-        file_types = sorted(file_types)  # Sorting for consistent ordering
-
-        # Create the Treeview widget for the table
-        table = ttk.Treeview(frame, columns=['File Type'] + commit_types, show="headings")
-        table.heading('File Type', text='File Type')
-        for commit_type in commit_types:
-            table.heading(commit_type, text=commit_type)
-            table.column(commit_type, width=100, anchor='center')  # Set uniform width and center align
-
-        # Inserting data into the table
-        for file_type in file_types:
-            row = [file_type]  # Start row with the file type label
-            for commit_type in commit_types:
-                # Append the count for this file type under each commit type
-                count = matrix[commit_type].get(file_type, 0)
-                row.append(count)
-            table.insert('', 'end', values=row)
-        return table
 
     def set_appearance_mode(self):
         """
         Toggles the appearance mode of the application between 'dark' and 'light' themes.
         """
-        if self.mode == "dark":
-            ctk.set_appearance_mode("light")
-            self.mode = "light"
+        if self.mode == constants.MODE_DARK:
+            ctk.set_appearance_mode(constants.MODE_LIGHT)
+            self.mode = constants.MODE_LIGHT
         else:
-            ctk.set_appearance_mode("dark")
-            self.mode = "dark"
-
-    # def on_closing(self):
-    #     """
-    #     Handles the closing event of the application.
-    #     """
-    #     if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
-    #         self.root.quit()
+            ctk.set_appearance_mode(constants.MODE_DARK)
+            self.mode = constants.MODE_DARK
 
     def on_closing(self):
         """
         Handles the closing event of the application.
         """
         if self.loading_repo:
-            # Check if the user really wants to exit while loading
-            if messagebox.askyesno("Exit", "Loading is in progress. Do you still want to exit?"):
-                # Perform any necessary cleanup here
-                self.clean_up_on_exit()
+            # Check if the user really wants to exit while loading.
+            if messagebox.askyesno(constants.EXIT, constants.LOADING_IN_PROG):
                 self.root.quit()
         else:
-            # Normal exit prompt
-            if messagebox.askyesno(title="Exit", message="Do you want to exit the application?"):
+            # Normal exit prompt.
+            if messagebox.askyesno(title=constants.EXIT, message=constants.EXIT_Q):
                 self.root.quit()
 
-    def clean_up_on_exit(self):
-        """
-        Perform necessary cleanup operations, such as terminating threads,
-        saving state, or other shutdown procedures.
-        """
-        # Example: Stop background tasks or save current state
-        print("Cleaning up resources before exiting...")
-
-    @staticmethod
-    def show_error_message(message):
+    def show_error_message(self, message):
         """
         Shows error messages in a message box.
         """
-        messagebox.showerror("Error", message)
+        self.loading_repo = False
+        messagebox.showerror(constants.ERROR, message)
