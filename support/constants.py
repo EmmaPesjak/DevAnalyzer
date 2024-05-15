@@ -1,3 +1,6 @@
+"""
+Constants class.
+"""
 MODE_DARK = "dark"
 MODE_LIGHT = "light"
 DEFAULT_THEME = "green"  # blue green or dark-blue
@@ -77,3 +80,6 @@ HELP = "Help"
 CATEGORIES = "Categories"
 NONE = "None"
 NO_DATA = "No data available for analysis, please select another repository."
+ERROR = "Error"
+LOADING_IN_PROG = "Loading is in progress. Are you sure you want to exit? This may cause unexpected behaviour"
+EXIT_Q = "Do you want to exit the application?"
