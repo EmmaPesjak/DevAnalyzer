@@ -354,7 +354,6 @@ class MainView:
 
             fig4, ax4 = self.visualizer.create_figure('spider', data=top_10_per_user,
                                                       title="Where the commits has been made")
-            # Canvas 4
             canvas4 = FigureCanvasTkAgg(fig4, master=main_area_frame)
             canvas4.draw()
             canvas4.get_tk_widget().grid(row=1, column=1, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
