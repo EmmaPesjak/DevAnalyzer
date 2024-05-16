@@ -1,3 +1,4 @@
+import torch
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification, \
     BertForSequenceClassification, BertTokenizerFast
 from itertools import cycle
@@ -248,47 +249,61 @@ class BertAnalyzer:
         """
         self.reset_for_new_repository()  # Ensure a clean state before starting analysis.
 
-        try:
+        for author, commits in commits_dict.items():
+            if author not in self.commit_types_per_user:
+                # Repopulate with zero counts for all commit types
+                self.commit_types_per_user[author] = {ct: 0 for ct in self.all_commit_types}
+                # Repopulate with zero counts for all file types
+                self.file_types_per_user[author] = {ft: 0 for ft in self.all_file_types}
+                # Prepare detailed contributions with nested dictionaries
+                self.detailed_contributions[author] = {ct: {ft: 0 for ft in self.all_file_types} for ct in
+                                                       self.all_commit_types}
 
-            for author, commits in commits_dict.items():
-                if author not in self.commit_types_per_user:
-                    # Repopulate with zero counts for all commit types
-                    self.commit_types_per_user[author] = {ct: 0 for ct in self.all_commit_types}
-                    # Repopulate with zero counts for all file types
-                    self.file_types_per_user[author] = {ft: 0 for ft in self.all_file_types}
-                    # Prepare detailed contributions with nested dictionaries
-                    self.detailed_contributions[author] = {ct: {ft: 0 for ft in self.all_file_types} for ct in
-                                                           self.all_commit_types}
+            for commit_message, file_paths in commits:
+                # Truncate and tokenize the commit message before classification
+                # commit_inputs = self.commit_message_tokenizer(commit_message, return_tensors="pt", truncation=True,
+                #                                        max_length=128)
+                #
+                # # Classify the commit message using the model
+                # with torch.no_grad():  # Ensure no gradients are computed during inference
+                #     commit_prediction = self.commit_message_model(**commit_inputs)
+                #     predicted_label_index = commit_prediction.logits.argmax(-1).item()
+                #     commit_type = self.commit_message_model.config.id2label[predicted_label_index]
+                commit_prediction = self.commit_message_nlp(commit_message, truncation=True, max_length=128)
+                commit_type = commit_prediction[0]['label']
 
-                for commit_message, file_paths in commits:
-                    # Classify the commit message
-                    commit_prediction = self.commit_message_nlp(commit_message)
-                    commit_type = commit_prediction[0]['label']
+                # Update commit label counts
+                self.commit_types_per_user[author][commit_type] += 1
+                self.commit_types_in_project[commit_type] += 1
+
+                # Classify each file path modified in this commit
+                for file_path in file_paths:
+                    # Truncate and tokenize the file path before classification
+                    # file_inputs = self.filepath_tokenizer(file_path, return_tensors="pt", truncation=True,
+                    #                                        max_length=128)
+                    #
+                    # # Classify the commit message using the model
+                    # with torch.no_grad():  # Ensure no gradients are computed during inference
+                    #     file_prediction = self.filepath_model(**file_inputs)
+                    #     predicted_label_index = file_prediction.logits.argmax(-1).item()
+                    #     file_type = self.filepath_model.config.id2label[predicted_label_index]
+
+                    file_prediction = self.filepath_nlp(file_path, truncation=True, max_length=128)
+                    file_type = file_prediction[0]['label']
 
                     # Update commit label counts
-                    self.commit_types_per_user[author][commit_type] += 1
-                    self.commit_types_in_project[commit_type] += 1
+                    self.file_types_per_user[author][file_type] += 1
+                    self.file_types_in_project[file_type] += 1
+                    self.detailed_contributions_in_project[commit_type][file_type] += 1
 
-                    # Classify each file path modified in this commit
-                    for file_path in file_paths:
-                        file_prediction = self.filepath_nlp(file_path)
-                        file_type = file_prediction[0]['label']
+                    # Update detailed contribution summary
+                    self.detailed_contributions[author][commit_type][file_type] += 1
 
-                        # Update commit label counts
-                        self.file_types_per_user[author][file_type] += 1
-                        self.file_types_in_project[file_type] += 1
-                        self.detailed_contributions_in_project[commit_type][file_type] += 1
-
-                        # Update detailed contribution summary
-                        self.detailed_contributions[author][commit_type][file_type] += 1
-
-            # Generate personal summaries from detailed contributions
-            self.personal_summaries = generate_personal_summaries(self.commit_types_per_user,
-                                                                  self.detailed_contributions)
-            self.project_summaries = generate_project_summaries(self.commit_types_in_project,
-                                                                self.detailed_contributions_in_project)
-        except Exception as e:
-            print(f"An error occurred during analysis: {str(e)}")
+        # Generate personal summaries from detailed contributions
+        self.personal_summaries = generate_personal_summaries(self.commit_types_per_user,
+                                                              self.detailed_contributions)
+        self.project_summaries = generate_project_summaries(self.commit_types_in_project,
+                                                            self.detailed_contributions_in_project)
 
     def get_total_what_per_user(self):
         """
