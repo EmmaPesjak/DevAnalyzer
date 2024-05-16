@@ -4,6 +4,7 @@ from models.db_handler import DBHandler
 from models.bert_readme_model import BertReadmeModel
 import atexit
 
+
 class MainModel:
     """
     Class that represents the main model of the project. Handles all database operations and writing to file.
@@ -34,8 +35,7 @@ class MainModel:
             try:
                 result = self.db_handler.insert_data_into_db(repo_url)
                 if result != "Success":
-                    callback(None, "Was not able to get the repository, please try again, "
-                                   "make sure to enter a valid Git repository URL.")
+                    callback(None, result)
                 elif callback:
                     # Use callback to send success data back
                     callback(result, None)
@@ -72,7 +72,6 @@ class MainModel:
         total_where = self.bert_analyzer.get_total_where()
         personal_summaries = self.bert_analyzer.get_personal_summary()
         overall_summary = self.bert_analyzer.get_overall_summary()
-        detailed_contributions = self.bert_analyzer.get_detailed_contributions()
 
         # Prepare the content to be written
         content_to_write = (
@@ -84,7 +83,6 @@ class MainModel:
             f"total_where_per_user = {total_where_per_user}\n"
             f"personal_summaries = {personal_summaries}\n"
             f"overall_summary = \'{overall_summary}\'\n"
-            f"detailed_contributions = {detailed_contributions}\n"
         )
 
         with open(filename, "w", encoding="utf-8") as file:

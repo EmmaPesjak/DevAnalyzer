@@ -1,6 +1,7 @@
 import time
 from models.readme_getter import ReadmeGetter
 
+
 class MainController:
     """
     The main controller of the application.
@@ -45,7 +46,7 @@ class MainController:
         else:
             # Proceed with UI update or further data processing
             if self.main_model.write_to_file():
-                 # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
+                # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
             else:
                 self.view.show_error_message("Something went wrong, please try again")
@@ -57,4 +58,4 @@ class MainController:
         self.view.update_ui_after_fetch(self.repo)  # Call the original update function
         end_time = time.time()  # Stop timing
         duration = end_time - self.start_time  # Calculate duration
-        #print(f"Total time taken: {duration} seconds")
+        # print(f"Total time taken: {duration} seconds")

@@ -55,21 +55,24 @@ class BertReadmeModel:
         if len(text) < summary_min_length:
             return text
 
-        # Split the text into segments based on a predefined length, processing each segment individually for summarization.
+        # Split the text into segments based on a predefined length, processing each segment individually
+        # for summarization.
         segments = [text[i:i + segment_length] for i in range(0, len(text), segment_length)]
         summaries = []
         for segment in segments:
             # Adjust the maximum summary length based on the segment length .
             adjusted_max_length = min(summary_max_length, len(segment) // 2)
             # Generate a summary for each text segment using the predefined settings in the summarizer pipeline.
-            summary = self.summarizer(segment, max_length=adjusted_max_length, min_length=summary_min_length, do_sample=False)
+            summary = self.summarizer(segment, max_length=adjusted_max_length, min_length=summary_min_length,
+                                      do_sample=False)
             summaries.append(summary[0]['summary_text'])
         # Combine individual segment summaries into one summary.
         combined_summaries = " ".join(summaries)
         # If the combined summaries exceed the segment length, summarize them again for conciseness.
         if len(combined_summaries) > segment_length:
             adjusted_max_length = min(summary_max_length, len(combined_summaries) // 2)
-            final_summary = self.summarizer(combined_summaries, max_length=adjusted_max_length, min_length=summary_min_length, do_sample=False)
+            final_summary = self.summarizer(combined_summaries, max_length=adjusted_max_length,
+                                            min_length=summary_min_length, do_sample=False)
             return final_summary[0]['summary_text']
         else:
             return combined_summaries
@@ -90,5 +93,3 @@ class BertReadmeModel:
         except FileNotFoundError:
             # Handle the case where the README file does not exist
             return "No README file found in the root."
-
-

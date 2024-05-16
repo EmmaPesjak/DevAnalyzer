@@ -2,6 +2,7 @@ from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassifica
     BertForSequenceClassification, BertTokenizerFast
 from itertools import cycle
 
+
 def generate_personal_summaries(commit_types_per_user, detailed_contributions):
     """
     Generates summary for each author.
@@ -52,7 +53,8 @@ def generate_personal_summaries(commit_types_per_user, detailed_contributions):
                     # Special formatting for the most common commit type
                     summary_part = f"{author} has mostly done {ctype} commits, with {count} {commit_word}."
                     if most_common_count > 0:
-                        summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files."
+                        summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
+                                        f"in {most_common_file} files."
                     else:
                         summary_part += " However, in 0 files."
                     first = False
@@ -61,15 +63,21 @@ def generate_personal_summaries(commit_types_per_user, detailed_contributions):
                     if second:
                         # Formatting for other commit types
                         if most_common_count > 0:
-                            summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
+                            summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
+                                           f"{next_emphasis_word} been done in {most_common_file} " \
+                                           f"files{end_of_sentence}"
                         else:
-                            summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} in 0 files{end_of_sentence}"
+                            summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} " \
+                                           f"in 0 files{end_of_sentence}"
                         second = False
                     else:
                         if most_common_count > 0:
-                            summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
+                            summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
+                                           f"{next_emphasis_word} been done in {most_common_file} " \
+                                           f"files{end_of_sentence}"
                         else:
-                            summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files{end_of_sentence}{end_of_sentence}"
+                            summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files" \
+                                           f"{end_of_sentence}{end_of_sentence}"
             summary_parts.append(summary_part)
 
         # Include zero commit types.
@@ -130,9 +138,11 @@ def generate_project_summaries(commit_types_in_project, detailed_contributions_i
 
             if first:
                 # Special formatting for the most common commit type
-                summary_part = f"In this project, {ctype} {commit_word} have been the most frequent, with {count} commits."
+                summary_part = f"In this project, {ctype} {commit_word} have been the most frequent, with " \
+                               f"{count} commits."
                 if most_common_count > 0:
-                    summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files."
+                    summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
+                                    f"in {most_common_file} files."
                 else:
                     summary_part += " However, in 0 files."
                 first = False
@@ -140,13 +150,17 @@ def generate_project_summaries(commit_types_in_project, detailed_contributions_i
                 if second:
                     # Formatting for other commit types
                     if most_common_count > 0:
-                        summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
+                        summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
+                                       f"{next_emphasis_word} been done in {most_common_file} " \
+                                       f"files{end_of_sentence}"
                     else:
-                        summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} in 0 files{end_of_sentence}"
+                        summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} in " \
+                                       f"0 files{end_of_sentence}"
                     second = False
                 else:
                     if most_common_count > 0:
-                        summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} {next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
+                        summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
+                                       f"{next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
                     else:
                         summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files{end_of_sentence}"
 
@@ -269,16 +283,13 @@ class BertAnalyzer:
                         self.detailed_contributions[author][commit_type][file_type] += 1
 
             # Generate personal summaries from detailed contributions
-            self.personal_summaries = generate_personal_summaries(self.commit_types_per_user, self.detailed_contributions)
-            self.project_summaries = generate_project_summaries(self.commit_types_in_project, self.detailed_contributions_in_project)
+            self.personal_summaries = generate_personal_summaries(self.commit_types_per_user,
+                                                                  self.detailed_contributions)
+            self.project_summaries = generate_project_summaries(self.commit_types_in_project,
+                                                                self.detailed_contributions_in_project)
         except Exception as e:
             print(f"An error occurred during analysis: {str(e)}")
 
-    def get_detailed_contributions(self):
-        """
-        Returns the detailed contributions of the project.
-        """
-        return self.detailed_contributions
     def get_total_what_per_user(self):
         """
         Returns a dictionary mapping each author to their total counts of each commit type.

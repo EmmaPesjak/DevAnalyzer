@@ -1,6 +1,7 @@
 import sqlite3
 from pydriller import Repository
 
+
 class DBHandler:
     """
     Class to handle the repository data, creating and connecting to the database.
@@ -83,7 +84,8 @@ class DBHandler:
 
                 conn.commit()
         except Exception as e:
-            error_message = "Please try again with an existing repository."
+            error_message = "Was not able to get the repository, please try again, make sure to enter a valid Git " \
+                            "repository URL with data to analyze."
         else:
             return "Success"
         finally:
@@ -91,48 +93,11 @@ class DBHandler:
                 conn.close()
         return error_message
 
-    def get_all_authors_commits_and_files(self):
-        """
-        Retrieves all authors along with their commits and the filenames of changed files for each commit.
-        :return: Dictionary with author as key, and each value being a list of tuples (commit message, list of filenames).
-        """
-        # Connect to the database
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # Execute SQL query to retrieve author details, their commits, and associated file changes
-        cursor.execute('''
-                SELECT a.name, c.message, GROUP_CONCAT(cf.file_path) as files
-                FROM authors a
-                JOIN commits c ON a.id = c.author_id
-                LEFT JOIN commit_files cf ON c.id = cf.commit_id
-                GROUP BY c.id
-                ORDER BY a.name;
-            ''')
-
-        # Fetch the results
-        results = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Organize the results into a structured format
-        # Here we create a dictionary where each key is an author's name,
-        # and the value is a list of tuples (commit message, [list of filenames]).
-        authors_commits_files = {}
-        for name, message, files in results:
-            if name not in authors_commits_files:
-                authors_commits_files[name] = []
-            # Split the concatenated filenames back into a list
-            file_list = files.split(',') if files else []
-            authors_commits_files[name].append((message, file_list))
-
-        return authors_commits_files
-
     def get_all_authors_and_their_commits(self):
         """
         Retrieves all authors along with their commits and the file paths of the changed files from the database.
-        :return: Dictionary with author as key, and each value being a list of tuples (commit message, list of file paths).
+        :return: Dictionary with author as key, and each value being a list of tuples (commit message,
+        list of file paths).
         """
         # Connect to the database
         conn = sqlite3.connect(self.db_name)
