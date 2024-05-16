@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
-from tkinter import messagebox, ttk
+from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from views.data_visualizer import DataVisualizer
 from support import constants
@@ -175,6 +175,7 @@ class MainView:
         dialog = ctk.CTkInputDialog(text=constants.ENTER_REPO, title=constants.REPO)
         repo_input = dialog.get_input()
         if repo_input and self.on_input_change:
+            self.git_button.configure(state=ctk.DISABLED)
             # Schedule the loading indicator to show in the main GUI thread.
             self.root.after(0, self.show_loading_indicator)
             # Start a thread to fetch repository data.
@@ -250,6 +251,8 @@ class MainView:
 
         self.repo = repo
 
+        self.git_button.configure(state=ctk.NORMAL)
+
         # Remove the existing 'user_select' widget if it exists and is not None.
         self.remove_user_select()
 
@@ -288,20 +291,20 @@ class MainView:
                 readme_summary = file_data['readme_summary']
             else:
                 readme_summary = constants.NONE
-            readme_summary = wrap_text(readme_summary, width=120)
+            readme_summary = wrap_text(readme_summary, width=140)
 
             if 'overall_summary' in file_data:
                 overall_summary = file_data['overall_summary']
             else:
                 overall_summary = constants.NONE
-            overall_summary = wrap_text(overall_summary, width=120)
+            overall_summary = wrap_text(overall_summary, width=140)
 
             info_text = (
                 f"Total number of commits: {total_commits}\n\n"
                 f"Overall summary: \n{overall_summary}\n\n"
                 f"Readme summary:\n{readme_summary}"
             )
-            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, text_color=constants.TEXT_COLOR)
+            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
             self.info_label.grid(row=1, column=0, columnspan=2, sticky="nsew")
 
     def setup_user_window(self, choice, file_data):
@@ -342,7 +345,7 @@ class MainView:
             data_found = True
             types_per_user = file_data['total_what_per_user'][choice]
             fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="Type of commit")
-            # Canvas 1
+            
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
             canvas.get_tk_widget().grid(row=1, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
@@ -361,7 +364,7 @@ class MainView:
         if choice in file_data.get('personal_summaries', {}):
             data_found = True
             personal_summary = file_data['personal_summaries'][choice]
-            personal_summary = wrap_text(personal_summary, width=120)
+            personal_summary = wrap_text(personal_summary, width=140)
             info_text_parts.append(f"Personal Summary:\n{personal_summary}")
 
         if not data_found:
@@ -371,7 +374,7 @@ class MainView:
             info_text = "\n\n".join(info_text_parts)
 
         info_label = ctk.CTkLabel(main_area_frame, text=info_text,
-                                  anchor="center", width=120, text_color=constants.TEXT_COLOR)
+                                  anchor="center", width=140, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
         info_label.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=constants.PADDING, pady=constants.PADDING)
         self.user_windows.append(new_window)
         new_window.protocol("WM_DELETE_WINDOW", lambda win=new_window: self.on_user_window_closing(win))
@@ -389,7 +392,7 @@ class MainView:
         Sets up the overview diagrams.
         :param file_data: Data to generate the diagrams.
         """
-        repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, text_color=constants.TEXT_COLOR)
+        repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
         # Initialize a flag to keep track of whether any diagrams were created.
@@ -428,7 +431,7 @@ class MainView:
 
         # If no diagrams were created due to empty datasets.
         if not diagrams_created:
-            no_data_label = ctk.CTkLabel(self.diagram_frame, text=constants.NO_DATA, text_color=constants.TEXT_COLOR)
+            no_data_label = ctk.CTkLabel(self.diagram_frame, text=constants.NO_DATA, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
     def set_appearance_mode(self):
@@ -460,4 +463,5 @@ class MainView:
         Shows error messages in a message box.
         """
         self.loading_repo = False
+        self.git_button.configure(state=ctk.NORMAL)
         messagebox.showerror(constants.ERROR, message)

@@ -3,6 +3,9 @@ import matplotlib
 from matplotlib import pyplot as plt
 matplotlib.use('agg')
 
+# Setting global font properties
+plt.rcParams['font.size'] = 16  # Sets the global font size
+
 
 class DataVisualizer:
     """
