@@ -345,7 +345,7 @@ class MainView:
             data_found = True
             types_per_user = file_data['total_what_per_user'][choice]
             fig1, ax1 = self.visualizer.create_figure('spider', data=types_per_user, title="Type of commit")
-            # Canvas 1
+            
             canvas = FigureCanvasTkAgg(fig1, master=main_area_frame)
             canvas.draw()
             canvas.get_tk_widget().grid(row=1, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
