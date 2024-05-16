@@ -56,6 +56,7 @@ def download_commit_messages(repo_url):
             if path is not None:  # Ensure there are no None entries
                 file.write(f"\"{path}\",\"\"\n")
 
+
 # Loop through the repository URLs
 for repo_url in repositories:
     print(f"Downloading commit messages for {repo_url}...")

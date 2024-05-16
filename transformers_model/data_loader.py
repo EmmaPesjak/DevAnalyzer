@@ -29,9 +29,9 @@ class DataLoader(Dataset):
         Returns:
             item (dict): A dictionary containing the tokenized data and the corresponding label.
         """
-        # Retrieve tokenized data for the given index
+        # Retrieve tokenized data for the given index.
         item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        # Add the label for the given index to the item dictionary
+        # Add the label for the given index to the item dictionary.
         item['labels'] = torch.tensor(self.labels[idx])
         return item
 
