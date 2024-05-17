@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 matplotlib.use('agg')
 
 # Setting global font properties
-plt.rcParams['font.size'] = 16  # Sets the global font size
+plt.rcParams['font.size'] = 14  # Sets the global font size
 
 
 class DataVisualizer:
@@ -123,6 +123,7 @@ class DataVisualizer:
         ax.plot(angles, values, "#3FA27B")
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(labels)
+        ax.tick_params(axis='y', labelsize=10)
 
         ax.set_title(title, position=(0.5, 1.1), ha='center')
         return fig, ax
