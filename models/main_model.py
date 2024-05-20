@@ -3,6 +3,7 @@ from models.bert_analyzer import BertAnalyzer
 from models.db_handler import DBHandler
 from models.bert_readme_model import BertReadmeModel
 import atexit
+from support import constants
 
 
 class MainModel:
@@ -13,7 +14,6 @@ class MainModel:
         """
         Initializes the main model.
         """
-
         # Create the database.
         self.db_handler = DBHandler('repo_data.db')
         self.readme_bert = BertReadmeModel()
@@ -34,7 +34,7 @@ class MainModel:
             """
             try:
                 result = self.db_handler.insert_data_into_db(repo_url)
-                if result != "Success":
+                if result != constants.SUCCESS:
                     callback(None, result)
                 elif callback:
                     # Use callback to send success data back

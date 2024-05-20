@@ -1,19 +1,15 @@
 from transformers import pipeline
 import re
+from support import constants
 
 
 def preprocess_readme(readme_content):
     """
-     Cleans the README content by removing HTML tags, code blocks, and inline code snippets
+    Cleans the README content by removing HTML tags, code blocks, and inline code snippets
      to prepare it for summarization.
-
-     Args:
-         readme_content (str): The original README file content.
-
-     Returns:
-         str: The cleaned README content.
-     """
-
+    :param readme_content: The original README file content.
+    :return: The cleaned README content.
+    """
     # Remove HTML tags
     no_html = re.sub(r'<.*?>', '', readme_content)
     # Remove code blocks enclosed in triple backticks
@@ -41,17 +37,13 @@ class BertReadmeModel:
         """
         Summarizes the given text by breaking it into manageable segments and summarizing each segment.
         If the overall summary is longer than the segment length, it is summarized again.
-
-        Args:
-            text (str): The text to be summarized.
-            segment_length (int): The length of text segments for individual summarization.
-            summary_max_length (int): The maximum length of the summary for each segment.
-            summary_min_length (int): The minimum length of the summary for each segment.
-
-        Returns:
-            str: The summarized text.
+        :param text: The text to be summarized.
+        :param segment_length: The length of text segments for individual summarization.
+        :param summary_max_length: The maximum length of the summary for each segment.
+        :param summary_min_length: The minimum length of the summary for each segment.
+        :return: The summarized text.
         """
-        # Early return if the text is too short to require summarization
+        # Early return if the text is too short to require summarization.
         if len(text) < summary_min_length:
             return text
 
@@ -60,7 +52,7 @@ class BertReadmeModel:
         segments = [text[i:i + segment_length] for i in range(0, len(text), segment_length)]
         summaries = []
         for segment in segments:
-            # Adjust the maximum summary length based on the segment length .
+            # Adjust the maximum summary length based on the segment length.
             adjusted_max_length = min(summary_max_length, len(segment) // 2)
             # Generate a summary for each text segment using the predefined settings in the summarizer pipeline.
             summary = self.summarizer(segment, max_length=adjusted_max_length, min_length=summary_min_length,
@@ -79,17 +71,17 @@ class BertReadmeModel:
 
     def get_readme_summary(self):
         try:
-            # Attempt to open and read the README file
+            # Attempt to open and read the README file.
             with open('support/Downloaded_README.txt', 'r', encoding='utf-8') as file:
                 readme_content = file.read()
 
             # Return a default message if the README content is empty or only whitespace.
             if not readme_content.strip():
-                return "No README file found in the root directory of selected project."
+                return constants.NO_README_CONTENT
 
-            # Preprocess and summarize the README content
+            # Preprocess and summarize the README content.
             preprocessed_content = preprocess_readme(readme_content)
             return self.summarize_text(preprocessed_content)
         except FileNotFoundError:
-            # Handle the case where the README file does not exist
-            return "No README file found in the root."
+            # Handle the case where the README file does not exist.
+            return constants.NO_README

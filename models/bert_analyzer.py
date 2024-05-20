@@ -1,4 +1,3 @@
-import torch
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification, \
     BertForSequenceClassification, BertTokenizerFast
 from itertools import cycle
@@ -242,10 +241,8 @@ class BertAnalyzer:
     def analyze_commits(self, commits_dict):
         """
         Analyze commits from a given dictionary of commits.
-
-        Args:
-            commits_dict (Dict[str, List[Tuple[str, List[str]]]]): A dictionary where the key is the author and
-            the value is a list of tuples containing commit messages and lists of file paths.
+        :param commits_dict: A dictionary where the key is the author and the value is a list of tuples
+        containing commit messages and lists of file paths.
         """
         self.reset_for_new_repository()  # Ensure a clean state before starting analysis.
 
@@ -260,15 +257,6 @@ class BertAnalyzer:
                                                        self.all_commit_types}
 
             for commit_message, file_paths in commits:
-                # Truncate and tokenize the commit message before classification
-                # commit_inputs = self.commit_message_tokenizer(commit_message, return_tensors="pt", truncation=True,
-                #                                        max_length=128)
-                #
-                # # Classify the commit message using the model
-                # with torch.no_grad():  # Ensure no gradients are computed during inference
-                #     commit_prediction = self.commit_message_model(**commit_inputs)
-                #     predicted_label_index = commit_prediction.logits.argmax(-1).item()
-                #     commit_type = self.commit_message_model.config.id2label[predicted_label_index]
                 commit_prediction = self.commit_message_nlp(commit_message, truncation=True, max_length=128)
                 commit_type = commit_prediction[0]['label']
 
@@ -278,16 +266,6 @@ class BertAnalyzer:
 
                 # Classify each file path modified in this commit
                 for file_path in file_paths:
-                    # Truncate and tokenize the file path before classification
-                    # file_inputs = self.filepath_tokenizer(file_path, return_tensors="pt", truncation=True,
-                    #                                        max_length=128)
-                    #
-                    # # Classify the commit message using the model
-                    # with torch.no_grad():  # Ensure no gradients are computed during inference
-                    #     file_prediction = self.filepath_model(**file_inputs)
-                    #     predicted_label_index = file_prediction.logits.argmax(-1).item()
-                    #     file_type = self.filepath_model.config.id2label[predicted_label_index]
-
                     file_prediction = self.filepath_nlp(file_path, truncation=True, max_length=128)
                     file_type = file_prediction[0]['label']
 

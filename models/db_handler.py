@@ -1,5 +1,6 @@
 import sqlite3
 from pydriller import Repository
+from support import constants
 
 
 class DBHandler:
@@ -60,14 +61,14 @@ class DBHandler:
         :param repo_url: Url of the repository.
         :return: If the insertion was successful or not.
         """
-        self.create_database()  # Ensure the database and tables exist
+        self.create_database()  # Ensure the database and tables exist.
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
         try:
             # For each commit, insert the author and commit info into the tables.
             for commit in Repository(repo_url).traverse_commits():
-                # Insert author if not exists
+                # Insert author if not exists.
                 cursor.execute('INSERT OR IGNORE INTO authors (name, email) VALUES (?, ?)',
                                (commit.author.name, commit.author.email))
                 cursor.execute('SELECT id FROM authors WHERE email = ?', (commit.author.email,))
@@ -84,10 +85,9 @@ class DBHandler:
 
                 conn.commit()
         except Exception as e:
-            error_message = "Was not able to get the repository, please try again, make sure to enter a valid Git " \
-                            "repository URL with data to analyze."
+            error_message = constants.DB_ERROR
         else:
-            return "Success"
+            return constants.SUCCESS
         finally:
             if 'conn' in locals():
                 conn.close()
@@ -119,9 +119,7 @@ class DBHandler:
         # Close the database connection
         conn.close()
 
-        # Organize the results into a structured format
-        # Here we create a dictionary where each key is an author's name,
-        # and the value is a list of tuples (commit message, [list of file paths]).
+        # Organize the results into a structured format.
         authors_commits_files = {}
         for name, message, files in results:
             if name not in authors_commits_files:

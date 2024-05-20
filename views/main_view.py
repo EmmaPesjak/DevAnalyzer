@@ -47,7 +47,6 @@ def read_file_data():
     local_variables = {}
     with open("support//repo_stats.py", 'r', encoding="utf-8") as file:
         file_content = file.read()
-        # Execute the file content in an empty global namespace and capture the local variables
         exec(file_content, {}, local_variables)
         return local_variables
 
@@ -234,11 +233,10 @@ class MainView:
 
         # Clear or reset the info bar.
         if hasattr(self, 'info_label') and self.info_label is not None:
-            self.info_label.destroy()  # or self.info_label.configure(text="")
+            self.info_label.destroy()
 
         self.loading_label = ctk.CTkLabel(self.diagram_frame, text=constants.LOADING,
                                           text_color=constants.TEXT_COLOR, font=("Segoe UI", 16, "bold"))
-        # Place the loading label in a specific row and column.
         self.loading_label.grid(row=0, column=0, sticky="nsew")
 
     def update_ui_after_fetch(self, repo):
@@ -304,7 +302,8 @@ class MainView:
                 f"Overall summary: \n{overall_summary}\n\n"
                 f"Readme summary:\n{readme_summary}"
             )
-            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
+            self.info_label = ctk.CTkLabel(self.diagram_frame, text=info_text, font=("Segoe UI", 16),
+                                           text_color=constants.TEXT_COLOR)
             self.info_label.grid(row=1, column=0, columnspan=2, sticky="nsew")
 
     def setup_user_window(self, choice, file_data):
@@ -397,7 +396,7 @@ class MainView:
 
         # Initialize a flag to keep track of whether any diagrams were created.
         diagrams_created = False
-        diagram_row = 2  # Start placing diagrams after the repository label row
+        diagram_row = 2  # Start placing diagrams after the repository label row.
 
         # Check for 'types_of_commits' data and create a diagram if it's not empty.
         if 'total_what' in file_data and file_data['total_what']:
@@ -422,11 +421,11 @@ class MainView:
         # Check for 'total_where' data and create a diagram if it's not empty.
         if 'total_where' in file_data and file_data['total_where']:
             diagrams_created = True
-            fig4, ax4 = self.visualizer.create_figure('spider', data=file_data['total_where'],
+            fig3, ax3 = self.visualizer.create_figure('spider', data=file_data['total_where'],
                                                       title="Where the commits has been made")
-            canvas4 = FigureCanvasTkAgg(fig4, master=self.diagram_frame)
-            canvas4.draw()
-            canvas4.get_tk_widget().grid(row=diagram_row, column=1, padx=constants.PADDING, pady=constants.PADDING,
+            canvas3 = FigureCanvasTkAgg(fig3, master=self.diagram_frame)
+            canvas3.draw()
+            canvas3.get_tk_widget().grid(row=diagram_row, column=1, padx=constants.PADDING, pady=constants.PADDING,
                                          sticky='nsew')
 
         # If no diagrams were created due to empty datasets.
