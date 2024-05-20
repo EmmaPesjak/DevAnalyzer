@@ -391,7 +391,8 @@ class MainView:
         Sets up the overview diagrams.
         :param file_data: Data to generate the diagrams.
         """
-        repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
+        repo_label = ctk.CTkLabel(self.diagram_frame, text=self.repo, font=("Segoe UI", 16),
+                                  text_color=constants.TEXT_COLOR)
         repo_label.grid(row=0, column=0, columnspan=2, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
         # Initialize a flag to keep track of whether any diagrams were created.
@@ -430,7 +431,8 @@ class MainView:
 
         # If no diagrams were created due to empty datasets.
         if not diagrams_created:
-            no_data_label = ctk.CTkLabel(self.diagram_frame, text=constants.NO_DATA, font=("Segoe UI", 16), text_color=constants.TEXT_COLOR)
+            no_data_label = ctk.CTkLabel(self.diagram_frame, text=constants.NO_DATA, font=("Segoe UI", 16),
+                                         text_color=constants.TEXT_COLOR)
             no_data_label.grid(row=0, column=0, padx=constants.PADDING, pady=constants.PADDING, sticky='nsew')
 
     def set_appearance_mode(self):
