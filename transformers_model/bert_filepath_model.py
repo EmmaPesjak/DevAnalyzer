@@ -92,16 +92,12 @@ results = []
 def compute_metrics(pred):
     """
     Computes accuracy, F1, precision, and recall for a given set of predictions.
-
-    Args:
-        pred (obj): An object containing label_ids and predictions attributes.
+    :param pred: An object containing label_ids and predictions attributes.
             - label_ids (array-like): A 1D array of true class labels.
             - predictions (array-like): A 2D array where each row represents
               an observation, and each column represents the probability of
               that observation belonging to a certain class.
-
-    Returns:
-        dict: A dictionary containing the following metrics:
+    :return: A dictionary containing the following metrics:
             - Accuracy (float): The proportion of correctly classified instances.
             - F1 (float): The macro F1 score, which is the harmonic mean of precision
               and recall. Macro averaging calculates the metric independently for

@@ -1,5 +1,6 @@
 import time
 from models.readme_getter import ReadmeGetter
+from support import constants
 
 
 class MainController:
@@ -38,7 +39,7 @@ class MainController:
         :param error: Any error that occurred during repository setup.
         """
         if error:
-            # Handle error, possibly in the main thread
+            # Handle error.
             self.view.remove_loading_indicator()
             self.view.remove_user_select()
             self.view.show_init_label()
@@ -49,13 +50,13 @@ class MainController:
                 # If the timer is removed, change end_timing to self.view.update_ui_after_fetch
                 self.view.root.after(0, self.end_timing)
             else:
-                self.view.show_error_message("Something went wrong, please try again")
+                self.view.show_error_message(constants.ERROR_MSG)
 
     def end_timing(self):
         """
         Helper method to see how long time it takes to execute.
         """
-        self.view.update_ui_after_fetch(self.repo)  # Call the original update function
-        end_time = time.time()  # Stop timing
-        duration = end_time - self.start_time  # Calculate duration
+        self.view.update_ui_after_fetch(self.repo)
+        end_time = time.time()
+        duration = end_time - self.start_time
         # print(f"Total time taken: {duration} seconds")
