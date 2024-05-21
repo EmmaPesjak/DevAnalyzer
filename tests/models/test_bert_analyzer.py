@@ -1,14 +1,16 @@
 import unittest
-from unittest.mock import patch
 
 from models.bert_analyzer import BertAnalyzer
 
-
 class TestBertAnalyzer(unittest.TestCase):
+    """
+    Unit-test for BertAnalyzer.
+    """
     def setUp(self):
         # Set up an instance of BertAnalyzer
         self.analyzer = BertAnalyzer()
 
+        # Set up a commit dictionary
         self.commits_dict = {
             'Alice': [
                 ('Fixed a bug', ['src/file1.java']),
@@ -23,7 +25,10 @@ class TestBertAnalyzer(unittest.TestCase):
         }
 
     def test_generate_personal_summaries_empty(self):
-        print("in test_generate_personal_summaries_empty")
+        """
+        Test that empty personal summaries are returned empty.
+        :return:
+        """
         self.assertEqual(
             self.analyzer.generate_personal_summaries({}, {}),
             {},
@@ -31,7 +36,10 @@ class TestBertAnalyzer(unittest.TestCase):
         )
 
     def test_generate_personal_summaries_valid(self):
-        # Assuming a simplified data structure for the test
+        """
+        Test that valid dicts generates valid personal summaries
+        :return:
+        """
         commit_types_per_user = {'Alice': {'Corrective': 2, 'Adaptive': 1, 'Perfective': 0, 'Administrative': 0, 'Other': 0}}
         detailed_contributions = {
             'Alice': {'Corrective': {'Source Code': 3, 'Configuration': 1, 'Tests': 0, 'Documentation': 0, 'Resources': 0}, 'Adaptive': {'Tests': 1, 'Documentation': 2}}
@@ -48,6 +56,10 @@ class TestBertAnalyzer(unittest.TestCase):
         )
 
     def test_generate_overall_summaries(self):
+        """
+        Tests that valid project dicts returns a valid summary.
+        :return:
+        """
         commit_types_in_project = {'Adaptive': 10, 'Corrective': 9, 'Perfective': 8, 'Administrative': 7, 'Documentation': 0}
         detailed_contributions_in_project = {'Adaptive': {'Source Code': 5, 'Configuration': 4, 'Tests': 3, 'Documentation': 2, 'Resources': 0},
                                              'Corrective': {'Source Code': 4, 'Configuration': 5, 'Tests': 3, 'Documentation': 2, 'Resources': 0},
@@ -62,14 +74,14 @@ class TestBertAnalyzer(unittest.TestCase):
         )
 
     def test_get_total_what(self):
-
-        # Expected results for tests
+        """
+        Tests that the total commit type is correct.
+        :return:
+        """
         expected_commit_types = {'Corrective': 1, 'Adaptive': 1, 'Perfective': 2, 'Administrative': 1, 'Other': 1}
 
         # Call analyze_commits
         self.analyzer.analyze_commits(self.commits_dict)
-
-        # Verify the internal state is as expected
         self.assertEqual(self.analyzer.get_total_what(), expected_commit_types)
 
         # Test get_total_what
