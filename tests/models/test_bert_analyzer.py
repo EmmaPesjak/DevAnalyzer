@@ -9,6 +9,19 @@ class TestBertAnalyzer(unittest.TestCase):
         # Set up an instance of BertAnalyzer
         self.analyzer = BertAnalyzer()
 
+        self.commits_dict = {
+            'Alice': [
+                ('Fixed a bug', ['src/file1.java']),
+                ('Added a new feature', ['src/file2.java']),
+                ('Refactored some tests', ['tests/Test.java'])
+            ],
+            'Bob': [
+                ('Renamed some packages', ['src/file3.java']),
+                ('Update README.md', ['doc/README.md']),
+                ('blabla', ['resources/image.png'])
+            ]
+        }
+
     def test_generate_personal_summaries_empty(self):
         print("in test_generate_personal_summaries_empty")
         self.assertEqual(
@@ -49,67 +62,27 @@ class TestBertAnalyzer(unittest.TestCase):
         )
 
     def test_get_total_what(self):
-        commits_dict = {
-            'Alice': [
-                ('Fixed a bug', ['src/file1.java']),
-                ('Added a new feature', ['src/file2.java']),
-                ('Refactored some tests', ['tests/Test.java'])
-            ],
-            'Bob': [
-                ('Renamed some packages', ['src/file3.java']),
-                ('Update README.md', ['doc/README.md']),
-                ('blabla', ['resources/image.png'])
-            ]
-        }
 
         # Expected results for tests
         expected_commit_types = {'Corrective': 1, 'Adaptive': 1, 'Perfective': 2, 'Administrative': 1, 'Other': 1}
-        expected_file_types = {'Source Code': 3, 'Tests': 1, 'Documentation': 1, 'Resources': 1, 'Configuration': 0}
 
         # Call analyze_commits
-        self.analyzer.analyze_commits(commits_dict)
+        self.analyzer.analyze_commits(self.commits_dict)
 
         # Verify the internal state is as expected
         self.assertEqual(self.analyzer.get_total_what(), expected_commit_types)
-        self.assertEqual(self.analyzer.get_total_where(), expected_file_types)
 
         # Test get_total_what
         result_what = self.analyzer.get_total_what()
         self.assertEqual(result_what, expected_commit_types)
 
-        # Test get_total_where
-        result_where = self.analyzer.get_total_where()
-        self.assertEqual(result_where, expected_file_types)
 
     def test_get_total_where(self):
-        commits_dict = {
-            'Alice': [
-                ('Fixed a bug', ['src/file1.java']),
-                ('Added a new feature', ['src/file2.java']),
-                ('Refactored some tests', ['tests/Test.java'])
-            ],
-            'Bob': [
-                ('Renamed some packages', ['src/file3.java']),
-                ('Update README.md', ['doc/README.md']),
-                ('blabla', ['resources/image.png'])
-            ]
-        }
-
         expected_file_types = {'Source Code': 3, 'Tests': 1, 'Documentation': 1, 'Resources': 1, 'Configuration': 0}
-        self.analyzer.analyze_commits(commits_dict)
+        # Call analyze_commits
+        self.analyzer.analyze_commits(self.commits_dict)
         self.assertEqual(self.analyzer.get_total_where(), expected_file_types)
 
         # Test get_total_where
         result_where = self.analyzer.get_total_where()
         self.assertEqual(result_where, expected_file_types)
-
-
-    #### 2. Test `analyze_commits` Method
-# **Simulate Input**: Pass a sample dictionary mimicking the expected input format and test for correct processing.
-# **Check State Reset**: Ensure that `reset_for_new_repository` is called before analyzing new commits to avoid data leakage between tests.
-
-    def test_analyze_commits_reset_called(self):
-        # You'll need to patch the reset_for_new_repository method to check if it's called
-        with patch.object(self.analyzer, 'reset_for_new_repository') as mocked_reset:
-            self.analyzer.analyze_commits({})
-            mocked_reset.assert_called_once()

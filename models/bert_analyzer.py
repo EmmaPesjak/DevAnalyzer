@@ -67,7 +67,6 @@ class BertAnalyzer:
         }
 
     def analyze_commits(self, commits_dict):
-        print(f'commits_dict: {commits_dict}')
         """
         Analyze commits from a given dictionary of commits.
         :param commits_dict: A dictionary where the key is the author and the value is a list of tuples
