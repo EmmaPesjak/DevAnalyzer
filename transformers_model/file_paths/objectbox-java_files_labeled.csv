@@ -220,7 +220,7 @@
 "tests\objectbox-java-test\src\main\java\io\objectbox\relation\ToOneTest.java","Tests"
 "tests\objectbox-java-test\src\test\java\io\objectbox\tree\MetaBranchCursor.java","Tests"
 "objectbox-java\src\main\java\io\objectbox\query\BreakForEach.java","Source Code"
-"objectbox-java\src\main\java\io\objectbox\internal\JniTest.java","Source Code"
+"objectbox-java\src\main\java\io\objectbox\internal\JniTest.java","Tests"
 "objectbox-java\src\main\java\io\objectbox\DebugFlags.java","Source Code"
 "tests\objectbox-java-test\src\test\resources\io\objectbox\corrupt-pageno-in-branch-data.mdb","Resources"
 "objectbox-java\src\main\java\io\objectbox\internal\CallWithHandle.java","Source Code"
