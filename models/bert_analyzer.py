@@ -3,178 +3,6 @@ from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassifica
 from itertools import cycle
 
 
-def generate_personal_summaries(commit_types_per_user, detailed_contributions):
-    """
-    Generates summary for each author.
-    :param commit_types_per_user: A dictionary containing commit types per user.
-    :param detailed_contributions: A dictionary containing detailed contributions for each author for project.
-    :return: Dictionary containing a personal summary for each author
-    """
-    personal_summaries = {}
-
-    for author, contributions in detailed_contributions.items():
-        summary_parts = []
-        # Sort the commit types by frequency for this user
-        sorted_contributions = sorted(commit_types_per_user[author].items(), key=lambda x: x[1], reverse=True)
-        zero_commit_types = []
-        first = True  # Flag for the first item
-        second = True  # Flag for the second item
-
-        # Create an iterator to cycle through synonyms
-        emphasis_words = cycle(["primarily", "mostly", "mainly"])
-
-        # Determine the number of non-zero commit types for formatting
-        num_non_zero = sum(1 for _, count in sorted_contributions if count > 0)
-        count_non_zero = 0
-
-        for ctype, count in sorted_contributions:
-            commit_word = "commit" if count == 1 else "commits"
-            commit_has_have = "has" if count == 1 else "have"
-            commit_these_this = "This" if count == 1 else "These"
-
-            if count == 0:
-                zero_commit_types.append(ctype)  # Collect zero commit types
-                continue
-            else:
-                count_non_zero += 1  # Increment the counter of non-zero types
-
-                # Get the file type with the highest count for this commit type from detailed_contributions
-                file_changes = contributions[ctype]
-                most_common_file, most_common_count = max(file_changes.items(),
-                                                          key=lambda item: item[1]) if file_changes else ("", 0)
-
-                next_emphasis_word = next(emphasis_words)  # Get the next word from the cycle
-
-                # Determine the conjunction for formatting
-                conjunction = "and" if count_non_zero == num_non_zero else ""
-                end_of_sentence = "." if conjunction == "and" else ""
-
-                if first:
-                    # Special formatting for the most common commit type
-                    summary_part = f"{author} has mostly done {ctype} commits, with {count} {commit_word}."
-                    if most_common_count > 0:
-                        summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
-                                        f"in {most_common_file} files."
-                    else:
-                        summary_part += " However, in 0 files."
-                    first = False
-
-                else:
-                    if second:
-                        # Formatting for other commit types
-                        if most_common_count > 0:
-                            summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
-                                           f"{next_emphasis_word} been done in {most_common_file} " \
-                                           f"files{end_of_sentence}"
-                        else:
-                            summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} " \
-                                           f"in 0 files{end_of_sentence}"
-                        second = False
-                    else:
-                        if most_common_count > 0:
-                            summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
-                                           f"{next_emphasis_word} been done in {most_common_file} " \
-                                           f"files{end_of_sentence}"
-                        else:
-                            summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files" \
-                                           f"{end_of_sentence}{end_of_sentence}"
-            summary_parts.append(summary_part)
-
-        # Include zero commit types.
-        if zero_commit_types:
-            if summary_parts[-1][-1] != '.':
-                summary_parts[-1] += '.'
-            zero_commits_sentence = f" However, {author} has not done any {', '.join(zero_commit_types)} commits"
-            summary_parts.append(zero_commits_sentence)
-
-        # Ensure the entire summary ends with a period
-        if not summary_parts[-1].endswith('.'):
-            summary_parts[-1] += "."
-        personal_summaries[author] = "".join(summary_parts)
-
-    return personal_summaries
-
-
-def generate_project_summaries(commit_types_in_project, detailed_contributions_in_project):
-    """
-    Generates an overall summary for the project.
-    :param commit_types_in_project: A dictionary containing the commit types with their respective counters.
-    :param detailed_contributions_in_project: A dictionary containing contributions for project.
-    :return: A summary of project.
-    """
-    # Summarize the most common types of commits
-    sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
-    summary_parts = []
-    zero_commit_types = []
-    first = True  # Flag to check if it's the first item
-    second = True
-
-    # Create an iterator to cycle through synonyms
-    emphasis_words = cycle(["primarily", "mostly", "mainly"])
-
-    # Determine the number of non-zero commit types for formatting
-    num_non_zero = sum(1 for _, count in sorted_commits if count > 0)
-    count_non_zero = 0
-
-    for ctype, count in sorted_commits:
-        commit_word = "commit" if count == 1 else "commits"
-        commit_has_have = "has" if count == 1 else "have"
-        commit_these_this = "This" if count == 1 else "These"
-
-        if count == 0:
-            zero_commit_types.append(ctype)  # Add to zero count list
-            continue  # Skip further processing for zero count types
-        else:
-            count_non_zero += 1  # Increment the counter of non-zero types
-            # Get the file type with the highest count for this commit type
-            file_changes = detailed_contributions_in_project[ctype]
-            most_common_file, most_common_count = max(file_changes.items(),
-                                                      key=lambda item: item[1]) if file_changes else ("", 0)
-            next_emphasis_word = next(emphasis_words)  # Get the next word from the cycle
-
-            # Determine the conjunction for formatting
-            conjunction = "and" if count_non_zero == num_non_zero else ""
-            end_of_sentence = "." if conjunction == "and" else ""
-
-            if first:
-                # Special formatting for the most common commit type
-                summary_part = f"In this project, {ctype} {commit_word} have been the most frequent, with " \
-                               f"{count} commits."
-                if most_common_count > 0:
-                    summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
-                                    f"in {most_common_file} files."
-                else:
-                    summary_part += " However, in 0 files."
-                first = False
-            else:
-                if second:
-                    # Formatting for other commit types
-                    if most_common_count > 0:
-                        summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
-                                       f"{next_emphasis_word} been done in {most_common_file} " \
-                                       f"files{end_of_sentence}"
-                    else:
-                        summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} in " \
-                                       f"0 files{end_of_sentence}"
-                    second = False
-                else:
-                    if most_common_count > 0:
-                        summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
-                                       f"{next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
-                    else:
-                        summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files{end_of_sentence}"
-
-        summary_parts.append(summary_part)
-
-    if zero_commit_types:
-        if summary_parts[-1][-1] != '.':
-            summary_parts[-1] += '.'
-        # Format the zero count types into a readable string
-        zero_commits_sentence = f" However, no {', '.join(zero_commit_types)} commits have been done in this project"
-        summary_parts.append(zero_commits_sentence)
-
-    return "".join(summary_parts)
-
 
 class BertAnalyzer:
     """
@@ -278,10 +106,181 @@ class BertAnalyzer:
                     self.detailed_contributions[author][commit_type][file_type] += 1
 
         # Generate personal summaries from detailed contributions
-        self.personal_summaries = generate_personal_summaries(self.commit_types_per_user,
+        self.personal_summaries = self.generate_personal_summaries(self.commit_types_per_user,
                                                               self.detailed_contributions)
-        self.project_summaries = generate_project_summaries(self.commit_types_in_project,
+        self.project_summaries = self.generate_project_summaries(self.commit_types_in_project,
                                                             self.detailed_contributions_in_project)
+
+    def generate_personal_summaries(self, commit_types_per_user, detailed_contributions):
+        """
+        Generates summary for each author.
+        :param commit_types_per_user: A dictionary containing commit types per user.
+        :param detailed_contributions: A dictionary containing detailed contributions for each author for project.
+        :return: Dictionary containing a personal summary for each author
+        """
+        personal_summaries = {}
+
+        for author, contributions in detailed_contributions.items():
+            summary_parts = []
+            # Sort the commit types by frequency for this user
+            sorted_contributions = sorted(commit_types_per_user[author].items(), key=lambda x: x[1], reverse=True)
+            zero_commit_types = []
+            first = True  # Flag for the first item
+            second = True  # Flag for the second item
+
+            # Create an iterator to cycle through synonyms
+            emphasis_words = cycle(["primarily", "mostly", "mainly"])
+
+            # Determine the number of non-zero commit types for formatting
+            num_non_zero = sum(1 for _, count in sorted_contributions if count > 0)
+            count_non_zero = 0
+
+            for ctype, count in sorted_contributions:
+                commit_word = "commit" if count == 1 else "commits"
+                commit_has_have = "has" if count == 1 else "have"
+                commit_these_this = "This" if count == 1 else "These"
+
+                if count == 0:
+                    zero_commit_types.append(ctype)  # Collect zero commit types
+                    continue
+                else:
+                    count_non_zero += 1  # Increment the counter of non-zero types
+
+                    # Get the file type with the highest count for this commit type from detailed_contributions
+                    file_changes = contributions[ctype]
+                    most_common_file, most_common_count = max(file_changes.items(),
+                                                              key=lambda item: item[1]) if file_changes else ("", 0)
+
+                    next_emphasis_word = next(emphasis_words)  # Get the next word from the cycle
+
+                    # Determine the conjunction for formatting
+                    conjunction = "and" if count_non_zero == num_non_zero else ""
+                    end_of_sentence = "." if conjunction == "and" else ""
+
+                    if first:
+                        # Special formatting for the most common commit type
+                        summary_part = f"{author} has mostly done {ctype} commits, with {count} {commit_word}."
+                        if most_common_count > 0:
+                            summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
+                                            f"in {most_common_file} files."
+                        else:
+                            summary_part += " However, in 0 files."
+                        first = False
+
+                    else:
+                        if second:
+                            # Formatting for other commit types
+                            if most_common_count > 0:
+                                summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
+                                               f"{next_emphasis_word} been done in {most_common_file} " \
+                                               f"files{end_of_sentence}"
+                            else:
+                                summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} " \
+                                               f"in 0 files{end_of_sentence}"
+                            second = False
+                        else:
+                            if most_common_count > 0:
+                                summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
+                                               f"{next_emphasis_word} been done in {most_common_file} " \
+                                               f"files{end_of_sentence}"
+                            else:
+                                summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files" \
+                                               f"{end_of_sentence}{end_of_sentence}"
+                summary_parts.append(summary_part)
+
+            # Include zero commit types.
+            if zero_commit_types:
+                if summary_parts[-1][-1] != '.':
+                    summary_parts[-1] += '.'
+                zero_commits_sentence = f" However, {author} has not done any {', '.join(zero_commit_types)} commits"
+                summary_parts.append(zero_commits_sentence)
+
+            # Ensure the entire summary ends with a period
+            if not summary_parts[-1].endswith('.'):
+                summary_parts[-1] += "."
+            personal_summaries[author] = "".join(summary_parts)
+
+        return personal_summaries
+
+    def generate_project_summaries(self, commit_types_in_project, detailed_contributions_in_project):
+        """
+        Generates an overall summary for the project.
+        :param commit_types_in_project: A dictionary containing the commit types with their respective counters.
+        :param detailed_contributions_in_project: A dictionary containing contributions for project.
+        :return: A summary of project.
+        """
+        # Summarize the most common types of commits
+        sorted_commits = sorted(commit_types_in_project.items(), key=lambda x: x[1], reverse=True)
+        summary_parts = []
+        zero_commit_types = []
+        first = True  # Flag to check if it's the first item
+        second = True
+
+        # Create an iterator to cycle through synonyms
+        emphasis_words = cycle(["primarily", "mostly", "mainly"])
+
+        # Determine the number of non-zero commit types for formatting
+        num_non_zero = sum(1 for _, count in sorted_commits if count > 0)
+        count_non_zero = 0
+
+        for ctype, count in sorted_commits:
+            commit_word = "commit" if count == 1 else "commits"
+            commit_has_have = "has" if count == 1 else "have"
+            commit_these_this = "This" if count == 1 else "These"
+
+            if count == 0:
+                zero_commit_types.append(ctype)  # Add to zero count list
+                continue  # Skip further processing for zero count types
+            else:
+                count_non_zero += 1  # Increment the counter of non-zero types
+                # Get the file type with the highest count for this commit type
+                file_changes = detailed_contributions_in_project[ctype]
+                most_common_file, most_common_count = max(file_changes.items(),
+                                                          key=lambda item: item[1]) if file_changes else ("", 0)
+                next_emphasis_word = next(emphasis_words)  # Get the next word from the cycle
+
+                # Determine the conjunction for formatting
+                conjunction = "and" if count_non_zero == num_non_zero else ""
+                end_of_sentence = "." if conjunction == "and" else ""
+
+                if first:
+                    # Special formatting for the most common commit type
+                    summary_part = f"In this project, {ctype} {commit_word} have been the most frequent, with " \
+                                   f"{count} commits."
+                    if most_common_count > 0:
+                        summary_part += f" {commit_these_this} {commit_has_have} {next_emphasis_word} been done " \
+                                        f"in {most_common_file} files."
+                    else:
+                        summary_part += " However, in 0 files."
+                    first = False
+                else:
+                    if second:
+                        # Formatting for other commit types
+                        if most_common_count > 0:
+                            summary_part = f" Then, {count} {ctype} {commit_word} {commit_has_have} " \
+                                           f"{next_emphasis_word} been done in {most_common_file} " \
+                                           f"files{end_of_sentence}"
+                        else:
+                            summary_part = f" Then, there {commit_has_have} been {count} {ctype} {commit_word} in " \
+                                           f"0 files{end_of_sentence}"
+                        second = False
+                    else:
+                        if most_common_count > 0:
+                            summary_part = f", {conjunction} {count} {ctype} {commit_word} {commit_has_have} " \
+                                           f"{next_emphasis_word} been done in {most_common_file} files{end_of_sentence}"
+                        else:
+                            summary_part = f", {conjunction} {count} {ctype} {commit_word}, but in 0 files{end_of_sentence}"
+
+            summary_parts.append(summary_part)
+
+        if zero_commit_types:
+            if summary_parts[-1][-1] != '.':
+                summary_parts[-1] += '.'
+            # Format the zero count types into a readable string
+            zero_commits_sentence = f" However, no {', '.join(zero_commit_types)} commits have been done in this project"
+            summary_parts.append(zero_commits_sentence)
+
+        return "".join(summary_parts)
 
     def get_total_what_per_user(self):
         """
