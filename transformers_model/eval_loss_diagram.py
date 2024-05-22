@@ -12,9 +12,10 @@ Helper script for displaying evaluation data for trained models.
 
 matplotlib.rcParams.update({'font.size': 12})
 
-eval_losses = [1.4558498151018284e-05, 3.541656724337372e-06, 2.6403126867080573e-06, 2.8146262138761813e-06,
-               2.8165950425318442e-06, 2.656338438100647e-06, 2.6504342258704128e-06]
+eval_losses = [2.5303856787672885e-09, 2.5303856787672885e-09, 1.6869238228522931e-09, 0.0,
+               0.0, 0.0, 0.0]
 epochs = [0.47, 0.94, 1.42, 1.89, 2.36, 2.83, 3.00]
+
 
 # # Create a plot
 # plt.figure(figsize=(8, 5))
